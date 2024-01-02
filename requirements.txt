@@ -1,0 +1,4 @@
+torch
+langchain
+openai
+notebook
