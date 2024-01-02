@@ -2,8 +2,8 @@ import random
 import re
 from typing import List
 
-from langchain.agents import AgentExecutor, BaseMultiActionAgent, Tool
-from langchain.agents import create_openai_functions_agent
+from langchain.agents import AgentExecutor, Tool
+from langchain.agents import create_openai_tools_agent
 from langchain.chat_models import ChatOpenAI
 
 
@@ -24,14 +24,13 @@ tools = [
         name="RollDice",
         func=dice_roll,
         description="call this to get the result of rolling dice.",
-        # add argument grammar here, ensure this always called with XdY, XdYkh1
     ),
 ]
 
 from langchain import hub
 
 # Get the prompt to use - you can modify this!
-prompt = hub.pull("hwchase17/openai-functions-agent")
+prompt = hub.pull("hwchase17/openai-tools-agent")
 prompt.messages[0].prompt.template = """
 You are an experienced player of Dungeons & Dragons 5th edition. When you are asked to roll a skill check,
 you (a) roll the dice and then (b) apply any modifiers as indicated by your character sheet.
@@ -42,7 +41,7 @@ Examples:
 """
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
-agent = create_openai_functions_agent(llm, tools, prompt)
+agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 agent_executor.invoke({
