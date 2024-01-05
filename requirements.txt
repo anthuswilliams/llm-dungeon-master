@@ -4,5 +4,5 @@ langchainhub
 openai
 notebook
 tiktoken
-faiss-gpu
 pdfminer.six
+lancedb
