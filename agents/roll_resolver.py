@@ -4,8 +4,12 @@ from typing import List
 
 from langchain.agents import AgentExecutor, Tool
 from langchain.agents import create_openai_tools_agent
+from langchain.tools.retriever import create_retriever_tool
 from langchain.chat_models import ChatOpenAI
 
+import sys
+sys.path.append(".")
+import retrievers.character_sheet as chardb
 
 def dice_roll(query: str) -> List[int]:
     results = re.search(r"^(\d+)d(\d+)$", query)
@@ -18,13 +22,18 @@ def dice_roll(query: str) -> List[int]:
     return [random.randint(1, int(val)) for i in range(int(num))]
     
 
-
 tools = [
+    create_retriever_tool(
+        name="CharacterSheet",        
+        retriever=chardb.connect().as_retriever(),
+        description="call this to get information from the character sheet"
+    ),
     Tool(
         name="RollDice",
         func=dice_roll,
         description="call this to get the result of rolling dice.",
     ),
+
 ]
 
 from langchain import hub
@@ -33,7 +42,9 @@ from langchain import hub
 prompt = hub.pull("hwchase17/openai-tools-agent")
 prompt.messages[0].prompt.template = """
 You are an experienced player of Dungeons & Dragons 5th edition. When you are asked to roll a skill check,
-you (a) roll the dice and then (b) apply any modifiers as indicated by your character sheet.
+you (a) roll the dice and then (b) apply any modifiers as indicated by your character sheet. 
+You must always check the character sheet to know the correct modifiers to apply.
+
 Return the result and an explanation of why you got the result that you did.
 Examples:
 "You rolled a 3 and a 5. Because you have disadvantage, your result is 3."
@@ -45,7 +56,7 @@ agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 agent_executor.invoke({
-    "input": "Roll a Perception check. You have advantage due to the clear day",
+    "input": "Roll a Wisdom saving throw",
     "chat_history": [
         # here is my character sheet!
     ]
