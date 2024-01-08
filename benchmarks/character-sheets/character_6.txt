@@ -1,0 +1,144 @@
+Name: Secure
+Race/Ancestry/Heritage: Warforged
+Class & Level: Sorcerer 1
+Background: Sailor
+Alignment: Neutral
+Experience: 0 xp
+
+
+ABILITY SCORES & ABILITIES
+(* includes +2 proficiency bonus; ** includes expertise, if any)
+
+Strength 8
+-1 ... Strength Ability Checks
+-1 ... Strength Saving Throws
++1 ... Athletics Skill  *
+120 lbs. ... Maximum Carrying Capacity
+240 lbs. ... Max. Push or Drag (Speed -5 ft.)
+240 lbs. ... Maximum Lift
+
+Dexterity 13
++1 ... Dexterity Ability Checks
++1 ... Dexterity Saving Throws
++1 ... Acrobatics Skill
++1 ... Sleight of Hand Skill
++1 ... Stealth Skill
+
+
+Constitution 16
++3 ... Constitution Ability Checks
++5 ... Constitution Saving Throws *
+
+Intelligence 10
++0 ... Intelligence Ability Checks
++0 ... Intelligence Saving Throws
++2 ... Arcana Skill  *
++0 ... History Skill
++0 ... Investigation Skill
++0 ... Nature Skill
++0 ... Religion Skill
+
+Wisdom 12
++1 ... Wisdom Ability Checks
++1 ... Wisdom Saving Throws
++1 ... Animal Handling Skill
++1 ... Insight Skill
++1 ... Medicine Skill
++3 ... Perception Skill  *
++1 ... Survival Skill
+
+Charisma 16
++3 ... Charisma Ability Checks
++5 ... Charisma Saving Throws *
++3 ... Deception Skill
++5 ... Intimidation Skill  *
++3 ... Performance Skill
++5 ... Persuasion Skill  *
+
+COMBAT [PHB p. 189]
+
+13 ... Passive Perception
++1 ... Initiative Modifier
+
+Armor Class 12 ... Armor worn: none
+
+30 ft. Speed ... Base distance per move
+
+9 hit points ... 1d6 Hit Dice
+
+
+Quarterstaff. Melee Weapon Attack: +1 to hit, reach 5 ft. Hit: 1d6-1 bludgeoning damage. (If used two-handed in melee, does 1d8-1 damage.)
+
+
+Dagger. Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. 1d4+1 piercing damage. (If thrown, normal range to 20 ft.; disadvantage long range 21 to 60 ft.)
+
+
+Shocking Grasp Cantrip. Melee Spell Attack: +5 to hit. Hit: 1d8 lightning damage and target can't take reactions until its next turn.
+
+
+FEATURES, TRAITS, SPECIAL ABILITIES
+
+Sailor Background [PHB p. 139]
+
+• Feature: Ship's Passage.
+
+• Traits: Seeking long-lost relic. Insensitive manner.
+
+• Ideal: Share work, share rewards.
+
+• Bond: Has a lover in every port.
+
+• Flaw: Fights any who insult the ship.
+
+
+Proficiencies & Languages
+• Proficiency Bonus: +2
+• Armor: none
+• Weapons: dagger, dart, light crossbow, quarterstaff, sling
+• Tools: alchemist's supplies, navigator's tools, vehicles (watercraft)
+• Saving Throws: Constitution, Charisma
+• Skills: Arcana, Athletics, Intimidation, Perception, Persuasion
+• Languages: Common, Giant, Auran, Aquan, Ignan, Primodial, Terran
+
+
+Warforged Traits [ERftLW, p. 35]
+
+• Creature Type: Humanoid
+
+• Age: 25 years old
+
+• Medium Size (5' 8", 252 lbs.)
+
+• Constructed Resilience. (adv. saves vs. poison, resistence to poison, immune to disease, do not need to eat or breathe)
+
+• Integrated Protection (bonus added to Armor Class, slower to don/doff armor)
+
+• Sentry's Rest (semiconscious 6 hours a day instead of 8 hours sleep, but not immune to magical sleep)
+
+
+Sorcerer Class Features [PHB p. 99, XGtE p. 51]
+
+• Wind Speaker (knows Primorial and its dialects)
+
+• Tempestuous Magic (as bonus action, casting non-cantrip spell also gives 10 feet fly speed, no opportunity attacks)
+
+Shocking Grasp Cantrip. Melee Spell Attack: +5 to hit. Hit: 1d8 lightning damage and target can't take reactions until its next turn.
+
+Spellcasting [PHB p. 201]
+
+Spell Attack Modifier +5
+Spell Save DC 13
+Cantrips Known: Friends, Mage Hand, Minor Illusion, Shocking Grasp
+
+
+Prepared Spells
+1st Level (2 slots): Thunderwave, Magic Missile
+
+
+EQUIPMENT & TREASURE
+
+
+Carried Gear [PHB, p. 143]: two (2) daggers, quarterstaff, belt pouch, set of common clothes, rope (silk, 50 feet), belaying pin (club), a non-magical lucky charm. (This load is about 14 lbs.; add 1 lb. per 50 coins carried.)
+
+
+Coins & Gems: 7 gold pieces (gp); 25 silver pieces (sp); 65 copper pieces (cp); 4 gems (worth 10 gp each)

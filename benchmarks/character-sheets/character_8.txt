@@ -1,0 +1,156 @@
+Name: Aetan 2-H9
+Race/Ancestry/Heritage: Autognome (Construct)
+Class & Level: Warlock 1
+Background: Charlatan
+Alignment: Neutral Good
+Experience: 0 xp
+
+
+ABILITY SCORES & ABILITIES
+(* includes +2 proficiency bonus; ** includes expertise, if any)
+
+Strength 10
++0 ... Strength Ability Checks
++0 ... Strength Saving Throws
++0 ... Athletics Skill
+150 lbs. ... Maximum Carrying Capacity
+300 lbs. ... Max. Push or Drag (Speed -5 ft.)
+300 lbs. ... Maximum Lift
+
+Dexterity 15
++2 ... Dexterity Ability Checks
++2 ... Dexterity Saving Throws
++2 ... Acrobatics Skill
++4 ... Sleight of Hand Skill  *
++2 ... Stealth Skill
+
+
+Constitution 13
++1 ... Constitution Ability Checks
++1 ... Constitution Saving Throws
+
+Intelligence 8
+-1 ... Intelligence Ability Checks
+-1 ... Intelligence Saving Throws
++1 ... Arcana Skill  *
+-1 ... History Skill
+-1 ... Investigation Skill
++1 ... Nature Skill  *
+-1 ... Religion Skill
+
+Wisdom 12
++1 ... Wisdom Ability Checks
++3 ... Wisdom Saving Throws *
++1 ... Animal Handling Skill
++1 ... Insight Skill
++1 ... Medicine Skill
++1 ... Perception Skill
++1 ... Survival Skill
+
+Charisma 17
++3 ... Charisma Ability Checks
++5 ... Charisma Saving Throws *
++5 ... Deception Skill  *
++3 ... Intimidation Skill
++3 ... Performance Skill
++3 ... Persuasion Skill
+
+COMBAT [PHB p. 189]
+
+11 ... Passive Perception
++2 ... Initiative Modifier
+
+Armor Class 15 ... Armor worn: none (natural armor)
+
+30 ft. Speed ... Base distance per move
+
+9 hit points ... 1d8 Hit Dice
+
+
+Dagger. Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. 1d4+2 piercing damage. (If thrown, normal range to 20 ft.; disadvantage long range 21 to 60 ft.)
+
+
+Dagger (offhand as bonus action). As above but only 1d4 piercing damage.
+
+
+Light Crossbow. Ranged Weapon Attack: +4 to hit. Hit: 1d8+2 piercing damage. (Normal range to 80 ft.; disadvantage long range 81 to 320 ft. Must be used two-handed, reloading limits to only one attack per round regardless of extra attacks.)
+
+
+Eldritch Blast Cantrip. Ranged Spell Attack: +5 to hit, target one creature within 120 ft. range. Hit: 1d10 force damage with 1 beam(s). (If more than one beam, blast can be used as multiple beams of 1d10, each with separate attack roll to hit as one attack action.)
+
+
+FEATURES, TRAITS, SPECIAL ABILITIES
+
+Charlatan Background [PHB p. 128]
+
+• Feature: False Identity.
+
+• Traits: Never explains scars. Defensive manner.
+
+• Ideal: Never repeats the same con.
+
+• Bond: Gives money to orphans.
+
+• Flaw: Believes own lies.
+
+
+Proficiencies & Languages
+• Proficiency Bonus: +2
+• Armor: light armor
+• Weapons: simple weapons
+• Tools: disguise kit, forgery kit, smith's tools, tinker's tools
+• Saving Throws: Wisdom, Charisma
+• Skills: Arcana, Deception, Nature, Sleight of Hand
+• Languages: Common, Gnomish
+
+
+Autognome Traits [SJAiS p. 11]
+
+• Creature Type: Construct
+
+• Age: 108 years old
+
+• Small Size (3' 6", 42 lbs.)
+
+• Armored Casing (natural AC)
+
+• Built for Success (+1d4; use times betw. long rests)
+
+• Mechanical Nature (resist. poison, immune disease, adv. vs. paralyzed or poisoned; doesn't eat, sleep, breathe)
+
+• Sentry's Rest (6 hrs. as 8 hrs. rest)
+
+• Specialized Design (tool proficiencies)
+
+• Healing Machine (Mending healing)
+
+• Armored Casing (minimum AC 13 + Dex modf.)
+
+
+Warlock Class Features [PHB p. 106, TCoE p. 73]
+
+• Otherworldly Patron (a marid padishah)
+
+• Pact Magic (all cast as 1st level spells, regain spell slots after short or long rest)
+
+• Genie's Vessel (bottled respite once betw. long rests; genie's wrath to add 2 cold damage once during turn
+
+Eldritch Blast Cantrip. Ranged Spell Attack: +5 to hit, target one creature within 120 ft. range. Hit: 1d10 force damage with 1 beam(s). (If more than one beam, blast can be used as multiple beams of 1d10, each with separate attack roll to hit as one attack action.)
+
+Spellcasting [PHB p. 201]
+
+Spell Attack Modifier +5
+Spell Save DC 13
+Cantrips Known: Eldritch Blast, Minor Illusion
+
+
+Known Spells (1 spell slots)
+Fog Cloud, Hex
+
+EQUIPMENT & TREASURE
+
+
+Carried Gear [PHB, p. 143]: leather armor (AC 11), two (2) daggers, light crossbow and 20 bolts, disguise kit (cosmetics, hair dye, props, etc.), belt pouch, set of fine clothes, tools of the con (various small convincing fakes). (This load is about 36 lbs.; add 1 lb. per 50 coins carried.)
+
+
+Coins & Gems: 11 gold pieces (gp); 43 silver pieces (sp); 71 copper pieces (cp); 2 gems (worth 10 gp each)

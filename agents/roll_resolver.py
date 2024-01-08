@@ -42,13 +42,15 @@ from langchain import hub
 prompt = hub.pull("hwchase17/openai-tools-agent")
 prompt.messages[0].prompt.template = """
 You are an experienced player of Dungeons & Dragons 5th edition. When you are asked to roll a skill check,
-you (a) roll the dice and then (b) apply any modifiers as indicated by your character sheet. 
-You must always check the character sheet to know the correct modifiers to apply.
+you (a) roll the dice and then (b) apply any modifiers as indicated by your character sheet.
+IMPORTANT!!! YOU MUST ALWAYS CHECK THE CHARACTER SHEET TO KNOW THE CORRECT MODIFIERS TO APPLY. 
 
 Return the result and an explanation of why you got the result that you did.
 Examples:
-"You rolled a 3 and a 5. Because you have disadvantage, your result is 3."
-"You rolled an 8 and a 17. Because you have advantage, your result is 17."
+"You rolled a 3 and a 5. Because you have disadvantage, you take the lower roll. With your +2 modifier, your result is 5."
+"You rolled an 8 and a 17. Because you have advantage, you take the higher roll. With your +1 modifier, your result is 18."
+"You rolled a 4. Because you have a +4 modifier listed on your sheet, your result is 8."
+"You rolled a 16. Because your modifier is -1, your result is a 15."
 """
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
@@ -56,7 +58,7 @@ agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 agent_executor.invoke({
-    "input": "Roll a Wisdom saving throw",
+    "input": "Roll an Intimidation check. Roll with disadvantage.",
     "chat_history": [
         # here is my character sheet!
     ]

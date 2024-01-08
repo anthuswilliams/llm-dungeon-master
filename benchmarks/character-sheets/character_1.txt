@@ -1,0 +1,148 @@
+Name: Captain Cura
+Race/Ancestry/Heritage: Firbolg
+Class & Level: Barbarian 1
+Background: Pirate
+Alignment: Chaotic Neutral
+Experience: 0 xp
+
+
+ABILITY SCORES & ABILITIES
+(* includes +2 proficiency bonus; ** includes expertise, if any)
+
+Strength 16
++3 ... Strength Ability Checks
++5 ... Strength Saving Throws *
++5 ... Athletics Skill  *
+480 lbs. ... Maximum Carrying Capacity
+960 lbs. ... Max. Push or Drag (Speed -5 ft.)
+960 lbs. ... Maximum Lift
+
+Dexterity 13
++1 ... Dexterity Ability Checks
++1 ... Dexterity Saving Throws
++1 ... Acrobatics Skill
++1 ... Sleight of Hand Skill
++1 ... Stealth Skill
+
+
+Constitution 14
++2 ... Constitution Ability Checks
++4 ... Constitution Saving Throws *
+
+Intelligence 10
++0 ... Intelligence Ability Checks
++0 ... Intelligence Saving Throws
++0 ... Arcana Skill
++0 ... History Skill
++0 ... Investigation Skill
++2 ... Nature Skill  *
++0 ... Religion Skill
+
+Wisdom 14
++2 ... Wisdom Ability Checks
++2 ... Wisdom Saving Throws
++4 ... Animal Handling Skill  *
++2 ... Insight Skill
++2 ... Medicine Skill
++4 ... Perception Skill  *
++2 ... Survival Skill
+
+Charisma 8
+-1 ... Charisma Ability Checks
+-1 ... Charisma Saving Throws
+-1 ... Deception Skill
+-1 ... Intimidation Skill
+-1 ... Performance Skill
+-1 ... Persuasion Skill
+
+COMBAT [PHB p. 189]
+
+14 ... Passive Perception
++1 ... Initiative Modifier
+
+Armor Class 13 ... Armor worn: none (Unarmored Defense)
+
+30 ft. Speed ... Base distance per move
+
+14 hit points ... 1d12 Hit Dice
+
+
+Greataxe. Melee Weapon Attack: +5 to hit, reach 5 ft. Hit: 1d12+3 slashing damage. (Must be used two-handed.)
+
+
+Handaxe. Melee Weapon Attack: +5 to hit, reach 5 ft. Hit: 1d6+3 slashing damage. (If thrown, normal range to 20 ft.; disadvantage long range 21 to 60 ft.)
+
+
+Javelin. Melee Weapon Attack: +5 to hit, reach 5 ft. Hit: 1d6+3 piercing damage. (If thrown, normal range to 30 ft.; disadvantage long range 31 to 120 ft.)
+
+
+Rage. Lasts 1 minute (10 rounds), or until unconscious, haven't attacked or been hit.
+
+
+FEATURES, TRAITS, SPECIAL ABILITIES
+
+Pirate Background [PHB p. 139]
+
+• Feature: Bad Reputation.
+
+• Traits: Always cases for heists. Inconsiderate of others.
+
+• Ideal: Because infamy is cool.
+
+• Bond: Seeks revenge on rival pirates.
+
+• Flaw: Reckless for a big score.
+
+
+Proficiencies & Languages
+• Proficiency Bonus: +2
+• Armor: light armor, medium armor, shields
+• Weapons: simple weapons, martial weapons
+• Tools: navigator's tools, vehicles (watercraft)
+• Saving Throws: Strength, Constitution
+• Skills: Animal Handling, Athletics, Nature, Perception
+• Languages: Common, Elvish, Giant
+
+
+Firbolg Traits [VGtM p. 106]
+
+• Creature Type: Fey
+
+• Age: 88 years old
+
+• Medium Size (8' 0", 417 lbs.)
+
+• Firbolg Magic (detect magic or disguise self once per short rest)
+
+• Hidden Step (invisible as bonus action once per short rest)
+
+• Powerful Build (carry, push, drag, lift as if large size)
+
+• Speech Of Beast And Leaf (Charisma adv. with beasts and animals)
+
+
+Barbarian Class Features
+[PHB p. 46, XVtE p. 9]
+
+• Rage (2/day)
+
+• Unarmored Defense (AC)
+
+Rage Effects [PHB p. 48]
+
+• Advantage on STR checks and saves
+
+• +2 bonus on STR-based melee damage
+
+• Resistence (half damage) from bludgeoning, piercing and slashing damage.
+
+Rage. Lasts 1 minute (10 rounds), or until unconscious, haven't attacked or been hit.
+
+
+EQUIPMENT & TREASURE
+
+
+Carried Gear [PHB, p. 143]: greataxe, two (2) handaxes, five (5) javelins, explorer's pack (backpack, a bedroll, a mess kit, a tinderbox, 10 torches, 10 days' rations, waterskin, 50 feet of hempen rope on the side), belt pouch, set of common clothes, rope (silk, 50 feet), belaying pin (club), a non-magical lucky charm. (This load is about 88 lbs.; add 1 lb. per 50 coins carried.)
+
+
+Coins & Gems: 7 gold pieces (gp); 48 silver pieces (sp); 58 copper pieces (cp); 2 gems (worth 10 gp each)

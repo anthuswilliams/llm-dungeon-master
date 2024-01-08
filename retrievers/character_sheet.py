@@ -21,7 +21,7 @@ def connect():
     embedding_function = OpenAIEmbeddings()
 
     db = lancedb.connect('db')
-    table = db.open_table('characters')
+    table = db.open_table('characters_fast')
     return LanceDB(table, embedding_function)
 
 
@@ -31,7 +31,7 @@ def generate_character_embeddings(path):
     db = lancedb.connect("db")
     character_sheet = load_character_sheet(path)
     table = db.create_table(
-        "characters",
+        "characters_fast",
          data=[
             {
                 "vector": embeddings.embed_query("Hello World"),
@@ -70,5 +70,5 @@ def retriever():
     
 # Create a retriever that fetches documents from multiple tables
 if __name__ == "__main__":
-    # generate_character_embeddings("agents/05_formatted.json")
-    print(retriever().invoke("What is Nebula's equipment?"))
+    generate_character_embeddings("agents/05_fast.txt")
+    print(retriever().invoke("What is Cura's equipment?"))
