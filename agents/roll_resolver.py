@@ -57,9 +57,10 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-agent_executor.invoke({
-    "input": "Roll an Intimidation check. Roll with disadvantage.",
-    "chat_history": [
-        # here is my character sheet!
-    ]
-})
+if __name__ == "__main__":
+    agent_executor.invoke({
+        "input": "Roll an Intimidation check. Roll with disadvantage.",
+        "chat_history": [
+            # here is my character sheet!
+        ]
+    })
