@@ -18,7 +18,9 @@ Individual agents are developed and tested using https://github.com/anthuswillia
 
 There are a number of complex interactions involved in a round of combat.  
 
-1. Initiative tracking 
+1. Initiative tracking
+- generate turn order
+- apply turn order as battle proceeds 
 2. Spacial awareness of the model
 3. Checking character/enemy sheets to make sure the moves called for are valid
 4. Tracking of current HP and used resources
