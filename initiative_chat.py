@@ -1,6 +1,7 @@
 from langchain.chat_models import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
+from langchain.utils.openai_functions import convert_pydantic_to_openai_function
 from langchain import hub
 from langchain.pydantic_v1 import BaseModel, Field
 
@@ -9,16 +10,21 @@ import random
 chat = ChatOpenAI()
 
 system_prompt = """
-You are an experienced dungeon master for Dungeons & Dragons 5th edition. We are going to play a short encounter.
-You will be in charge of generating the encounter and keeping track of the order in which they take their turns.
-
-There will be one player fighting two goblins (Goblin A and Goblin B) in this encounter.
-You will ask what each participants name and their Initiative and wait for their response. The
-player with the highest initiative will go first.
-
-After you get each inititive, you will ask each participant and the goblins what they would like to do on their turn.
+You are an experienced dungeon-master for Dungeons & Dragons 5th edition. You are administering an encounter
+between a player and enemies.
+Participants: 1 Human Player, 2 AI-Controlled Goblins ("Grothnar" and "Halbirk")
+Functions:
+TalkToPlayer(): Function to communicate with the human player.
+TalkToGoblin(): Function to communicate with the AI-controlled goblins. You must specify which Goblin you are talking to and what you want to ask, for example "Halbirk, what do you want to do?"
+Procedure:
+Initiative Roll: The AI DM begins by using TalkToPlayer() and TalkToGoblin() to ask each participant for their Initiative.
+Collecting Initiative Results: The AI DM receives and records the Initiative from each participant.
+Determining Initiative Order: The AI DM arranges the participants in descending order of their Initiative, from highest to lowest.
+Commencing Combat:
+You start the combat round with the participant who rolled the highest initiative.
+Uses TalkToPlayer() to engage with the human player and TalkToGoblin() to manage the AI goblins' actions.
+Ensures that each participant takes their turn according to the initiative order. Continue cycling through the initiative order until the combat has ended.
 """
-
 
 def create_goblin_prompt(name):
     goblin_stats = f"""\n
@@ -33,27 +39,24 @@ def create_goblin_prompt(name):
     return prompt
 
 
-def talk_to_goblin_a(gm_response):
-    goblin_prompt = create_goblin_prompt("Goblin A")
-    goblin_messages = [
-        SystemMessage(content=goblin_prompt),
-        HumanMessage(content=gm_response),
+goblin_messages = {
+    "Grothnar": [
+        SystemMessage(content=create_goblin_prompt("Grothnar")),
+    ],
+    "Halbirk": [
+        SystemMessage(content=create_goblin_prompt("Halbirk")),
+    ]
+}
+
+def talk_to_goblin(message):
+    global goblin_messages
+    identifier = "Grothnar" if "Grothnar" in message else "Halbirk"
+    goblin_messages[identifier] = goblin_messages[identifier] + [
+        HumanMessage(content=message),
     ]
 
-    goblin_response = chat.invoke(goblin_messages)
+    goblin_response = chat.invoke(goblin_messages[identifier])
     return goblin_response
-
-
-def talk_to_goblin_b(gm_response):
-    goblin_prompt = create_goblin_prompt("Goblin B")
-    goblin_messages = [
-        SystemMessage(content=goblin_prompt),
-        HumanMessage(content=gm_response),
-    ]
-
-    goblin_response = chat.invoke(goblin_messages)
-    return goblin_response
-
 
 def talk_to_player(gm_response):
     print(gm_response)
@@ -61,30 +64,20 @@ def talk_to_player(gm_response):
     player_response = input()
     return player_response
 
-
 class TalkToGoblin(BaseModel):
-    query: str = Field(
-        description="Query to talk to the goblins.  The query should be full sentences."
-    )
-
-
+    identifier: str = Field('Which goblin you want to talk to, for example "A"')
+    query: str = Field("The question you wish to ask the goblin")
+    
 tools = [
     Tool(
-        name="Chat_with_Goblin_A",
-        func=talk_to_goblin_a,
-        args_schema=TalkToGoblin,
-        description="Call this to to talk to Goblin A.",
+        name="TalkToGoblin",
+        func=talk_to_goblin,
+        description="Call this to to talk to one of the goblins.",
     ),
     Tool(
-        name="Chat_with_Goblin_B",
-        func=talk_to_goblin_b,
-        args_schema=TalkToGoblin,
-        description="Call this to to talk to Goblin B.",
-    ),
-    Tool(
-        name="Chat_with_Player",
+        name="TalkToPlayer",
         func=talk_to_player,
-        description="Call this to to talk to the player or Captain Cura.",
+        description="Call this to to talk to the player.",
     ),
 ]
 
@@ -93,14 +86,19 @@ prompt = hub.pull("hwchase17/openai-tools-agent")
 prompt.messages[0].prompt.template = system_prompt
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+# llm_with_tools = llm.bind(
+#     functions=[
+#         convert_pydantic_to_openai_function(TalkToGoblin),
+#     ]
+# )
 
 agent = create_openai_tools_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
 if __name__ == "__main__":
     agent_executor.invoke(
         {
-            "input": "Start the encounter. The player's character is Captain Cura and their inititative is 15.",
+            "input": "Start the encounter.",
             "chat_history": [
                 # here is my character sheet!
             ],
