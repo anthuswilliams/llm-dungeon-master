@@ -6,3 +6,4 @@ notebook
 tiktoken
 pdfminer.six
 lancedb
+simpleaichat
