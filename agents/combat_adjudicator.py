@@ -1,12 +1,11 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
 from langchain import hub
-from agents.enemy import Goblin
 
-system_prompt = """
+system_prompt_template = """
 You are an experienced dungeon-master for Dungeons & Dragons 5th edition. You are administering an encounter
 between a player and enemies.
-Participants: 1 Human Player, 2 AI-Controlled Goblins ("Grothnar" and "Halbirk")
+Participants: {participants}
 Functions:
 TalkToPlayer(): Function to communicate with the human player.
 TalkToGrothnar(): Function to communicate with the AI-controlled goblin, Grothnar
@@ -31,41 +30,20 @@ def talk_to_player(gm_response):
     player_response = input()
     return player_response
     
+def start_encounter(description, tools, participants):
 # Get the prompt to use - you can modify this!
-prompt = hub.pull("hwchase17/openai-tools-agent")
-prompt.messages[0].prompt.template = system_prompt
+    prompt = hub.pull("hwchase17/openai-tools-agent")
+    prompt.messages[0].prompt.template = system_prompt_template.format(participants=participants)
 
-llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-
-if __name__ == "__main__":
-    goblin_a = Goblin("Grothnar")
-    goblin_b = Goblin("Halbirk")
-
-    tools = [
-        Tool(
-            name="TalkToGrothnar",
-            func=goblin_a.talk,
-            description="Call this to to talk to one of the goblins.",
-        ),
-            Tool(
-            name="TalkToHalbirk",
-            func=goblin_b.talk,
-            description="Call this to to talk to one of the goblins.",
-        ),
-        Tool(
-            name="TalkToPlayer",
-            func=talk_to_player,
-            description="Call this to to talk to the player.",
-        ),
-    ]
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
     agent_executor.invoke(
         {
-            "input": "Start the encounter.",
+            "input": description,
             "chat_history": [
                 # here is my character sheet!
             ],
         }
-    )
+    )  

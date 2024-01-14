@@ -13,6 +13,7 @@ class StatBlock(BaseModel):
     armor_class: int = Field("The enemy's Armor Class")
     hit_point: int = Field("The enemy's Hit Points")
     speed: str = Field("The enemy's base movement speed")
+    initiative: str = Field("The enemy's initiative modifier, for example '+1'")
 
     strength: str = Field("The enemy's strength (STR), should be of the form [[Value]] ([[Modifier]])")
     dexterity: str = Field("The enemy's dexterity (DEX), should be of the form [[Value]] ([[Modifier]])")
