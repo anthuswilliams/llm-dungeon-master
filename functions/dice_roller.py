@@ -5,7 +5,7 @@ from typing import List
 
 
 def dice_roll(query: str) -> List[int]:
-    results = re.search(r"^(\d+)d(\d+)((\+|-)\d+)?$", query)
+    results = re.search(r"^(\d+)d(\d+)(\s?(\+|-)\s?\d+)?$", query)
     if not results:
         raise ValueError(f"query {query} is uninterpretable")
 
@@ -19,7 +19,7 @@ def dice_roll(query: str) -> List[int]:
     # In other cases, the intent is not to discard a roll but to sum them, e.g. when rolling for damage it might call for 3d6+3
     result = [random.randint(1, int(val)) for i in range(int(num))]
     if modifier:
-        modifier = int(modifier[1:]) * (-1 if modifier[0] == "-" else 1)
+        modifier = int(modifier.strip()[1:]) * (-1 if modifier.strip()[0] == "-" else 1)
         return sum(result) + modifier
     else:
         return result
