@@ -51,13 +51,13 @@ def generate_character_embeddings(path):
 
 def retriever():
     # Create a retriever that fetches documents from multiple tables
-    lance_retriever = connect().as_retriever()
-
+    lance_retriever = connect().as_retriever(search_kwargs={'k': 1})
     template = """Answer the question based only on the following context:
     {context}.
 
     Question: {question}
     """
+
     prompt = ChatPromptTemplate.from_template(template)
     model = ChatOpenAI()
 
@@ -69,11 +69,16 @@ def retriever():
     )
 
 
-def retriever_tool():
-    return connect().as_retriever()
+def retriever_tool(question):
+    response = retriever().invoke(question)
+    return response
     
 
 # Create a retriever that fetches documents from multiple tables
 if __name__ == "__main__":
-    # generate_character_embeddings("agents/05_fast.txt")
-    print(retriever().invoke("Give me Captain Cura's character sheet"))
+    print(retriever().invoke("What is Mendiete Skiari's traits, bonds and flaws?"))
+    # for testing the db directly
+    # db = connect()
+    # query = "Who is Captain Cura's class?"
+    # docs = db.similarity_search(query)
+    # print(docs)
