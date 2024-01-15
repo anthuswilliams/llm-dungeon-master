@@ -1,9 +1,7 @@
 from langchain.chat_models import ChatOpenAI
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
-from langchain.utils.openai_functions import convert_pydantic_to_openai_function
 from langchain import hub
-from langchain.pydantic_v1 import BaseModel, Field
 from functions.dice_roller import dice_roll
 
 prompt_template = """
@@ -48,7 +46,7 @@ tools = [
 
 
 class Enemy:
-    def __init__(self, name, stats, identifier):
+    def __init__(self, name, stats, identifier, injected_tools=None):
         # Get the prompt to use - you can modify this!
         prompt = hub.pull("hwchase17/openai-tools-agent")
         self.messages = []
@@ -58,9 +56,10 @@ class Enemy:
 
         llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
-        agent = create_openai_tools_agent(llm, tools, prompt)
+        t = injected_tools or tools
+        agent = create_openai_tools_agent(llm, t, prompt)
         self.executor = AgentExecutor(
-            agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
+            agent=agent, tools=t, verbose=True, handle_parsing_errors=True
         )
 
     def talk(self, message):
