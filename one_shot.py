@@ -5,7 +5,7 @@ import agents.enemy as enemy
 from langchain.agents import Tool
 
 encounter = e.design_encounter(
-    "Design a medium difficulty encounter for 1 level 7 player. It should be set in a city."
+    "Design a medium difficulty encounter for 1 level 1 player. It should be set in a city."
 )
 print(encounter)
 
@@ -13,10 +13,10 @@ tools = [
     Tool(
         name="TalkToPlayer",
         func=talk_to_player,
-        description="Call this to to talk to the player.",
+        description="Call this to to talk to the Player.",
     ),
 ]
-participants = [{"type": "Player", "name": "Player"}]
+participants = [{"type": "Player", "name": "Captain Cura"}]
 
 for i, e in enumerate(encounter["enemies"]):
     # seed an enemy agent

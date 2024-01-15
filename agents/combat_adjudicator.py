@@ -1,6 +1,9 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
+from langchain.tools.retriever import create_retriever_tool
 from langchain import hub
+
+import retrievers.character_sheet as charsheet
 
 system_prompt_template = """
 You are an experienced dungeon-master for Dungeons & Dragons 5th edition. You are administering an encounter
@@ -10,6 +13,9 @@ Functions:
 {participant_functions}
 
 Procedure:
+Step Zero: Loading Relevant Character Sheets
+Use the RetrieveCharacterSheet() function to load the character sheets for all players involved in the encounter.
+
 Step One: Initative
 Initiative Roll: You begin by using the functions provided to ask each participant for their Initiative.
 Collecting Initiative Results: You receive and record the Initiative from each participant, and arrange them in descending order, from highest to lowest.
@@ -17,7 +23,11 @@ Collecting Initiative Results: You receive and record the Initiative from each p
 Step 2: Combat
 Action: Starting with the participant who rolled the highest initiative, ask for their action by using the TalkTo* functions.
 (Example: if the Player has rolled the highest initiative, use the TalkToPlayer() function to prompt them for their action.)
-Resolving Action: When the participant declares their action, adjudicate the results and describe the outcome of their action. 
+Evaluating Action: When the participant declares their action, use the RetrieveCharacterSheet() function to determine how and whether
+their action can be applied.
+Resolving Action: Prompt the participant to roll any attack rolls, damage rolls, skill checks, etc.
+Determine Outcome: Use  the RetrieveCharacterSheet function for the target to determine how the participant's action affects them. Adjudicate the results and describe
+the outcome of the action.
 
 Step 3: State Tracking
 Update State: Output the conditions of all participants, including health, conditions (prone, unconscious, and so on)
@@ -25,13 +35,16 @@ Update State: Output the conditions of all participants, including health, condi
 Repeat Steps 2 and 3 until the encounter has ended.
 """
 
+# Will add:
+#   1. function to fetch participant (character + enemy) stats from database
+#   2. adjudication of actions based on character sheets (e.g. characters are unconscious when their HP reaches 0)
+#   3. adjudication of allowable actions, e.g. rejecting player actions that are incompatible with their character sheet
 
 def talk_to_player(gm_response):
     print(gm_response)
 
     player_response = input()
-    return player_response
-
+    return player_response    
 
 def start_encounter(description, tools, participants):
     # Get the prompt to use - you can modify this!
@@ -39,13 +52,21 @@ def start_encounter(description, tools, participants):
     participant_functions = "\n".join(
         [f'TalkTo{p["name"]} - Function to talk to {p["name"]}' for p in participants]
     )
-    participant_names = [p["name"] for p in participants]
+    participant_names = [f'Name: {p["name"]}\nType: {p["type"]}' for p in participants]
     prompt.messages[0].prompt.template = system_prompt_template.format(
-        participants=participant_names, participant_functions=participant_functions
+        participants="\n\n".join(participant_names), participant_functions=participant_functions
     )
 
     llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
+    tools_with_retriever = [
+        create_retriever_tool(
+            name="CharacterSheet",        
+            retriever=charsheet.retriever_tool(),
+            description="call this to get information from the character sheet"
+        )
+        *tools
+    ]
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(
         agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
@@ -58,3 +79,7 @@ def start_encounter(description, tools, participants):
             ],
         }
     )
+
+if __name__ == "__main__":
+
+    participants = [{"type": "Player", "name": "Player"}, {"type": "Thug", "name": "Big Pete"}]

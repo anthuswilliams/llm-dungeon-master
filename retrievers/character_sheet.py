@@ -21,7 +21,7 @@ def connect():
     embedding_function = OpenAIEmbeddings()
 
     db = lancedb.connect('db')
-    table = db.open_table('characters_fast')
+    table = db.open_table('character_sheets')
     return LanceDB(table, embedding_function)
 
 
@@ -67,8 +67,13 @@ def retriever():
         | model
         | StrOutputParser()
     )
+
+
+def retriever_tool():
+    return connect().as_retriever()
     
+
 # Create a retriever that fetches documents from multiple tables
 if __name__ == "__main__":
-    generate_character_embeddings("agents/05_fast.txt")
-    print(retriever().invoke("What is Cura's equipment?"))
+    # generate_character_embeddings("agents/05_fast.txt")
+    print(retriever().invoke("Give me Captain Cura's character sheet"))
