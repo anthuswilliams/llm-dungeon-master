@@ -4,10 +4,7 @@ from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
 from langchain.utils.openai_functions import convert_pydantic_to_openai_function
 from langchain import hub
 from langchain.pydantic_v1 import BaseModel, Field
-
-import random
-from typing import List
-import re
+from functions.dice_roller import dice_roll
 
 prompt_template = """
 You are a {name} in a game of Dungeons & Dragons 5th edition.  You will be identified by the name {identifier}.
@@ -40,26 +37,6 @@ def create_enemy_prompt(name, stat_block, identifier):
     )
     return prompt
 
-
-def dice_roll(query: str) -> List[int]:
-    results = re.search(r"^(\d+)d(\d+)((\+|-)\d+)?$", query)
-    if not results:
-        raise ValueError(f"query {query} is uninterpretable")
-
-    num = results.group(1)
-    val = results.group(2)
-    modifier = results.group(3)
-    
-    # TODO: return signature here is inconsistent. The issue is we haven't nailed down how the caller is asking for rolls.
-    #  For example, when rolling with advantage, it sometimes calls for 2d20 and keeps the higher, and sometimes it calls for 2d20kh1, i.e. expecting us to do that here
-    #
-    # In other cases, the intent is not to discard a roll but to sum them, e.g. when rolling for damage it might call for 3d6+3 
-    result = [random.randint(1, int(val)) for i in range(int(num))]
-    if modifier:
-        modifier = int(modifier[1:]) * (-1 if modifier[0] == "-" else 1)
-        return sum(result) + modifier
-    else:
-        return result    
 
 tools = [
     Tool(
