@@ -31,7 +31,7 @@ def generate_character_embeddings(path):
     db = lancedb.connect("db")
     character_sheet = load_character_sheet(path)
     table = db.create_table(
-        "characters_fast",
+        "character_sheets",
          data=[
             {
                 "vector": embeddings.embed_query("Hello World"),
