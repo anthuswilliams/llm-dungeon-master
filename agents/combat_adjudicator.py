@@ -13,11 +13,8 @@ Functions:
 {participant_functions}
 
 Procedure:
-Step Zero: Loading Relevant Character Sheets
-Use the RetrieveCharacterSheet() function to load the character sheets for all players involved in the encounter.
-
 Step One: Initative
-Initiative Roll: You begin by using the TalkTo* functions provided to ask each participant for their Initiative.
+Initiative Roll: You begin by using the TalkTo* functions provided to ask each participant for their Initiative, Health points, status effects, etc.
 Collecting Initiative Results: You receive and record the Initiative from each participant, and arrange them in descending order, from highest to lowest.
 
 Step 2: Combat
