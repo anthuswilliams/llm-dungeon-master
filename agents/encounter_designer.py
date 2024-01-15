@@ -1,3 +1,4 @@
+import json
 import simpleaichat
 
 from pydantic import BaseModel, Field
@@ -70,5 +71,9 @@ def design_encounter(instructions):
 
 
 if __name__ == "__main__":
-    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a desert.")
+    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a temple.")
+    for e in encounter["enemies"]:
+        camelized_name = e["name"].replace(" ", "_").lower()
+        with open(f"benchmarks/enemies/{camelized_name}.json", "w") as fh:
+            fh.write(json.dumps(e, indent=4))
     print(encounter)
