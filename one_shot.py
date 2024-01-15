@@ -13,10 +13,10 @@ tools = [
     Tool(
         name="TalkToPlayer",
         func=talk_to_player,
-        description="Call this to to talk to the Player.",
+        description="Call this to to talk to the player.",
     ),
 ]
-participants = [{"type": "Player", "name": "Captain Cura"}]
+participants = [{"type": "Player", "name": "Player"}]
 
 for i, e in enumerate(encounter["enemies"]):
     # seed an enemy agent

@@ -17,7 +17,7 @@ Step Zero: Loading Relevant Character Sheets
 Use the RetrieveCharacterSheet() function to load the character sheets for all players involved in the encounter.
 
 Step One: Initative
-Initiative Roll: You begin by using the functions provided to ask each participant for their Initiative.
+Initiative Roll: You begin by using the TalkTo* functions provided to ask each participant for their Initiative.
 Collecting Initiative Results: You receive and record the Initiative from each participant, and arrange them in descending order, from highest to lowest.
 
 Step 2: Combat
@@ -26,8 +26,8 @@ Action: Starting with the participant who rolled the highest initiative, ask for
 Evaluating Action: When the participant declares their action, use the RetrieveCharacterSheet() function to determine how and whether
 their action can be applied.
 Resolving Action: Prompt the participant to roll any attack rolls, damage rolls, skill checks, etc.
-Determine Outcome: Use  the RetrieveCharacterSheet function for the target to determine how the participant's action affects them. Adjudicate the results and describe
-the outcome of the action.
+Prompt the target for any attributes relevant to the outcome such as Armor Class, saving throws, etc.
+Determine Outcome: Adjudicate the results and describe the outcome of the action. Notify any affected participants of any damage or status effects.
 
 Step 3: State Tracking
 Update State: Output the conditions of all participants, including health, conditions (prone, unconscious, and so on)
@@ -35,10 +35,6 @@ Update State: Output the conditions of all participants, including health, condi
 Repeat Steps 2 and 3 until the encounter has ended.
 """
 
-# Will add:
-#   1. function to fetch participant (character + enemy) stats from database
-#   2. adjudication of actions based on character sheets (e.g. characters are unconscious when their HP reaches 0)
-#   3. adjudication of allowable actions, e.g. rejecting player actions that are incompatible with their character sheet
 
 def talk_to_player(gm_response):
     print(gm_response)
@@ -58,15 +54,6 @@ def start_encounter(description, tools, participants):
     )
 
     llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-
-    tools_with_retriever = [
-        create_retriever_tool(
-            name="CharacterSheet",        
-            retriever=charsheet.retriever_tool(),
-            description="call this to get information from the character sheet"
-        )
-        *tools
-    ]
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(
         agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
