@@ -75,11 +75,11 @@ Note: The AI Assistant must recognize the importance of distinct interaction pha
     before initiating communication with the other party. The assistant should make it clear when it transitions from player interaction 
     to DM reporting, maintaining the integrity and flow of the game. 
     Do not make any assumptions about the succesfullness of the player's actions.  The AI DM will determine the outcome of the player's actions.
+    After you call TalkToDM() end the interaction.
 """
 
 def talk_to_player(gm_response):
     print(gm_response)
-
     player_response = input()
     return player_response    
 
@@ -126,7 +126,7 @@ tools = [
 
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, injected_tools=None):
         # Get the prompt to use - you can modify this!
         prompt = hub.pull("hwchase17/openai-tools-agent")
         self.messages = []
@@ -134,9 +134,10 @@ class Player:
 
         llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
-        agent = create_openai_tools_agent(llm, tools, prompt)
+        t = injected_tools or tools
+        agent = create_openai_tools_agent(llm, t, prompt)
         self.executor = AgentExecutor(
-            agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
+            agent=agent, tools=t, verbose=True, handle_parsing_errors=True
         )
 
     def talk(self, message):
@@ -154,5 +155,5 @@ class Player:
 
 
 if __name__ == "__main__":
-    player = Player("Captain Cura")
+    player = Player()
     player.talk("A thug has tried to tackle Captain Cura.  Please roll a athletics check.")
