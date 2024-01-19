@@ -1,6 +1,7 @@
-from agents.combat_adjudicator import start_encounter, talk_to_player
+from agents.combat_adjudicator import start_encounter
 import agents.encounter_designer as e
 import agents.enemy as enemy
+import agents.player_assistant as pa
 
 from langchain.agents import Tool
 
@@ -11,12 +12,12 @@ print(encounter)
 
 tools = [
     Tool(
-        name="TalkToPlayer",
-        func=talk_to_player,
-        description="Call this to to talk to the player. Use complete sentences!",
+        name="TalkToPlayerAssistant",
+        func=pa.PlayerAssistant().talk,
+        description="Call this to to talk to the player's assistant. Use complete sentences!",
     ),
 ]
-participants = [{"type": "Player", "name": "Player"}]
+participants = [{"type": "Player", "name": "Captain Cura"}]
 
 for i, e in enumerate(encounter["enemies"]):
     # seed an enemy agent

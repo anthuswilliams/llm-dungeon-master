@@ -106,7 +106,7 @@ tools = [
 ]
 
 
-class PlayerAssitant:
+class PlayerAssistant:
     def __init__(self, injected_tools=None):
         # Get the prompt to use - you can modify this!
         prompt = hub.pull("hwchase17/openai-tools-agent")
@@ -136,5 +136,5 @@ class PlayerAssitant:
 
 
 if __name__ == "__main__":
-    player = PlayerAssitant()
+    player = PlayerAssistant()
     player.talk("A thug has tried to tackle Captain Cura.  Please roll a athletics check.")
