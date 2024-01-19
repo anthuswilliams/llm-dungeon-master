@@ -1,10 +1,11 @@
 # torch
+lancedb
 langchain
 langchainhub
-openai
 notebook
-tiktoken
-pdfminer.six
-lancedb
+openai
 pandas
+pdfminer.six
+pytest
 simpleaichat
+tiktoken
