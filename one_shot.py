@@ -13,7 +13,7 @@ tools = [
     Tool(
         name="TalkToPlayer",
         func=talk_to_player,
-        description="Call this to to talk to the player.",
+        description="Call this to to talk to the player. Use complete sentences!",
     ),
 ]
 participants = [{"type": "Player", "name": "Player"}]
@@ -32,7 +32,7 @@ for i, e in enumerate(encounter["enemies"]):
         Tool(
             name=f"TalkTo{identifier}",
             func=enemy.Enemy(enemy_type, e, identifier).talk,
-            description=f"Call this to to talk to {identifier}.",
+            description=f"Call this to to talk to {identifier}. Use complete sentences!",
         ),
     )
 
