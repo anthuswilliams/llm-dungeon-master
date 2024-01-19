@@ -3,7 +3,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
 from langchain import hub
 from langchain_core.tools import BaseTool
-from functions.dice_roller import dice_roll
+from langchain.schema import AgentFinish
 
 from typing import Union
 
@@ -81,32 +81,13 @@ Note: The AI Assistant must recognize the importance of distinct interaction pha
 def talk_to_player(gm_response):
     print(gm_response)
     player_response = input()
-    return player_response    
+    return player_response   
 
-class TalktoDM(BaseTool):
-    name = "Use this tool to talk to the AI DM"
-    description = "This tool will return the input given by the player to the AI DM."
+def talk_to_dm(assistant_message): 
+    return AgentFinish(return_values={"output": assistant_message}, log=assistant_message)
 
-    def __init__(self):
-        super().__init__()
-        self.return_direct = True
-
-    def talk(self, player_response):
-        # Implement the method here
-        return player_response
-    
-    def _run(self, work_order_id: str):
-        raise NotImplementedError("implement run function")
-
-    def _arun(self, radius: Union[int, float]):
-        raise NotImplementedError("This tool does not support async")
 
 tools = [
-    # Tool(
-    #     name="RollDice",
-    #     func=dice_roll,
-    #     description="call this to get the result of rolling dice.",
-    # ),
     Tool(
         name="TalkToPlayer",
         func=talk_to_player,
@@ -119,13 +100,13 @@ tools = [
     ),
     Tool(
         name="TalkToDM",
-        func=TalktoDM().talk,
+        func=talk_to_dm,
         description="call this to talk to the AI DM",
     ),
 ]
 
 
-class Player:
+class PlayerAssitant:
     def __init__(self, injected_tools=None):
         # Get the prompt to use - you can modify this!
         prompt = hub.pull("hwchase17/openai-tools-agent")
@@ -155,5 +136,5 @@ class Player:
 
 
 if __name__ == "__main__":
-    player = Player()
+    player = PlayerAssitant()
     player.talk("A thug has tried to tackle Captain Cura.  Please roll a athletics check.")

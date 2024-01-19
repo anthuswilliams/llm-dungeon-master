@@ -5,7 +5,6 @@ from typing import List
 
 from langchain.agents import AgentExecutor, Tool
 from langchain.agents import create_openai_tools_agent
-from langchain.tools.retriever import create_retriever_tool
 from langchain.chat_models import ChatOpenAI
 from langchain_core.messages import HumanMessage
 

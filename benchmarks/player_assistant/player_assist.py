@@ -1,4 +1,4 @@
-import agents.player as p
+import agents.player_assistant as p
 import retrievers.character_sheet as chardb
 import json
 import random 
@@ -52,10 +52,10 @@ tools = [
 all_conversations = {}
 
 for character in characters:
-    player = p.Player(injected_tools=tools)
+    player_assistant = p.PlayerAssitant(injected_tools=tools)
     dm_request = starting_message[0].format(character_name=character)
     conversation.append(f"DM: {dm_request}")
-    response = player.talk(dm_request)
+    response = player_assistant.talk(dm_request)
     all_conversations[character] = "/n/n".join(conversation)
     conversation = []
 
