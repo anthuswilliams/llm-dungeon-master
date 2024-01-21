@@ -1,8 +1,19 @@
 import json
-import simpleaichat
-
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Type, Optional
+
+from langchain.agents import AgentExecutor, create_openai_tools_agent
+from langchain.chat_models import ChatOpenAI
+from langchain.callbacks.manager import (
+    AsyncCallbackManagerForToolRun,
+    CallbackManagerForToolRun,
+)
+from langchain_core.agents import AgentFinish
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
+from langchain_core.tools import BaseTool
+
+import functions.encounter_checker as ec
 
 class Action(BaseModel):
     """A special move or tactic an enemy may take"""
@@ -28,52 +39,110 @@ class Enemy(BaseModel):
     name: str = Field("The name of the creature or humanoid enemy")
     stats: StatBlock = Field("""The stat block for the enemy""")
     cr: str = Field("The enemy's Challenge Rating")
+    xp: int = Field("The XP value of the enemy")
     actions: List[Action] = Field("A list of actions that the enemy may take")
     other_info: str = Field("Any other information relevant to how the enemy appears, acts, moves, or behaves")
+
+class Player(BaseModel):
+    """Defines a player character who will participate in the encounter"""
+    level: int = Field("The player's level")
 
 class Encounter(BaseModel):
     """Defines an encounter including any enemies, terrain, setting, etc."""
     enemies: List[Enemy] = Field("List of enemies included in the encounter")
 
+class DifficultyArgs(BaseModel):
+    player_levels: List[int] = Field("an integer list of the players in the party")
+    desired_difficulty: str = Field("the desired difficulty")
+
+class DifficultyMap(BaseTool):
+    name = "DifficultyMap"
+    description = "returns total XP for an encounter for a party of adventurers"
+    args_schema: Type[BaseModel] = DifficultyArgs
+
+    def _run(
+        self, player_levels: List[int], desired_difficulty: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None
+    ):
+        """Use the tool."""
+        return ec.calculate_party_xp(player_levels, desired_difficulty)
+    
+    async def _arun(
+        self,
+        player_levels: List[int],
+        desired_difficulty: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool asynchronously."""
+        raise NotImplementedError("does not support async")
+    
+class StructureEncounter(BaseTool):
+    name="StructureEncounter"
+    description = "structures an encounter according to the desired output format"
+    args_schema: Type[BaseModel] = Encounter
+
+    def _run(
+        self, enemies: List[Enemy], run_manager: Optional[CallbackManagerForToolRun] = None
+    ):
+        """Use the tool"""
+        return AgentFinish(return_values={"output": {"enemies": enemies}}, log=json.dumps([e.model_dump_json() for e in enemies]))
+
+    async def _arun(
+        self,
+        enemies: List[Enemy],
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool asynchronously."""
+        raise NotImplementedError("does not support async")
+
 
 system_message = """
-    You are designing an encounter for Dungeons and Dragons 5th Edition.  You have the following information:
-    Input Parameters:
+You are designing an encounter for Dungeons and Dragons 5th Edition. The user will provide:
+Player Information: Number of players and their respective levels.
+Desired Difficulty Level: Easy, Medium, Hard, or Deadly.
+Narrative and Setting Context: Brief description of the current narrative and setting in which the encounter will take place.
 
-    Player Information: Number of players and their respective levels.
-    Desired Difficulty Level: Easy, Medium, Hard, or Deadly.
-    Narrative and Setting Context: Brief description of the current narrative and setting in which the encounter will take place.
-    
-    As the encounter designer you should consider the following:
+You have access to the following tools:
+`DifficultyMap` - used to determine the allowable range of enemy XP for the players and their respective levels
+`StructureEncounter` - used to structure the encounter you design according to the user's desired output format
 
-    Select Appropriate Creatures: Choose creatures with Challenge Ratings (CR) that match the desired difficulty level, ensuring that the total encounter difficulty is appropriate for the players' strength.
-    Encounter Design Principles:
-    Balance: Ensure that the encounter matches the desired difficulty level.
-    Narrative Integration: Design the encounter to fit seamlessly into the ongoing story and setting.
-    Output of encounter details:
-    Provide a list of creatures or adversaries, including their CRs.
+
+Use `DifficultyMap` to choose creatures with XP that match the desired difficulty level, ensuring that the total
+encounter difficulty is appropriate for the players' strength. Select one or more enemies such that:
+- the sum of the XP of all enemies does not exceed the desired difficulty level
+- the creatures are an evocative part of the narrative and setting the user has chosen
+
+Output of encounter details:
+Provide a list of creatures or adversaries, including their CRs and XP. Use the `StructureEncounter` tool to format this.
+
+{agent_scratchpad}
 """
 
-def design_encounter(instructions):        
-    ai = simpleaichat.AIChat(console=False,
-        save_messages=False,
-        model="gpt-3.5-turbo",
-        params={"temperature": 0.0},
-        system=system_message
-    )
+def design_encounter(instructions):
+    model = ChatOpenAI(temperature=0)
 
-    response_structured = ai(
-        instructions,
-        output_schema=Encounter
-    )
+    tools = [
+        DifficultyMap(),
+        StructureEncounter()
+    ]
 
-    return response_structured
+    prompt = ChatPromptTemplate.from_messages([
+        SystemMessage(content=system_message),
+        HumanMessagePromptTemplate.from_template("{instructions}"),
+        MessagesPlaceholder("agent_scratchpad"),
+    ])
 
+    agent = create_openai_tools_agent(llm=model, tools=tools, prompt=prompt)
+
+    executor = AgentExecutor(
+        agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
+    )        
+    
+    return executor.invoke({"instructions": instructions})
+    
 
 if __name__ == "__main__":
-    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a temple.")
-    for e in encounter["enemies"]:
-        camelized_name = e["name"].replace(" ", "_").lower()
-        with open(f"benchmarks/enemies/{camelized_name}.json", "w") as fh:
-            fh.write(json.dumps(e, indent=4))
+    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a mysterious forest, which has gone unexplored for 1000 years.")
+    
     print(encounter)
+#    print(json.dumps(encounter, indent=4))
