@@ -1,77 +1,94 @@
-from langchain.chat_models import ChatOpenAI
-from langchain.agents import AgentExecutor, Tool, create_openai_tools_agent
-from langchain import hub
+import simpleaichat
 
-system_prompt_template = """
-You are an experienced dungeon-master for Dungeons & Dragons 5th edition, overseeing an encounter between a player and enemies.
+from pydantic import BaseModel, Field
+from typing import List
 
-*Participants:* {participants}
-*Functions:* {participant_functions}
-*Player Assistant Function:* TalkToPlayerAssistant - use complete sentences, and include the player's character name in EVERY message.
-(Example: [[Character name]] needs to make an attack roll)
-(Example: What would [[Character name]] like to do?)
+system_prompt = """
+**You are an experienced dungeon-master for Dungeons & Dragons 5th edition, overseeing an encounter between a player and enemies.**
 
-*Procedure:*
+**Functions:**
+`TalkToParticipant` - use this to communicate with the participant whose turn it is to act
+`TalkToTarget` - use this to communicate with the target of the participant's actions
 
-*Step One: Action (Adhering to Initiative Order):*  Starting with the participant at the top of the initiative order, engage with each
-using the appropriate method. For non-player characters, use the `TalkTo*` functions. For the player character, use `TalkToPlayerAssistant`
-and address them by their character name, asking for their action.
+Your role is to fully resolve a single turn. The user will tell you whose turn it is and what the current state of the battlefield is.
+Use the "TalkTo*" function to interact with participants for their actions and responses.
 
-*Step Two: Resolving Action (Complete Actions):* When a participant declares their action, follow the appropriate procedure:
-    - For non-players, prompt them to roll for attack rolls, damage rolls, skill checks, etc., using `TalkTo*`.
-    - For the player, use `TalkToPlayerAssistant` to interact with their character sheet and prompt for rolls and actions.
-    - Example: If the participant wishes to make an attack, prompt them to roll an attack roll.
-    - Example: If a creature uses MultiAttack, prompt for each attack separately and resolve them before proceeding.
+**Procedure:**
 
-*Step Three: Fully Resolving a Turn:* Ensure actions like MultiAttack are fully resolved before moving on to the next step.
+**Step One: Request Participant's Action.** 
+- Use the `TalkToParticipant` function to ask the current participant for their action.
+Provide them with the current state of the battlefield to inform their decision.
 
-*Step Four: Determine Outcome:* Adjudicate the results and describe the outcome of the action. Using the TalkTo* functions, prompt the target
-for any attributes relevant to the outcome such as Armor Class, saving throws, etc. Also, prompt participants for any additional rolls if necessary.
-    - Example: If a participant has been attacked, ask them for their AC and compare it to the attack roll to determine if the attack was successful.
-    - Example: If a participant has succeeded in their attack roll, prompt them to roll for damage.
+**Step Two: Resolving Action (Complete Actions):**
+- Once a participant declares their action, use `TalkToParticipant` to prompt them for any necessary rolls (attack rolls, damage rolls,
+skill checks, etc.). Ensure you have all the information needed before proceeding.
 
-*Step Five: Notify Affected Participants:* Inform any affected participants of the outcome.
-    - For non-player characters, use the TalkTo* functions to inform them of any damage or status effects
-    - For the player, use `TalkToPlayerAssistant` to inform them of any damage or status effects.
+**Step Three: Determine Outcome:**
+- Adjudicate the results and describe the outcome of the action. Use `TalkToTarget` to prompt the target for relevant attributes like
+Armor Class, saving throws, etc. Prompt participants for any additional rolls if necessary.
+    - Example: If a participant is attacked, use `TalkToTarget` to ask for their AC and compare it to the attack roll.
+    - Example: If a participant's attack is successful, prompt them to roll for damage using `TalkToParticipant`.
 
-*Step Six: End of Round:* Output the conditions of all participants, including health, conditions (prone, unconscious, and so on).
-Use the following format:
-Name:
-Current HP:
-Status Effects:
+**Step Four: Notify Affected Participants:**
+- Inform any affected participants of the results, including damage or status effects, using `TalkToTarget`.
+
+*Note: Some actions, like MultiAttack, require repeating Steps 2-4. Repeat these steps until all actions are fully resolved.*
+
+**Step Five: End of Turn:**
+- Output the condition of all participants, including health and status effects, in the following format:
+  - Name: [[Name]]
+  - Current HP: [[HP]]
+  - Status Effects: [[Status Effects]]
 """
-def start_round(tools, participants, initiative):
-    # Get the prompt to use - you can modify this!
-    prompt = hub.pull("hwchase17/openai-tools-agent")
-    participant_functions = "\n".join(
-        [f'TalkTo{p["name"]} - Function to talk to {p["name"]}' for p in participants]
-    )
-    participant_names = [f'Name: {p["name"]}\nType: {p["type"]}' for p in participants]
 
-    prompt.messages[0].prompt.template = system_prompt_template.format(
-        participants="\n\n".join(participant_names), participant_functions=participant_functions
+class Initiative(BaseModel):
+    """A dictionary including the name of the participant and their initiative"""
+    participant: str = Field("The name of the participant")
+    value: int = Field("The participant's initiative value")
+
+
+class Participant(BaseModel):
+    """A summary of information pertaining to a participant in the encounter"""
+    HP: int = Field("The participant's current Health Points")
+    AC: int = Field("The participant's Armor Class")
+    status_effects: List[str] = Field("A list of status effects affecting the participant")
+
+class State(BaseModel):
+    """Defines the current state of the battlefield"""
+    to_act: str = Field("The name of the participant whose turn it is to act")
+    participants: List[Participant] = Field("List of participants in the encounter")
+    initiative_order: List[Initiative] = Field("List of initiative values in the encounter")
+
+
+# def select_tool()
+
+def evaluate_turn(tools, current_state):
+    ai = simpleaichat.AIChat(
+        console=False,
+        save_messages=False,
+        model="gpt-3.5-turbo",
+        params={"temperature": 0.0},
+        system=system_prompt
     )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-    agent = create_openai_tools_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(
-        agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
+    response_structured = ai(
+        json.dumps(current_state.model_dump()),
+        tools=tools,
+#        output_schema=State
     )
 
-    initiative_strs = "\n".join([f'{i["participant"]}: {i["value"]}' for i in initiative])
-    return agent_executor.invoke(
-        {
-            "input": f"Initiative Order: {initiative_strs}",
-            "chat_history": [
-                # here is my character sheet!
-            ],
-        }
-    )
+    print(response_structured)
+
+#    while response_structured["tool"] is not None:
+#        print(json.dumps(response_structured, indent=4))
+#        response_structured = ai(response_structured["response"], tools=tools, output_schema=State)
+
+    return response_structured
+
 
 if __name__ == "__main__":
     import json
     import agents.enemy as enemy
-    import agents.player_assistant as pa
     import agents.npc as npc
 
     cura = npc.NPC(name="Captain Cura")
@@ -84,25 +101,30 @@ if __name__ == "__main__":
         {"type": "thug", "name": "Big Pete"}
     ]
 
-    thug.talk("You are in an alley, face to face with Captain Cura, a hero. Heroes make you sick!")
-    cura.talk("You encounter a lumbering thug named Big Pete. He looks ready to fight!")
-    tools = [
-        Tool(
-            name="TalkToCaptainCura",
-            func=cura.talk,
-            description="Use this to talk to Captain Cura. Use complete sentences!"
-        ),
-        Tool(
-            name=f"TalkToBigPete",
-            func=thug.talk,
-            description=f"Call this to to talk to Big Pete. Use complete sentences!",
-        ),
-    ]
+    def talk_to_target(message):
+        """Use this to talk to Captain Cura. Use complete sentences!"""
+        response = cura.talk(message)
+        return response["output"]
+    
+    def talk_to_participant(message):
+        """Use this to talk to Big Pete. Use complete sentences!"""
+        response = thug.talk(message)
+        return response["output"]
+
+    tools = [talk_to_participant, talk_to_target]
 
     initiative = [
         {"participant": "Big Pete", "value": 22},
         {"participant": "Captain Cura", "value": 18}
     ]
-    start_round(tools, participants, initiative)
+    t = evaluate_turn(tools, State.model_validate({
+        "to_act": "Big Pete",
+        "participants": [
+            {"name": "Captain Cura", "HP": 16, "AC": 14, "status_effects": []},
+            {"name": "Big Pete", "HP": 32, "AC": 15, "status_effects": []},
+        ],
+        "initiative_order": initiative
+    }))
+    print(json.dumps(t, indent=4))
 
 
