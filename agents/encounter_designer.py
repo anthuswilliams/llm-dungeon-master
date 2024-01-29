@@ -85,7 +85,8 @@ class StructureEncounter(BaseTool):
         self, enemies: List[Enemy], run_manager: Optional[CallbackManagerForToolRun] = None
     ):
         """Use the tool"""
-        return AgentFinish(return_values={"output": {"enemies": enemies}}, log=json.dumps([e.model_dump_json() for e in enemies]))
+        loggable = [e if isinstance(e, dict) else e.model_dump_json() for e in enemies]
+        return AgentFinish(return_values={"enemies": enemies}, log=json.dumps(loggable))
 
     async def _arun(
         self,
@@ -112,11 +113,11 @@ encounter difficulty is appropriate for the players' strength. Select one or mor
 - the sum of the XP of all enemies does not exceed the desired difficulty level
 - the creatures are an evocative part of the narrative and setting the user has chosen
 
-Output of encounter details:
-Provide a list of creatures or adversaries, including their CRs and XP. Use the `StructureEncounter` tool to format this.
+Output: Provide a list of creatures or adversaries, including their CRs and XP. Use the `StructureEncounter` tool to format this.
 
 {agent_scratchpad}
 """
+
 
 def design_encounter(instructions):
     model = ChatOpenAI(temperature=0)
@@ -135,14 +136,20 @@ def design_encounter(instructions):
     agent = create_openai_tools_agent(llm=model, tools=tools, prompt=prompt)
 
     executor = AgentExecutor(
-        agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
-    )        
+        agent=agent, tools=tools, verbose=True, handle_parsing_errors=False,
+    )
+    # langchain's AgentExecutor enforces at the time of instantiation that, if you are using multiple tools, none of them are using return_direct
+    # This is probably to support being able to call them in parallel, having to synthesize them, etc. But in our case, we want
+    #  the final tool to just structure our output, so we set return_direct after having instantiated AgentExecutor
+    tools[-1].return_direct = True
     
-    return executor.invoke({"instructions": instructions})
-    
+    ret = executor.invoke({"instructions": instructions})
+    try:
+        return Encounter(**ret["output"].return_values)
+    except Exception:
+        raise Exception("Expected JSON response, got ", ret)
+
 
 if __name__ == "__main__":
     encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a mysterious forest, which has gone unexplored for 1000 years.")
-    
-    print(encounter)
-#    print(json.dumps(encounter, indent=4))
+    print(encounter.model_dump_json(indent=4))
