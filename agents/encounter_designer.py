@@ -110,7 +110,7 @@ You have access to the following tools:
 
 Use `DifficultyMap` to choose creatures with XP that match the desired difficulty level, ensuring that the total
 encounter difficulty is appropriate for the players' strength. Select one or more enemies such that:
-- the sum of the XP of all enemies does not exceed the desired difficulty level
+- the sum of the XP of all enemies falls within the range of the desired difficulty level
 - the creatures are an evocative part of the narrative and setting the user has chosen
 
 Output: Provide a list of creatures or adversaries, including their CRs and XP. Use the `StructureEncounter` tool to format this.
