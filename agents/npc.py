@@ -27,20 +27,6 @@ Example:
 I rolled a 4. I have [[initiative modifier]] on initiative, so my initiative is [[4 + initiative_modifier]]
 """
 
-tools = [
-    Tool(
-        name="RollDice",
-        func=dice_roll,
-        description="call this to get the result of rolling dice.",
-    ),
-    Tool(
-        name="RetrieveCharacterInfo",
-        func=chardb.retriever_tool,
-        description="call this to get information from the character sheet",
-    ),
-]
-
-
 class NPC:
     def __init__(self, name, injected_tools=None):
         # Get the prompt to use - you can modify this!
@@ -51,6 +37,19 @@ class NPC:
         )
 
         llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
+        tools = [
+            Tool(
+                name="RollDice",
+                func=dice_roll,
+                description="call this to get the result of rolling dice.",
+            ),
+            Tool(
+                name="RetrieveCharacterInfo",
+                func=lambda q: chardb.retriever_tool(f"{name}: {q}"),
+                description="call this to get information from the character sheet",
+            ),
+        ]
 
         t = injected_tools or tools
         agent = create_openai_tools_agent(llm, t, prompt)

@@ -96,6 +96,32 @@ class StructureEncounter(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("does not support async")
 
+class EncounterDesignerArgs(BaseModel):
+    player_levels: List[int] = Field("an integer list of the players in the party")
+    desired_difficulty: str = Field("the desired difficulty")
+    setting: str = Field("the desired narrative and setting for the encounter")
+
+class EncounterDesigner(BaseTool):
+    name = "EncounterDesigner"
+    description = "design an appropriate encounter given the party levels, desired difficulty, and setting."
+    args_schema: Type[BaseModel] = EncounterDesignerArgs
+
+    def _run(
+        self, player_levels: List[int], desired_difficulty: str, setting: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None
+    ):
+        """Use the tool."""
+        return design_encounter(f"Design an encounter of {desired_difficulty} difficulty for players of levels {player_levels}. {setting}")
+    
+    async def _arun(
+        self,
+        player_levels: List[int],
+        desired_difficulty: str,
+        setting: str,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool asynchronously."""
+        raise NotImplementedError("does not support async")
 
 system_message = """
 You are designing an encounter for Dungeons and Dragons 5th Edition. The user will provide:
