@@ -100,24 +100,38 @@ class EncounterDesignerArgs(BaseModel):
     player_levels: List[int] = Field("an integer list of the players in the party")
     desired_difficulty: str = Field("the desired difficulty")
     setting: str = Field("the desired narrative and setting for the encounter")
+    story_hook: str = Field("the situation and events leading up to the encounter")
 
 class EncounterDesigner(BaseTool):
     name = "EncounterDesigner"
-    description = "design an appropriate encounter given the party levels, desired difficulty, and setting."
+    description = "design an appropriate encounter given the party levels, desired difficulty, and story hook."
     args_schema: Type[BaseModel] = EncounterDesignerArgs
+    prev_invocations = {}
 
     def _run(
-        self, player_levels: List[int], desired_difficulty: str, setting: str,
+        self, player_levels: List[int], desired_difficulty: str, setting: str, story_hook: str,
         run_manager: Optional[CallbackManagerForToolRun] = None
     ):
         """Use the tool."""
-        return design_encounter(f"Design an encounter of {desired_difficulty} difficulty for players of levels {player_levels}. {setting}")
+        keys = str({
+            "player_levels": player_levels,
+            "desired_difficulty": desired_difficulty,
+            "setting": setting,
+            "story_hook": story_hook
+        })
+        if self.prev_invocations.get(keys):
+            return self.prev_invocations[keys]
+        
+        enc = design_encounter(f"Design an encounter of {desired_difficulty} difficulty for players of levels {player_levels}. {setting}. {story_hook}")
+        self.prev_invocations[keys] = enc
+        return enc
     
     async def _arun(
         self,
         player_levels: List[int],
         desired_difficulty: str,
         setting: str,
+        story_hook: str,
         run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
     ) -> str:
         """Use the tool asynchronously."""
@@ -139,7 +153,7 @@ encounter difficulty is appropriate for the players' strength. Select one or mor
 - the sum of the XP of all enemies falls within the range of the desired difficulty level
 - the creatures are an evocative part of the narrative and setting the user has chosen
 
-Output: Provide a list of creatures or adversaries, including their CRs and XP. Use the `StructureEncounter` tool to format this.
+Output: Provide a list of creatures or adversaries, including their CRs and XP. IMPORTANT: You MUST use the `StructureEncounter` tool to format this response.
 
 {agent_scratchpad}
 """
@@ -170,6 +184,7 @@ def design_encounter(instructions):
     tools[-1].return_direct = True
     
     ret = executor.invoke({"instructions": instructions})
+    print(ret["output"])
     try:
         return Encounter(**ret["output"].return_values)
     except Exception:
@@ -177,5 +192,5 @@ def design_encounter(instructions):
 
 
 if __name__ == "__main__":
-    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a mysterious forest, which has gone unexplored for 1000 years.")
+    encounter = design_encounter("Design an encounter for three level 1 players that is medium difficulty, and is set in a mysterious forest, which has gone unexplored for 1000 years. The party is pursuing a bandit and have followed him into the forest")
     print(encounter.model_dump_json(indent=4))
