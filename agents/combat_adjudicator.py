@@ -55,7 +55,7 @@ def start_encounter(description, tools, participants):
         participants="\n\n".join(participant_names), participant_functions=participant_functions
     )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+    llm = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0)
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(
         agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
