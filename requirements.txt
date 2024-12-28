@@ -1,10 +1,4 @@
 # torch
-lancedb
-langchain
-langchainhub
 notebook
 openai
-pandas
-pdfminer.six
-pytest
 tiktoken
