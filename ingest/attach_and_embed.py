@@ -31,7 +31,14 @@ def create_attach_and_embed_pipeline():
                 },
                 "gsub": {
                     "field": "attachment.content",
-                    "pattern": "http?s:\/\/[^\s]+\s",
+                    # remove links from content
+                    "pattern": "https?:\/\/[^\s]+\s",
+                    "replacement": ""
+                },
+                "gsub": {
+                    "field": "attachment.content",
+                    # remove links at content end (someone better at regex than I could do this in line with above)
+                    "pattern": "https?:\/\/[^\s]+$",
                     "replacement": ""
                 },
                 "inference": {
@@ -62,7 +69,7 @@ def encode_documents(dir_path):
 def import_files(files):
     for filename, contents in files:
         elastic_request(
-            method=requests.put, url=f"players-handbook/_doc/{filename}?pipeline=attach_and_chunk", data={"data": contents})
+            method=requests.put, url=f"players-handbook-embedded/_doc/{filename}?pipeline=attach_and_embed", data={"data": contents})
 
 
 if __name__ == "__main__":
