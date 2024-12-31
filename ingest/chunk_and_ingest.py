@@ -77,7 +77,7 @@ def ingest(doc, title, index):
     print(title, doc)
     cleaned_title = title.replace("?", "")
     rslt = elastic_request(method=requests.put,
-                           url=f"{INDEX}/_doc/{cleaned_title}?pipeline=clean_and_embed",
+                           url=f"{index}/_doc/{cleaned_title}?pipeline=clean_and_embed",
                            data={"content": doc})
     return rslt
 

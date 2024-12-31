@@ -61,7 +61,7 @@ def generate_keywords(client, question):
 
 def query_elastic(keywords, question):
     results = elastic_request(
-        url="players-handbook-2014,tashas-cauldron-of-everything,xanathars-guide-to-everything,volos-guide-to-monsters/_search",
+        url="_search",
             data={
                 "query": {
                     "match": {
@@ -105,7 +105,7 @@ def generate_response(client, context, question):
             },
             {
                 "role": "assistant",
-                "content": [{"type": "text", "text": c} for c in context[0:3]]
+                "content": [{"type": "text", "text": c} for c in context[0:6]]
             },
             {
                 "role": "user",
@@ -148,4 +148,4 @@ def query(question):
 
 
 if __name__ == "__main__":
-    print(query("What are the racial abilities that come with playing a Kenku?"))
+    print(query("I want to play a character as similar as possible to a warrior during sengoku jidai. What class should I choose?"))
