@@ -2,3 +2,5 @@
 notebook
 openai
 tiktoken
+cbor2
+python-poppler

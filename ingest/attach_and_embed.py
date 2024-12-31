@@ -1,6 +1,7 @@
 import requests
 import os
-import base64
+import cbor2
+import json
 
 from utils.elastic import elastic_request
 
@@ -52,24 +53,134 @@ def create_attach_and_embed_pipeline():
         })
 
 
-def encode_documents(dir_path):
-    encoded_files = []
+def create_embed_section_pipeline():
+    return elastic_request(
+        url="_ingest/pipeline/embed_section",
+        method=requests.put,
+        data={
+            "description": "Generate embeddings",
+            "processors": [{
+                "inference": {
+                    "model_id": "open-ai-embeddings",
+                    "input_output": {
+                        "input_field": "passage",
+                        "output_field": "passage-embedding"
+                    }
+                }
+            }]
+        })
+
+
+def create_pdf_ingest_pipeline():
+    return elastic_request(
+        url="_ingest/pipeline/pdf_ingest",
+        method=requests.put,
+        data={
+            "description": "Ingest PDFs",
+            "processors": [{
+                "attachment": {
+                    "field": "data",
+                    "indexed_chars": -1,
+                    "properties": ["content", "title", "date"],
+                    "remove_binary": True
+                }
+            }, {
+                "gsub": {
+                    "field": "attachment.content",
+                    # remove page headers
+                    "pattern": "\d{2}/\d{2}/\d{2}, \d{2}:\d{2} [AP]M .+\n\nhttps:\/\/www\.dndbeyond\.com\/.+\n",
+                    "replacement": ""
+                },
+            }, {
+                "gsub": {
+                    "field": "attachment.content",
+                    # remove links
+                    "pattern": "https:\/\/www\.dndbeyond\.com\/.+\n",
+                    "replacement": ""
+                }
+            }]
+        })
+
+
+def import_files(dir_path, pipeline):
+    failed = []
     for filename in os.listdir(dir_path):
         file_path = os.path.join(dir_path, filename)
-        if os.path.isfile(file_path):
-            with open(file_path, 'rb') as file:
-                file_content = file.read()
-                encoded_content = base64.b64encode(
-                    file_content).decode('utf-8')
-                encoded_files.append((filename, encoded_content))
+        if not os.path.isfile(file_path):
+            continue
+        with open(file_path, 'rb') as file:
+            file_content = file.read()
+            fname = filename.replace(" ", "-").replace(".pdf", "").lower()
+        rslt = elastic_request(method=requests.put,
+                               url=f"sources-raw/_doc/{fname}?pipeline={pipeline}",
+                               headers={"Content-Type": "application/cbor"},
+                               data=cbor2.dumps({"data": file_content}))
+        try:
+            rslt.raise_for_status()
+        except Exception as e:
+            print("Error: ", e)
+            if rslt.headers.get("content-type") == "application/json":
+                print(rslt.json())
+            failed.append(filename)
 
-    return encoded_files
+    print("Failed: ", failed)
 
 
-def import_files(files):
-    for filename, contents in files:
-        elastic_request(
-            method=requests.put, url=f"players-handbook-embedded/_doc/{filename}?pipeline=attach_and_embed", data={"data": contents})
+def create_embedding_mapping():
+    return elastic_request(url="sources-chunked",
+                           method=requests.put,
+                           data={
+                               "mappings": {
+                                   "dynamic": True,
+                                   "properties": {
+                                       "passage-embedding": {
+                                           "properties": {
+                                               "predicted_value": {
+                                                   "type": "dense_vector",
+                                                   "index": True,
+                                                   "dims": 1536,
+                                                   "similarity": "cosine"
+                                               }
+                                           }
+                                       }
+                                   }
+                               }
+                           })
+
+
+def process_each_section():
+    data = {
+        "query": {
+            "match_all": {}
+        },
+        "size": 10000,
+        "sort": [
+            {"attachment.date": "asc"}
+        ]
+    }
+
+    r = elastic_request(url="players-handbook/_search?scroll=1m",
+                        method=requests.post,
+                        data=data).json()
+    scroll_id = r["_scroll_id"]
+    while len(r["hits"]["hits"]) > 0:
+        print(r["hits"]["hits"])
+        bulk_submit = [[{"index": {}}, {"passage": passage["text"], "section": hit["_id"]}]
+                       for hit in r["hits"]["hits"] for passage in hit["_source"]["passages"]]
+        payload = "\n".join([json.dumps(j)
+                            for entry in bulk_submit for j in entry])
+        # use bulk endpoint to submit each paragraph as a new document
+        create = requests.post("https://192.168.1.153:9200/players-handbook-chunked/_bulk?pipeline=embed_section",
+                               headers={
+                                   "Content-Type": "application/x-ndjson",
+                                   "Accept": "application/json",
+                                   "Authorization": f"ApiKey {os.getenv('ELASTIC_API_KEY')}"
+                               },
+                               verify=False,
+                               data=f"{payload}\n")
+        print(create.json())
+        r = elastic_request(url="_search/scroll",
+                            data={"scroll": "1m", "scroll_id": scroll_id}).json()
 
 
 if __name__ == "__main__":
@@ -82,15 +193,15 @@ if __name__ == "__main__":
             print(inf_endpt.json())
             raise
 
-    try:
-        pipeline_endpt = create_attach_and_embed_pipeline()
-        pipeline_endpt.raise_for_status()
-    except Exception as e:
-        print("Error: ", e)
-        print(pipeline_endpt.json())
-        raise
+    for m in [create_attach_and_embed_pipeline, create_pdf_ingest_pipeline, create_embed_section_pipeline]:
+        try:
+            pipeline_endpt = m()
+            pipeline_endpt.raise_for_status()
+        except Exception as e:
+            print("Error: ", e)
+            print(pipeline_endpt.json())
+            raise
 
-    encoded_files = encode_documents(
-        dir_path="/data/Player's Handbook 5e (2014)")
-
-    import_files(encoded_files)
+    import_files(dir_path="/data", pipeline="pdf_ingest")
+    # create_embedding_mapping()
+    # process_each_section()
