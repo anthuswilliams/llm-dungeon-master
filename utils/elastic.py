@@ -6,17 +6,19 @@ import requests
 ELASTIC_HOST = "https://192.168.1.153:9200"
 
 
-def elastic_request(data=None, method=None, url=None):
-    if method == None:
+def elastic_request(data=None, method=None, url=None, headers=None):
+    if not method:
         method = requests.get
-    if data:
+    if not headers:
+        headers = {"Content-Type": "application/json"}
+    if data and headers["Content-Type"] == "application/json":
         data = json.dumps(data)
 
     return method(f"{ELASTIC_HOST}/{url}",
                   headers={
-                      "Content-Type": "application/json",
                       "Accept": "application/json",
-                      "Authorization": f"ApiKey {os.getenv('ELASTIC_API_KEY')}"
+                      "Authorization": f"ApiKey {os.getenv('ELASTIC_API_KEY')}",
+                      **headers
                   },
                   verify=False,
                   data=data)
