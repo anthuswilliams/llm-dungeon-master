@@ -61,11 +61,11 @@ def generate_keywords(client, question):
 
 def query_elastic(keywords, question):
     results = elastic_request(
-        url="players-handbook-embedded/_search",
+        url="players-handbook-2014,tashas-cauldron-of-everything,xanathars-guide-to-everything,volos-guide-to-monsters/_search",
             data={
                 "query": {
                     "match": {
-                        "attachment.content": {
+                        "content": {
                             "query": keywords,
                             "operator": "or",
                             "boost": 0.7
@@ -89,7 +89,7 @@ def query_elastic(keywords, question):
     results.raise_for_status()
     hits = results.json()["hits"]["hits"]
     # logger.debug(hits)
-    return [h["_source"]["attachment"]["content"] for h in hits]
+    return [h["_source"]["content"] for h in hits]
 
 
 def generate_response(client, context, question):
@@ -148,4 +148,4 @@ def query(question):
 
 
 if __name__ == "__main__":
-    print(query("I rolled a 27 to hit a creature with an 18 Armor Class. Was I successful?"))
+    print(query("What are the racial abilities that come with playing a Kenku?"))

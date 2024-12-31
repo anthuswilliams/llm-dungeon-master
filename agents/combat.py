@@ -127,6 +127,7 @@ def resolve_attack(client, conversations, tools):
                 break
         else:
             user_input = input("")
+            total_tool_calls = 0
             if user_input == "stop" or user_input == "end of turn":
                 return user_input, conversations
             conversations.append({
