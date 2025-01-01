@@ -5,10 +5,9 @@ app = FastAPI()
 
 from typing import List
 
-class Message(BaseModel):
-    content: List[str]
-    content: str
+class Messages(BaseModel):
+    messages: List[str]
 
 @app.post("/messages")
-async def create_message(message: Message):
-    return {"messages": message.content}
+async def create_message(messages: Messages):
+    return {"messages": messages.messages}
