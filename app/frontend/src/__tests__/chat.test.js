@@ -50,12 +50,14 @@ test('sends correct payload to server on submit and checks spinner visibility', 
   const newMessage = 'Test message';
   fireEvent.change(input, { target: { value: newMessage } });
 
+  // eslint-disable-next-line testing-library/no-unnecessary-act
   act(() => {
     fireEvent.click(sendButton);
   });
 
   expect(screen.queryByText('Loading...')).toBeInTheDocument();
 
+  // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
     await screen.findByText('Test message');
   });
