@@ -68,7 +68,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {renderMessages()}
       </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <button onClick={handleCopyToClipboard} className="copy-link">
+      <button onClick={handleCopyToClipboard} className="copy-link" disabled={messages.length === 0}>
         Copy
       </button>
       <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
