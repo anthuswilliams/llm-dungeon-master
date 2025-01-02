@@ -10,6 +10,35 @@ beforeAll(() => {
   });
 });
 
+test('submits message on Enter key press', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({}),
+  }));
+
+  render(<ChatInterface />);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+  const newMessage = 'Enter key message';
+  fireEvent.change(input, { target: { value: newMessage } });
+
+  // Simulate pressing the Enter key
+  fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+  // eslint-disable-next-line testing-library/no-unnecessary-act
+  await act(async () => {
+    await screen.findByText('Enter key message');
+  });
+
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
 afterAll(() => {
   console.error.mockRestore();
 });
