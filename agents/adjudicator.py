@@ -92,7 +92,7 @@ def query_elastic(keywords, question):
     return [h["_source"]["content"] for h in hits]
 
 
-def generate_response(client, context, question):
+def generate_response(client, context, history):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -107,20 +107,21 @@ def generate_response(client, context, question):
                 "role": "assistant",
                 "content": [{"type": "text", "text": c} for c in context[0:6]]
             },
-            {
-                "role": "user",
-                "content": [{
-                    "type": "text",
-                    "text": question
-                }]
-            }
+            # {
+            #     "role": "user",
+            #     "content": [{
+            #         "type": "text",
+            #         "text": question
+            #     }]
+            # },
+            *history
         ]
     )
 
     return response.choices[0].message.content
 
 
-def query(question):
+def query(history):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -144,8 +145,26 @@ def query(question):
     keywords = generate_keywords(client, question)
     context = query_elastic(keywords, question)
 
-    return generate_response(client, context, question)
+    return generate_response(client, context, history)
 
 
 if __name__ == "__main__":
-    print(query("Can I use the Lucky feat to reroll my saving throw from Fireball?"))
+    conversation = []
+    while True:
+        question = input("Type message: ")
+        if question == "exit":
+            break
+        conversation.append(
+            {
+                "role": "user",
+                "content": question
+            }
+        )
+        answer = query(conversation)
+        print(answer)
+        conversation.append(
+            {
+                "role": "assistant",
+                "content": answer
+            }
+        )

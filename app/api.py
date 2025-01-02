@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -18,10 +18,9 @@ app.add_middleware(
 
 
 class Messages(BaseModel):
-    messages: List[str]
+    messages: List[Dict[str, str]]
 
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    responses = [query(message) for message in messages.messages]
-    return {"responses": responses}
+    return {"messages": [{"role": msg["role"], "content": msg["content"]} for msg in messages.messages]}

@@ -19,21 +19,27 @@ const ChatInterface = ({ initialMessages = [] }) => {
     if (newMessage.trim() === '') return;
     setLoading(true);
 
-    const message = { id: 0, message: newMessage, type: 'user' };
-    setMessages([...messages, message]);
+    const userMessage = { id: 0, message: newMessage, type: 'user' };
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
 
     try {
+      const formattedMessages = updatedMessages.map((msg, index) => ({
+        role: index % 2 === 0 ? 'user' : 'assistant',
+        content: msg.message,
+      }));
+
       const response = await fetch('http://localhost:8000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ messages: [newMessage] }),
+        body: JSON.stringify(formattedMessages),
       });
       const data = await response.json();
       if (data.responses) {
         const responseMessages = data.responses.map((msg, index) => ({ id: index + 1, message: msg, type: 'api' }));
-        setMessages([...messages, message, ...responseMessages]);
+        setMessages([...messages, ...responseMessages]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
