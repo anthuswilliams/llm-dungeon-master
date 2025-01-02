@@ -99,7 +99,8 @@ test('Copy button behavior', async () => {
 
   render(<ChatInterface initialMessages={messages} />);
 
-  const copyButton = screen.getByText('Copy');
+  const copyButtons = screen.getAllByText('Copy');
+  const copyButton = copyButtons[0];
   expect(copyButton).not.toBeDisabled();
 
   // Simulate clicking the copy button
@@ -110,7 +111,8 @@ test('Copy button behavior', async () => {
 
   // Render the component with no initial messages
   render(<ChatInterface initialMessages={[]} />);
-  const disabledCopyButton = screen.getByText('Copy');
+  const disabledCopyButtons = screen.getAllByText('Copy');
+  const disabledCopyButton = disabledCopyButtons[1];
   expect(disabledCopyButton).toBeDisabled();
 render(<ChatInterface />);
 
