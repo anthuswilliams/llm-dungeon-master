@@ -8,6 +8,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   const [loading, setLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
+  const [debug, setDebug] = useState(false);
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
@@ -98,6 +99,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
       />
       <div className="char-count">
         {newMessage.length}/1000
+      </div>
+      <div className="debug-checkbox">
+        <label>
+          <input
+            type="checkbox"
+            checked={debug}
+            onChange={() => setDebug(!debug)}
+          />
+          Debug
+        </label>
       </div>
       <button onClick={handleSendMessage} className="send-button">Send</button>
     </div>
