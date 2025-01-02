@@ -58,7 +58,7 @@ test('sends correct payload to server on submit and checks spinner visibility', 
   });
 
   // Assert spinner is present while message is in flight
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+  expect(screen.queryByText('Loading...')).toBeInTheDocument();
   expect(fetch).toHaveBeenCalledWith('http://localhost:8000/messages', {
     method: 'POST',
     headers: {
