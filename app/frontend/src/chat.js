@@ -12,8 +12,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
-      <div key={index} className={`message ${msg.type}`}>
-        <span className={msg.type}>{msg.message}</span>
+      <div key={index}>
+        <div className={`message ${msg.type}`}>
+          <span className={msg.type}>{msg.message}</span>
+        </div>
         {msg.type === 'api' && msg.keywords && msg.context && (
           <div className="debug-info">
             <div><strong>Keywords:</strong> {msg.keywords}</div>
