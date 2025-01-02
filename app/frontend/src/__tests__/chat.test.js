@@ -83,11 +83,13 @@ test('each message is rendered', () => {
   });
 });
 
-test('Copy button behavior', async () => {
-  const { rerender } = render(<ChatInterface initialMessages={[]} />);
+test('Copy button is disabled when there are no messages', () => {
+  render(<ChatInterface initialMessages={[]} />);
   const copyButton = screen.getByText('Copy');
   expect(copyButton).toBeDisabled();
+});
 
+test('Copy button copies messages to clipboard when enabled', async () => {
   const messages = [
     { id: 0, message: 'Hello', type: 'user' },
     { id: 1, message: 'How are you?', type: 'api' },
@@ -101,10 +103,12 @@ test('Copy button behavior', async () => {
     },
   });
 
+  const { rerender } = render(<ChatInterface initialMessages={[]} />);
   await act(async () => {
     rerender(<ChatInterface initialMessages={messages} />);
   });
 
+  const copyButton = screen.getByText('Copy');
   expect(copyButton).not.toBeDisabled();
 
   // Simulate clicking the copy button
