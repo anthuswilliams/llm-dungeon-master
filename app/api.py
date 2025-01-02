@@ -3,11 +3,11 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-from typing import List
+from typing import List, Dict
 
 class Messages(BaseModel):
-    messages: List[str]
+    messages: List[Dict[str, str]]
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    return {"messages": messages.messages}
+    return {"messages": [{"role": msg["role"], "content": msg["content"]} for msg in messages.messages]}
