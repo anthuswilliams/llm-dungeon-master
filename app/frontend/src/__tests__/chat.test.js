@@ -79,7 +79,22 @@ test('each message is rendered', () => {
   });
 });
 
-test('sends correct payload to server on submit and checks spinner visibility', async () => {
+test('updates character count as user types', () => {
+  render(<ChatInterface />);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  const charCount = screen.getByText('0/1000');
+
+  expect(charCount).toBeInTheDocument();
+
+  fireEvent.change(input, { target: { value: 'Hello' } });
+
+  expect(screen.getByText('5/1000')).toBeInTheDocument();
+
+  fireEvent.change(input, { target: { value: 'Hello, world!' } });
+
+  expect(screen.getByText('13/1000')).toBeInTheDocument();
+});
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
   }));
