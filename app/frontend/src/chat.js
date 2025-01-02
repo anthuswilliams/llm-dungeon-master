@@ -24,7 +24,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: newMessage }),
+        body: JSON.stringify({ messages: [newMessage] }),
       });
     } catch (error) {
       console.error('Error sending message:', error);
