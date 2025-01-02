@@ -3,8 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
-jest.mock('node-fetch', () => jest.fn());
-import fetch from 'node-fetch';
+global.fetch = jest.fn();
 
 test('renders all messages', () => {
   const messages = [
