@@ -62,7 +62,7 @@ test('sends correct payload to server on submit and checks spinner visibility', 
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ message: newMessage }),
+    body: JSON.stringify({ messages: [newMessage] }),
   });
 
   // Wait for the fetch to complete and assert spinner is no longer present
