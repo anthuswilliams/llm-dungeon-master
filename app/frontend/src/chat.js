@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './spinner.scss'; // Assuming you have a CSS file for the spinner
 
 const ChatInterface = ({ initialMessages = [] }) => {
   const [messages, setMessages] = useState(initialMessages);
+  const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <span className={msg.type}>{msg.message}</span>
       </div>
     ));
+    if (messageInputRef.current) {
+      messageInputRef.current.focus();
+    }
   };
 
   const handleSendMessage = async () => {
@@ -85,6 +89,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
             handleSendMessage();
           }
         }}
+        ref={messageInputRef}
+        autoFocus
         disabled={loading}
         maxLength={1000}
         rows={4}
