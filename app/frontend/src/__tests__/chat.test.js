@@ -13,7 +13,6 @@ test('renders all messages', () => {
 
   render(<ChatInterface initialMessages={messages} />);
 
-  // Simulate setting messages
   messages.forEach(msg => {
     const messageElement = screen.getByText(msg.message);
     expect(messageElement).toBeInTheDocument();
@@ -45,27 +44,21 @@ test('sends correct payload to server on submit and checks spinner visibility', 
   const input = getByPlaceholderText('Type a message...');
   const sendButton = getByText('Send');
 
-  // Assert spinner is not present initially
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
-  // Simulate user typing a message
   const newMessage = 'Test message';
   fireEvent.change(input, { target: { value: newMessage } });
 
-  // Simulate clicking the send button
   act(() => {
     fireEvent.click(sendButton);
   });
 
-  // Assert spinner is present while message is in flight
   expect(screen.queryByText('Loading...')).toBeInTheDocument();
 
-  // Wait for the fetch to complete
   await act(async () => {
     await screen.findByText('Test message');
   });
 
-  // Assert spinner is no longer present
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
   fetchMock.mockRestore();
