@@ -179,32 +179,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
             </label>
           </div>
         </div>
-          <label>
-            KNN: {knn.toFixed(2)}
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={knn}
-              onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
-            />
-          </label>
-          <label>
-            Keywords: {keywords.toFixed(2)}
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={keywords}
-              onChange={(e) => handleSliderChange('keywords', parseFloat(e.target.value))}
-            />
-          </label>
-        </div>
         <button onClick={handleSendMessage} className="send-button">Send</button>
       </div>
-    </div>
   );
 };
 
