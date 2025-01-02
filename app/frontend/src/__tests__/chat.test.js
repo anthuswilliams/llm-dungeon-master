@@ -40,10 +40,10 @@ test('sends correct payload to server on submit and checks spinner visibility', 
     json: () => Promise.resolve({}),
   }));
 
-  const { getByPlaceholderText, getByText } = render(<ChatInterface />);
+  render(<ChatInterface />);
 
-  const input = getByPlaceholderText('Type a message...');
-  const sendButton = getByText('Send');
+  const input = screen.getByPlaceholderText('Type a message...');
+  const sendButton = screen.getByText('Send');
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
