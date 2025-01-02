@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Message } from 'react-chat-ui';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
@@ -16,7 +15,7 @@ const ChatInterface = () => {
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
 
-    const message = new Message({ id: 0, message: newMessage });
+    const message = { id: 0, message: newMessage };
     setMessages([...messages, message]);
 
     try {
