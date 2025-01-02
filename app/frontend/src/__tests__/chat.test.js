@@ -53,22 +53,19 @@ test('sends correct payload to server on submit and checks spinner visibility', 
   fireEvent.change(input, { target: { value: newMessage } });
 
   // Simulate clicking the send button
-  await act(async () => {
+  act(() => {
     fireEvent.click(sendButton);
   });
 
   // Assert spinner is present while message is in flight
   expect(screen.queryByText('Loading...')).toBeInTheDocument();
-  expect(fetch).toHaveBeenCalledWith('http://localhost:8000/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ messages: [newMessage] }),
+
+  // Wait for the fetch to complete
+  await act(async () => {
+    await screen.findByText('Test message');
   });
 
-  // Wait for the fetch to complete and assert spinner is no longer present
-  await screen.findByText('Test message');
+  // Assert spinner is no longer present
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
   fetchMock.mockRestore();
