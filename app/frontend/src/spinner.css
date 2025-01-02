@@ -38,6 +38,7 @@
   width: 90%;
   margin: 0 auto;
   display: block;
+  border-radius: 5px;
 }
 
 .send-button {
