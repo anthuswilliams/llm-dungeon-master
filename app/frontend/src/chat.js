@@ -74,6 +74,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
         {copyStatus}
       </span>
+      <textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         placeholder="Type a message..."
