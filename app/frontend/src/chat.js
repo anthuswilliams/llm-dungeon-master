@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-const ChatInterface = () => {
-  const [messages, setMessages] = useState([]);
+const ChatInterface = ({ initialMessages = [] }) => {
+  const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
 
   const renderMessages = () => {
