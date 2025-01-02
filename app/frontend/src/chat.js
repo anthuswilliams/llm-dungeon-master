@@ -111,7 +111,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <div className="chat-feed">
         {renderMessages()}
       </div>
-    </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
       <button onClick={handleCopyToClipboard} className="copy-link" disabled={messages.length === 0}>
         Copy
@@ -182,6 +181,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         </div>
         <button onClick={handleSendMessage} className="send-button">Send</button>
       </div>
+    </div>
   );
 };
 
