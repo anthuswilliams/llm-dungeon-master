@@ -9,6 +9,7 @@ beforeAll(() => {
     if (!message.includes('act(...)')) {
       console.error(message);
     }
+  });
 });
 
 afterAll(() => {
@@ -125,5 +126,4 @@ test('disables input box while request is in flight', async () => {
   expect(input).not.toBeDisabled();
 
   fetchMock.mockRestore();
-});
 });
