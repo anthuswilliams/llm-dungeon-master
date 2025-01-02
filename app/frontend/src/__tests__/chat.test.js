@@ -34,6 +34,7 @@ test('each message is rendered', () => {
     expect(messageElement).toBeInTheDocument();
   });
 });
+
 test('sends correct payload to server on submit and checks spinner visibility', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
