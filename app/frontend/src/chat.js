@@ -10,7 +10,18 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
 
-  const renderMessages = () => {
+  const [knn, setKnn] = useState(0.4);
+  const [keywords, setKeywords] = useState(0.6);
+
+  const handleSliderChange = (type, value) => {
+    if (type === 'knn') {
+      setKnn(value);
+      setKeywords(1 - value);
+    } else {
+      setKeywords(value);
+      setKnn(1 - value);
+    }
+  };
     return messages.map((msg, index) => (
       <div key={index}>
         <div className={`message ${msg.type}`}>
@@ -22,6 +33,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <>
                 <div><strong>Keywords:</strong> {msg.keywords}</div>
                 <div><strong>Context:</strong> {msg.context.join(', ')}</div>
+                <div><strong>KNN:</strong> {msg.knn}</div>
+                <div><strong>Keywords:</strong> {msg.keywords}</div>
               </>
             ) : (
               <div>No debug information for this response.</div>
@@ -49,7 +62,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
           role: index % 2 === 0 ? 'user' : 'assistant',
           content: msg.message,
         })),
-        debug
+        debug,
+        knn,
+        keywords
       };
 
       const response = await fetch('http://localhost:8000/messages', {
@@ -130,6 +145,30 @@ const ChatInterface = ({ initialMessages = [] }) => {
               onChange={() => setDebug(!debug)}
             />
             Debug
+          </label>
+        </div>
+        <div className="slider-container">
+          <label>
+            KNN: {knn.toFixed(2)}
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={knn}
+              onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
+            />
+          </label>
+          <label>
+            Keywords: {keywords.toFixed(2)}
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={keywords}
+              onChange={(e) => handleSliderChange('keywords', parseFloat(e.target.value))}
+            />
           </label>
         </div>
         <button onClick={handleSendMessage} className="send-button">Send</button>

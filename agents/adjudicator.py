@@ -68,7 +68,7 @@ def query_elastic(keywords, question):
                         "content": {
                             "query": keywords,
                             "operator": "or",
-                            "boost": 0.7
+                            "boost": keywords
                         }
                     }
                 },
@@ -122,7 +122,7 @@ def generate_response(client, context, history):
     return response.choices[0].message.content
 
 
-def query(history, debug=False):
+def query(history, debug=False, knn=0.4, keywords=0.6):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.

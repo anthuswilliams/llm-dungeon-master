@@ -24,7 +24,7 @@ class Messages(BaseModel):
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    response = query(messages.messages, debug=messages.debug)
+    response = query(messages.messages, debug=messages.debug, knn=messages.knn, keywords=messages.keywords)
     if isinstance(response, dict) and "keywords" in response and "context" in response:
         return response
     else:
