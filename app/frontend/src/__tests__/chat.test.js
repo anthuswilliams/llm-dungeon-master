@@ -127,35 +127,4 @@ test('disables input box while request is in flight', async () => {
 
   fetchMock.mockRestore();
 });
-  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-    json: () => Promise.resolve({}),
-  }));
-
-  render(<ChatInterface />);
-
-  const input = screen.getByPlaceholderText('Type a message...');
-  const sendButton = screen.getByText('Send');
-
-  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-  const newMessage = 'Test message';
-  fireEvent.change(input, { target: { value: newMessage } });
-
-  // eslint-disable-next-line testing-library/no-unnecessary-act
-  act(() => {
-    fireEvent.click(sendButton);
-  });
-
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
-
-  // eslint-disable-next-line testing-library/no-unnecessary-act
-  await act(async () => {
-    await screen.findByText((content, element) => {
-      return element.tagName.toLowerCase() === 'div' && content === 'Test message';
-    });
-  });
-
-  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-  fetchMock.mockRestore();
 });
