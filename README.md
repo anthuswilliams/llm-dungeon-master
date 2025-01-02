@@ -26,5 +26,12 @@ There are a number of complex interactions involved in a round of combat.
 4. Tracking of current HP and used resources
 - describing and applying the outcomes of attacks and spells
 5. Encounter balancing
-6. Dictating the actions of enemies
+6. Dictating the actions of enemiesvi 
 - Enemy AI
+
+# Getting up and running
+
+- You need the `libpoppler-cpp-dev` library:
+```
+apt-get install libpoppler-cpp-dev
+```

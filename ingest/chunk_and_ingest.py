@@ -84,8 +84,8 @@ def ingest(doc, title, index):
 
 if __name__ == "__main__":
 
-    FILENAME = "/data/Tasha’s Cauldron of Everything.pdf"
-    INDEX = "tashas-cauldron-of-everything"
+    FILENAME = "/data/Player's Handbook (2014).pdf"
+    INDEX = "players-handbook-2014"
     docs = chunk_file(FILENAME)
     for title, item in docs.items():
         if title:

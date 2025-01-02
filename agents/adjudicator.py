@@ -148,4 +148,4 @@ def query(question):
 
 
 if __name__ == "__main__":
-    print(query("I want to play a character as similar as possible to a warrior during sengoku jidai. What class should I choose?"))
+    print(query("Can I use the Lucky feat to reroll my saving throw from Fireball?"))
