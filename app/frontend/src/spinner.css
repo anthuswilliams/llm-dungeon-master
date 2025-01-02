@@ -19,6 +19,7 @@
 
 .message.user {
   text-align: left;
+  margin-left: 5%;
 }
 
 .message.api {
