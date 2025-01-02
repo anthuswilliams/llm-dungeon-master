@@ -100,17 +100,19 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <div className="char-count">
         {newMessage.length}/1000
       </div>
-      <div className="debug-checkbox">
-        <label>
-          <input
-            type="checkbox"
-            checked={debug}
-            onChange={() => setDebug(!debug)}
-          />
-          Debug
-        </label>
+      <div className="controls">
+        <div className="debug-checkbox">
+          <label>
+            <input
+              type="checkbox"
+              checked={debug}
+              onChange={() => setDebug(!debug)}
+            />
+            Debug
+          </label>
+        </div>
+        <button onClick={handleSendMessage} className="send-button">Send</button>
       </div>
-      <button onClick={handleSendMessage} className="send-button">Send</button>
     </div>
   );
 };

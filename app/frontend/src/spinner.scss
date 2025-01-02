@@ -107,13 +107,19 @@
     border: 0.0625em solid #8b4513; // Dark brown
   }
 
-  .debug-checkbox {
-    margin-left: 5%;
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 0.5em;
+  }
+
+  .debug-checkbox {
     font-size: 0.9em;
   }
 
   .send-button {
+    margin-left: auto;
     background-color: #007bff;
     color: white;
     border: none;
