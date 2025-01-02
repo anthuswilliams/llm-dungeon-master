@@ -9,7 +9,7 @@ beforeAll(() => {
     if (!message.includes('act(...)')) {
       console.error(message);
     }
-  });
+});
 
 afterAll(() => {
   console.error.mockRestore();
