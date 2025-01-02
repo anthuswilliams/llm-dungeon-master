@@ -10,7 +10,7 @@ class Messages(BaseModel):
 
 @app.get("/")
 async def read_index():
-    with open("app/frontend/src/index.html", "r") as file:
+    with open("app/frontend/src/public/index.html", "r") as file:
         content = file.read()
     return Response(content, media_type="text/html")
 async def create_message(messages: Messages):
