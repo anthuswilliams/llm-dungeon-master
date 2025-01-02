@@ -39,6 +39,7 @@
   margin: 0 auto;
   display: block;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .send-button {
