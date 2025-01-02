@@ -11,7 +11,7 @@ class Messages(BaseModel):
 
 @app.get("/")
 async def read_index():
-    with open("app/frontend/public/index.html", "r") as file:
+    with open("app/frontend/build/index.html", "r") as file:
         content = file.read()
     return Response(content, media_type="text/html")
 
