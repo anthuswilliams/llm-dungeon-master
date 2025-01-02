@@ -100,7 +100,9 @@ test('Copy button behavior', async () => {
     },
   });
 
-  act(() => rerender(<ChatInterface initialMessages={messages} />));
+  await act(async () => {
+    rerender(<ChatInterface initialMessages={messages} />);
+  });
   const copyButton = screen.getByText('Copy');
   expect(copyButton).not.toBeDisabled();
 
