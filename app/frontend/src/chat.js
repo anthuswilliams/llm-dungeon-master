@@ -16,10 +16,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <div className={`message ${msg.type}`}>
           <span className={msg.type}>{msg.message}</span>
         </div>
-        {debug && msg.type === 'api' && msg.keywords && msg.context && (
+        {debug && msg.type === 'api' && (
           <div className="debug-info">
-            <div><strong>Keywords:</strong> {msg.keywords}</div>
-            <div><strong>Context:</strong> {msg.context.join(', ')}</div>
+            {msg.keywords && msg.context ? (
+              <>
+                <div><strong>Keywords:</strong> {msg.keywords}</div>
+                <div><strong>Context:</strong> {msg.context.join(', ')}</div>
+              </>
+            ) : (
+              <div>No debug information for this response.</div>
+            )}
           </div>
         )}
       </div>
