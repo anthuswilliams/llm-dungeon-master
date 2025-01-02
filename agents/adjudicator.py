@@ -122,7 +122,7 @@ def generate_response(client, context, history):
     return response.choices[0].message.content
 
 
-def query(history):
+def query(history, debug=False):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -147,11 +147,16 @@ def query(history):
         return "Please provide a question."
     question = history[-1]["content"]
     keywords = generate_keywords(client, question)
-    print(keywords)
     context = query_elastic(keywords, question)
-    print(context)
 
-    return generate_response(client, context, history)
+    if debug:
+        return {
+            "response": generate_response(client, context, history),
+            "keywords": keywords,
+            "context": context
+        }
+    else:
+        return generate_response(client, context, history)
 
 
 if __name__ == "__main__":

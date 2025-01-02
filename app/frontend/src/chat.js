@@ -13,6 +13,12 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const renderMessages = () => {
     return messages.map((msg, index) => (
       <div key={index} className={`message ${msg.type}`}>
+        {msg.keywords && msg.context && (
+          <div className="debug-info">
+            <div><strong>Keywords:</strong> {msg.keywords}</div>
+            <div><strong>Context:</strong> {msg.context.join(', ')}</div>
+          </div>
+        )}
         <span className={msg.type}>{msg.message}</span>
       </div>
     ));
@@ -34,7 +40,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
         messages: updatedMessages.map((msg, index) => ({
           role: index % 2 === 0 ? 'user' : 'assistant',
           content: msg.message,
-        }))
+        })),
+        debug
       };
 
       const response = await fetch('http://localhost:8000/messages', {
@@ -46,7 +53,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
       });
       const data = await response.json();
       if (data.response) {
-        const responseMessage = { id: updatedMessages.length, message: data.response, type: 'api' };
+        const responseMessage = {
+          id: updatedMessages.length,
+          message: data.response,
+          type: 'api',
+          keywords: data.keywords || null,
+          context: data.context || null
+        };
         setMessages([...updatedMessages, responseMessage]);
       }
     } catch (error) {
