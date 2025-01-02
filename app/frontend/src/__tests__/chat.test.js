@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
@@ -53,7 +53,9 @@ test('sends correct payload to server on submit and checks spinner visibility', 
   fireEvent.change(input, { target: { value: newMessage } });
 
   // Simulate clicking the send button
-  fireEvent.click(sendButton);
+  await act(async () => {
+    fireEvent.click(sendButton);
+  });
 
   // Assert spinner is present while message is in flight
   expect(screen.getByText('Loading...')).toBeInTheDocument();
