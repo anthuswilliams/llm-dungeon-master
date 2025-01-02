@@ -31,7 +31,9 @@ test('submits message on Enter key press', async () => {
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
-    await screen.findByText('Enter key message');
+    await screen.findByText((content, element) => {
+      return element.tagName.toLowerCase() === 'div' && content === 'Enter key message';
+    });
   });
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -101,7 +103,9 @@ test('sends correct payload to server on submit and checks spinner visibility', 
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
-    await screen.findByText('Test message');
+    await screen.findByText((content, element) => {
+      return element.tagName.toLowerCase() === 'div' && content === 'Test message';
+    });
   });
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
