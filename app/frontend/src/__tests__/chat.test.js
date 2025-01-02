@@ -109,7 +109,141 @@ test('Copy button copies messages to clipboard when enabled', async () => {
   expect(writeTextMock).toHaveBeenCalledWith(JSON.stringify(messages, null, 2));
 });
 
-test('displays character count', () => {
+test('sends debug: true when checkbox is checked', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.debug).toBe(true);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+  const debugCheckbox = screen.getByLabelText('Debug');
+  fireEvent.click(debugCheckbox);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  fetchMock.mockRestore();
+});
+
+test('sends debug: false when checkbox is unchecked', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.debug).toBe(false);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  fetchMock.mockRestore();
+});
+
+test('sends correct slider values', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.knn).toBeCloseTo(0.4);
+    expect(body.keywords).toBeCloseTo(0.6);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  fetchMock.mockRestore();
+});
+
+test('sliders always sum to 1', () => {
+  render(<ChatInterface />);
+  const knnSlider = screen.getByLabelText(/KNN:/);
+  const keywordsSlider = screen.getByLabelText(/Keywords:/);
+
+  fireEvent.change(knnSlider, { target: { value: 0.7 } });
+  expect(parseFloat(knnSlider.value) + parseFloat(keywordsSlider.value)).toBeCloseTo(1);
+
+  fireEvent.change(keywordsSlider, { target: { value: 0.3 } });
+  expect(parseFloat(knnSlider.value) + parseFloat(keywordsSlider.value)).toBeCloseTo(1);
+});
+
+test('displays debug info when debug is checked', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({
+      response: 'API response',
+      context: ['context1', 'context2'],
+    }),
+  }));
+
+  render(<ChatInterface />);
+  const debugCheckbox = screen.getByLabelText('Debug');
+  fireEvent.click(debugCheckbox);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  await screen.findByText('API response');
+  expect(screen.getByText('context1, context2')).toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
+test('displays message when no debug info is available', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({
+      response: 'API response',
+      context: null,
+    }),
+  }));
+
+  render(<ChatInterface />);
+  const debugCheckbox = screen.getByLabelText('Debug');
+  fireEvent.click(debugCheckbox);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  await screen.findByText('API response');
+  expect(screen.getByText('No debug information for this response.')).toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
+test('debug info includes slider values at submission time', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({
+      response: 'API response',
+      context: ['context1', 'context2'],
+      knn: 0.4,
+      keywords: 0.6,
+    }),
+  }));
+
+  render(<ChatInterface />);
+  const debugCheckbox = screen.getByLabelText('Debug');
+  fireEvent.click(debugCheckbox);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  await screen.findByText('API response');
+  expect(screen.getByText('KNN: 0.40')).toBeInTheDocument();
+  expect(screen.getByText('Keywords: 0.60')).toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
   render(<ChatInterface initialMessages={[]} />);
   const input = screen.getByPlaceholderText('Type a message...');
   expect(screen.getByText('0/1000')).toBeInTheDocument();
