@@ -83,7 +83,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
           message: data.response,
           type: 'api',
           keywords: keywordsWeight,
-          context: data.context || null
+          context: data.context || null,
+          knn
         };
         setMessages([...updatedMessages, responseMessage]);
       }
