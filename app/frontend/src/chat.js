@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { ChatFeed, Message } from 'react-chat-ui';
+import { Message } from 'react-chat-ui';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
-  const handleSendMessage = async () => {
+  const renderMessages = () => {
+    return messages.map((msg, index) => (
+      <div key={index} className="message">
+        {msg.message}
+      </div>
+    ));
+  };
     if (newMessage.trim() === '') return;
 
     const message = new Message({ id: 0, message: newMessage });
@@ -28,11 +34,9 @@ const ChatInterface = () => {
 
   return (
     <div>
-      <ChatFeed
-        messages={messages}
-        showSenderName
-        bubblesCentered={false}
-      />
+      <div className="chat-feed">
+        {renderMessages()}
+      </div>
       <input
         type="text"
         value={newMessage}
