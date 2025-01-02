@@ -52,7 +52,14 @@ const ChatInterface = ({ initialMessages = [] }) => {
     setNewMessage('');
   };
 
-  return (
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(messages, null, 2));
+      alert('Messages copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy messages: ', err);
+    }
+  };
     <div className="chat-interface">
       <h1 className="chat-title">Chat with the RPG</h1>
       <div className="chat-feed">
@@ -78,6 +85,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {newMessage.length}/1000
       </div>
       <button onClick={handleSendMessage} className="send-button">Send</button>
+      <button onClick={handleCopyToClipboard} className="copy-button">Copy Messages</button>
     </div>
   );
 };
