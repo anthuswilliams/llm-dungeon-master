@@ -60,6 +60,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       console.error('Failed to copy messages: ', err);
     }
   };
+  return (
     <div className="chat-interface">
       <h1 className="chat-title">Chat with the RPG</h1>
       <div className="chat-feed">
