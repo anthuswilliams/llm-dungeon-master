@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './spinner.css'; // Assuming you have a CSS file for the spinner
+import './spinner.scss'; // Assuming you have a CSS file for the spinner
 
 const ChatInterface = ({ initialMessages = [] }) => {
   const [messages, setMessages] = useState(initialMessages);
