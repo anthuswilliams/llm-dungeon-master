@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
-global.fetch = jest.fn();
 
 test('renders all messages', () => {
   const messages = [
@@ -19,6 +18,7 @@ test('renders all messages', () => {
     const messageElement = screen.getByText(msg.message);
     expect(messageElement).toBeInTheDocument();
   });
+  fetchMock.mockRestore();
 });
 
 test('each message is rendered', () => {
@@ -36,6 +36,10 @@ test('each message is rendered', () => {
   });
 });
 test('sends correct payload to server on submit', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({}),
+  }));
+
   const { getByPlaceholderText, getByText } = render(<ChatInterface />);
 
   const input = getByPlaceholderText('Type a message...');
