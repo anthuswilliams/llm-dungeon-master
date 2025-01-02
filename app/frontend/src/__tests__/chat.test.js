@@ -110,11 +110,10 @@ test('Copy button behavior', async () => {
   expect(writeTextMock).toHaveBeenCalledWith(JSON.stringify(messages, null, 2));
 
   // Render the component with no initial messages
+  // Render the component with no initial messages
   render(<ChatInterface initialMessages={[]} />);
-  const disabledCopyButtons = screen.getAllByText('Copy');
-  const disabledCopyButton = disabledCopyButtons[1];
+  const disabledCopyButton = screen.getByText('Copy');
   expect(disabledCopyButton).toBeDisabled();
-render(<ChatInterface />);
 
   const input = screen.getByPlaceholderText('Type a message...');
   const charCount = screen.getByText('0/1000');
