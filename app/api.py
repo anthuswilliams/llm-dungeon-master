@@ -18,6 +18,7 @@ app.add_middleware(
 
 
 class Messages(BaseModel):
+    debug: bool
     messages: List[Dict[str, str]]
 
 
