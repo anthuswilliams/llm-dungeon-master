@@ -68,7 +68,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           {newMessage.length}/1000
         </div>
       </div>
-      <button onClick={handleSendMessage}>Send</button>
+      <button onClick={handleSendMessage} style={{ alignSelf: 'flex-end' }}>Send</button>
     </div>
   );
 };
