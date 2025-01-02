@@ -59,32 +59,40 @@ def generate_keywords(client, question):
     return completion.choices[0].message.content
 
 
-def query_elastic(keywords, question, knn):
+def query_elastic(keywords, question, settings):
+    data = {
+        "query": {
+            "match": {
+                "content": {
+                    "query": keywords,
+                    "operator": "or",
+                    "boost": settings["keywords"]
+                }
+            }
+        },
+        "knn": {
+            "field": "content-embedding",
+            "k": 10,
+            "boost": settings["knn"],
+            "num_candidates": 10,
+            "query_vector_builder": {
+                "text_embedding": {
+                    "model_id": "open-ai-embeddings",
+                    "model_text": question
+                }
+            }
+        }
+    }
+
+    if settings["keywords"] == 0:
+        del data["query"]
+    if settings["knn"] == 0:
+        del data["knn"]
+
     results = elastic_request(
         url="_search",
-            data={
-                "query": {
-                    "match": {
-                        "content": {
-                            "query": keywords,
-                            "operator": "or",
-                            "boost": keywords
-                        }
-                    }
-                },
-                "knn": {
-                    "field": "content-embedding",
-                    "k": 10,
-                    "boost": knn,
-                    "num_candidates": 10,
-                    "query_vector_builder": {
-                        "text_embedding": {
-                            "model_id": "open-ai-embeddings",
-                            "model_text": question
-                        }
-                    }
-                }
-            })
+        data=data
+    )
 
     results.raise_for_status()
     hits = results.json()["hits"]["hits"]
@@ -146,13 +154,15 @@ def query(history, debug=False, knn=0.4, keywords=0.6):
     if not history:
         return "Please provide a question."
     question = history[-1]["content"]
-    keywords = generate_keywords(client, question)
-    context = query_elastic(keywords, question, knn)
+    keyword_query = generate_keywords(
+        client, question) if keywords > 0 else None
+    context = query_elastic(keywords, question, {
+                            "knn": knn, "keywords": keywords})
 
     if debug:
         return {
             "response": generate_response(client, context, history),
-            "keywords": keywords,
+            "keywords": keyword_query,
             "context": context
         }
     else:
