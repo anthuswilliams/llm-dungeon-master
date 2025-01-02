@@ -24,11 +24,13 @@
 
   .debug-checkbox {
     font-size: 0.9em;
+
     label {
       color: #888; // Lighten the text color
       display: flex;
       align-items: center;
     }
+
     input[type="checkbox"] {
       appearance: none;
       width: 1em;
@@ -38,8 +40,11 @@
       margin-right: 0.5em;
       cursor: pointer;
       position: relative;
+
       &:checked {
         background-color: #007bff; // Blue color similar to Send button
+        color: white;
+        font-weight: bold;
         border-color: #007bff;
       }
     }
@@ -136,11 +141,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 90%;
+    margin: 0 auto;
     margin-top: 0.5em;
-  }
-
-  .debug-checkbox {
-    font-size: 0.9em;
   }
 
   .send-button {
@@ -156,7 +159,6 @@
     margin-top: 0.625em;
     display: block;
     margin-left: auto;
-    margin-right: 5%;
   }
 
   .send-button:hover {

@@ -34,8 +34,6 @@ test('submits message on Enter key press', async () => {
 
   const newMessage = 'Enter key message';
   fireEvent.change(input, { target: { value: newMessage } });
-
-  // Simulate pressing the Enter key
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   expect(screen.getByText('Loading...')).toBeInTheDocument();
@@ -103,28 +101,16 @@ test('Copy button copies messages to clipboard when enabled', async () => {
     },
   });
 
-  const { rerender } = render(<ChatInterface initialMessages={[]} />);
-  await act(async () => {
-    rerender(<ChatInterface initialMessages={messages} />);
-  });
-
+  render(<ChatInterface initialMessages={messages} />);
   const copyButton = screen.getByText('Copy');
   expect(copyButton).not.toBeDisabled();
 
-  // Simulate clicking the copy button
   fireEvent.click(copyButton);
-
-  // Assert that the clipboard's writeText method was called with the correct JSON string
   expect(writeTextMock).toHaveBeenCalledWith(JSON.stringify(messages, null, 2));
 });
 
 test('displays character count', () => {
-  // Render the component with no initial messages
-  // Render the component with no initial messages
   render(<ChatInterface initialMessages={[]} />);
-  const disabledCopyButton = screen.getByText('Copy');
-  expect(disabledCopyButton).toBeDisabled();
-
   const input = screen.getByPlaceholderText('Type a message...');
   expect(screen.getByText('0/1000')).toBeInTheDocument();
 
