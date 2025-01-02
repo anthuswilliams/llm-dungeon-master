@@ -24,10 +24,12 @@ const ChatInterface = ({ initialMessages = [] }) => {
     setMessages(updatedMessages);
 
     try {
-      const formattedMessages = updatedMessages.map((msg, index) => ({
-        role: index % 2 === 0 ? 'user' : 'assistant',
-        content: msg.message,
-      }));
+      const formattedMessages = {
+        messages: updatedMessages.map((msg, index) => ({
+          role: index % 2 === 0 ? 'user' : 'assistant',
+          content: msg.message,
+        }))
+      };
 
       const response = await fetch('http://localhost:8000/messages', {
         method: 'POST',
