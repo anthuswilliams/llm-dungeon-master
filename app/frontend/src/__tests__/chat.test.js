@@ -35,7 +35,7 @@ test('each message is rendered', () => {
     expect(messageElement).toBeInTheDocument();
   });
 });
-test('sends correct payload to server on submit', async () => {
+test('sends correct payload to server on submit and checks spinner visibility', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
   }));
@@ -45,6 +45,9 @@ test('sends correct payload to server on submit', async () => {
   const input = getByPlaceholderText('Type a message...');
   const sendButton = getByText('Send');
 
+  // Assert spinner is not present initially
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
   // Simulate user typing a message
   const newMessage = 'Test message';
   fireEvent.change(input, { target: { value: newMessage } });
@@ -52,7 +55,8 @@ test('sends correct payload to server on submit', async () => {
   // Simulate clicking the send button
   fireEvent.click(sendButton);
 
-  // Assert fetch was called with the correct payload
+  // Assert spinner is present while message is in flight
+  expect(screen.getByText('Loading...')).toBeInTheDocument();
   expect(fetch).toHaveBeenCalledWith('http://localhost:8000/messages', {
     method: 'POST',
     headers: {
@@ -60,6 +64,10 @@ test('sends correct payload to server on submit', async () => {
     },
     body: JSON.stringify({ message: newMessage }),
   });
+
+  // Wait for the fetch to complete and assert spinner is no longer present
+  await screen.findByText('Test message');
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
