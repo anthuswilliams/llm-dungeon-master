@@ -12,6 +12,13 @@
   font-family: 'Gill Sans Nova', sans-serif;
   background-color: color.adjust(#f5f5dc, $lightness: 50%);
 
+  .chat-title {
+    font-family: 'Old English MT', serif;
+    text-align: center;
+    margin-bottom: 1em;
+    color: #8b4513; // Dark brown
+  }
+
   .chat-feed {
     flex: 1;
     overflow-y: auto;
