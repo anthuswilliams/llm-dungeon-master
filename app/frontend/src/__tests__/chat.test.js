@@ -75,7 +75,7 @@ test('each message is rendered', () => {
     { id: 0, message: 'I am fine, thank you!' },
   ];
 
-  render(<ChatInterface initialMessages={messages} />);
+  const { rerender } = render(<ChatInterface initialMessages={messages} />);
 
   messages.forEach(msg => {
     const messageElement = screen.getByText(msg.message);
