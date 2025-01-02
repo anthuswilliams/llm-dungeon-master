@@ -95,6 +95,7 @@ test('updates character count as user types', () => {
 
   expect(screen.getByText('13/1000')).toBeInTheDocument();
 });
+test('sends correct payload to server on button click and checks spinner visibility', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
   }));
@@ -126,4 +127,5 @@ test('updates character count as user types', () => {
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
   fetchMock.mockRestore();
+});
 });
