@@ -20,6 +20,29 @@
     color: #8b4513; // Dark brown
   }
 
+  .debug-checkbox {
+    font-size: 0.9em;
+    label {
+      color: #888; // Lighten the text color
+      display: flex;
+      align-items: center;
+    }
+    input[type="checkbox"] {
+      appearance: none;
+      width: 1em;
+      height: 1em;
+      border: 0.0625em solid #8b4513; // Dark brown
+      border-radius: 0.3125em;
+      margin-right: 0.5em;
+      cursor: pointer;
+      position: relative;
+      &:checked {
+        background-color: #007bff; // Blue color similar to Send button
+        border-color: #007bff;
+      }
+    }
+  }
+
   .copy-link:disabled {
     color: #d3d3d3; // Very light grey
     cursor: default;
