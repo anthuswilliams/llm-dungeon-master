@@ -112,8 +112,6 @@ test('Copy button behavior', async () => {
   render(<ChatInterface initialMessages={[]} />);
   const disabledCopyButton = screen.getByText('Copy');
   expect(disabledCopyButton).toBeDisabled();
-});
-
 render(<ChatInterface />);
 
   const input = screen.getByPlaceholderText('Type a message...');
