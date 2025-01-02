@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import './spinner.css'; // Assuming you have a CSS file for the spinner
 
 const ChatInterface = ({ initialMessages = [] }) => {
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+
+  const [loading, setLoading] = useState(false);
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
@@ -14,6 +17,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
+    setLoading(true);
 
     const message = { id: 0, message: newMessage };
     setMessages([...messages, message]);
@@ -33,6 +37,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
       }
     } catch (error) {
       console.error('Error sending message:', error);
+    } finally {
+      setLoading(false);
     }
 
     setNewMessage('');
@@ -43,6 +49,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <div className="chat-feed">
         {renderMessages()}
       </div>
+      {loading && <div className="spinner">Loading...</div>}
       <input
         type="text"
         value={newMessage}
