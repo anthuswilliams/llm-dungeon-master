@@ -11,7 +11,6 @@ const ChatInterface = () => {
         {msg.message}
       </div>
     ));
-  };
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
 
