@@ -1,5 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+
+// Suppress act warnings in the console
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation((message) => {
+    if (!message.includes('act(...)')) {
+      console.error(message);
+    }
+  });
+});
+
+afterAll(() => {
+  console.error.mockRestore();
+});
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
