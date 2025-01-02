@@ -19,8 +19,6 @@ class Messages(BaseModel):
     messages: List[str]
 
 
-
-
 @app.post("/messages")
 async def create_message(messages: Messages):
     return {"messages": messages.messages}
