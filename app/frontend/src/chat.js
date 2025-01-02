@@ -39,9 +39,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
         body: JSON.stringify(formattedMessages),
       });
       const data = await response.json();
-      if (data.responses) {
-        const responseMessages = data.responses.map((msg, index) => ({ id: index + 1, message: msg, type: 'api' }));
-        setMessages([...messages, ...responseMessages]);
+      if (data.response) {
+        const responseMessage = { id: updatedMessages.length, message: data.response, type: 'api' };
+        setMessages([...updatedMessages, responseMessage]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
