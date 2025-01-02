@@ -9,7 +9,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
-      <div key={index} className="message">
+      <div key={index} className={`message ${msg.type}`}>
         <span className={msg.type}>{msg.message}</span>
       </div>
     ));
