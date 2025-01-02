@@ -10,7 +10,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const renderMessages = () => {
     return messages.map((msg, index) => (
       <div key={index} className="message">
-        {msg.message}
+        <span className={msg.type}>{msg.message}</span>
       </div>
     ));
   };
@@ -19,7 +19,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
     if (newMessage.trim() === '') return;
     setLoading(true);
 
-    const message = { id: 0, message: newMessage };
+    const message = { id: 0, message: newMessage, type: 'user' };
     setMessages([...messages, message]);
 
     try {
@@ -32,7 +32,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       });
       const data = await response.json();
       if (data.responses) {
-        const responseMessages = data.responses.map((msg, index) => ({ id: index + 1, message: msg }));
+        const responseMessages = data.responses.map((msg, index) => ({ id: index + 1, message: msg, type: 'api' }));
         setMessages([...messages, message, ...responseMessages]);
       }
     } catch (error) {
