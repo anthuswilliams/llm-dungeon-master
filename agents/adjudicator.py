@@ -75,7 +75,7 @@ def query_elastic(keywords, question):
                 "knn": {
                     "field": "content-embedding",
                     "k": 10,
-                    "boost": 0.3,
+                    "boost": knn,
                     "num_candidates": 10,
                     "query_vector_builder": {
                         "text_embedding": {
