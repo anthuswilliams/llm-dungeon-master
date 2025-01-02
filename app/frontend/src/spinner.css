@@ -40,6 +40,12 @@
   justify-content: space-between;
 }
 
+textarea {
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+}
+
 button {
   background-color: #007bff;
   color: white;
