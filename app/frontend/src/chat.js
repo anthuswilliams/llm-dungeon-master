@@ -19,13 +19,18 @@ const ChatInterface = ({ initialMessages = [] }) => {
     setMessages([...messages, message]);
 
     try {
-      await fetch('http://localhost:8000/messages', {
+      const response = await fetch('http://localhost:8000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ messages: [newMessage] }),
       });
+      const data = await response.json();
+      if (data.responses) {
+        const responseMessages = data.responses.map((msg, index) => ({ id: index + 1, message: msg }));
+        setMessages([...messages, message, ...responseMessages]);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
     }
