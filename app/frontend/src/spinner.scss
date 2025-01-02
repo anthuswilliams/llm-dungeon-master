@@ -25,8 +25,6 @@
     cursor: default;
   }
 
-}
-
   .chat-feed {
     flex: 1;
     overflow-y: auto;
@@ -129,7 +127,6 @@
     margin-left: auto;
     margin-right: 5%;
   }
-  }
 
   .send-button:hover {
     background-color: #0056b3;
@@ -143,7 +140,7 @@
     margin-right: 5%;
     margin-top: 0.25em;
   }
-  
+
   .copy-link {
     background: none;
     border: none;
@@ -155,3 +152,4 @@
     display: block;
     margin-left: auto;
   }
+}
