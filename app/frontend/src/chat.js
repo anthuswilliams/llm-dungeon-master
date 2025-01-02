@@ -55,7 +55,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         placeholder="Type a message..."
-        onKeyPress={(e) => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter') {
             handleSendMessage();
           }
