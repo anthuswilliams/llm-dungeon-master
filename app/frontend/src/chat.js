@@ -12,6 +12,7 @@ const ChatInterface = () => {
       </div>
     ));
   };
+  const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
 
     const message = new Message({ id: 0, message: newMessage });
@@ -30,6 +31,7 @@ const ChatInterface = () => {
     }
 
     setNewMessage('');
+  };
   };
 
   return (
