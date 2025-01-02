@@ -2,11 +2,19 @@
 
 .chat-interface {
   width: 60%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   font-family: 'Gill Sans Nova', sans-serif;
   background-color: color.adjust(#f5f5dc, $lightness: 50%);
+
+  .chat-feed {
+    flex: 1;
+    overflow-y: auto;
+  }
 
   .message {
     border: 1px solid #ddd;
