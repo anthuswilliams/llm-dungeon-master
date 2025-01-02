@@ -16,7 +16,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <div className={`message ${msg.type}`}>
           <span className={msg.type}>{msg.message}</span>
         </div>
-        {msg.type === 'api' && msg.keywords && msg.context && (
+        {debug && msg.type === 'api' && msg.keywords && msg.context && (
           <div className="debug-info">
             <div><strong>Keywords:</strong> {msg.keywords}</div>
             <div><strong>Context:</strong> {msg.context.join(', ')}</div>
