@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act, rerender } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
@@ -59,7 +59,7 @@ test('renders all messages', () => {
     { id: 0, message: 'I am fine, thank you!' },
   ];
 
-  render(<ChatInterface initialMessages={messages} />);
+  const { rerender } = render(<ChatInterface initialMessages={messages} />);
 
   messages.forEach(msg => {
     const messageElement = screen.getByText(msg.message);
