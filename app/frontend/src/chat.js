@@ -68,7 +68,12 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {renderMessages()}
       </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <textarea
+      <button onClick={handleCopyToClipboard} className="copy-link" style={{ textDecoration: 'underline', background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}>
+        Copy Messages
+      </button>
+      <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+        {copyStatus}
+      </span>
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         placeholder="Type a message..."
@@ -87,10 +92,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {newMessage.length}/1000
       </div>
       <button onClick={handleSendMessage} className="send-button">Send</button>
-      <button onClick={handleCopyToClipboard} className="copy-button">Copy Messages</button>
-      <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-        {copyStatus}
-      </span>
     </div>
   );
 };
