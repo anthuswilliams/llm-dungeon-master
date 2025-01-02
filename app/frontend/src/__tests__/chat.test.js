@@ -1,5 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import ChatInterface from '../chat';
 
 // Suppress act warnings in the console
 beforeAll(() => {
@@ -8,6 +10,11 @@ beforeAll(() => {
       console.error(message);
     }
   });
+});
+
+afterAll(() => {
+  console.error.mockRestore();
+});
 
 test('submits message on Enter key press', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
@@ -39,13 +46,6 @@ test('submits message on Enter key press', async () => {
 
   fetchMock.mockRestore();
 });
-
-afterAll(() => {
-  console.error.mockRestore();
-});
-import '@testing-library/jest-dom/extend-expect';
-import ChatInterface from '../chat';
-
 
 test('renders all messages', () => {
   const messages = [
@@ -94,6 +94,7 @@ test('updates character count as user types', () => {
 
   expect(screen.getByText('13/1000')).toBeInTheDocument();
 });
+
 test('sends correct payload to server on button click and checks spinner visibility', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
@@ -126,5 +127,4 @@ test('sends correct payload to server on button click and checks spinner visibil
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
   fetchMock.mockRestore();
-});
 });
