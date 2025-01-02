@@ -6,6 +6,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [newMessage, setNewMessage] = useState('');
 
   const [loading, setLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
@@ -55,9 +56,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const handleCopyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(messages, null, 2));
-      alert('Messages copied to clipboard!');
+      setCopyStatus('Copied!');
     } catch (err) {
-      console.error('Failed to copy messages: ', err);
+      setCopyStatus('Failed to copy to clipboard');
     }
   };
   return (
@@ -87,6 +88,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
       </div>
       <button onClick={handleSendMessage} className="send-button">Send</button>
       <button onClick={handleCopyToClipboard} className="copy-button">Copy Messages</button>
+      <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+        {copyStatus}
+      </span>
     </div>
   );
 };
