@@ -13,13 +13,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const renderMessages = () => {
     return messages.map((msg, index) => (
       <div key={index} className={`message ${msg.type}`}>
-        {msg.keywords && msg.context && (
+        <span className={msg.type}>{msg.message}</span>
+        {msg.type === 'api' && msg.keywords && msg.context && (
           <div className="debug-info">
             <div><strong>Keywords:</strong> {msg.keywords}</div>
             <div><strong>Context:</strong> {msg.context.join(', ')}</div>
           </div>
         )}
-        <span className={msg.type}>{msg.message}</span>
       </div>
     ));
     if (messageInputRef.current) {
