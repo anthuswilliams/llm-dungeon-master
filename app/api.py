@@ -19,12 +19,15 @@ app.add_middleware(
 
 class Messages(BaseModel):
     debug: bool
+    knn: float
+    keywords: float
     messages: List[Dict[str, str]]
 
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    response = query(messages.messages, debug=messages.debug, knn=messages.knn, keywords=messages.keywords)
+    response = query(messages.messages, debug=messages.debug,
+                     knn=messages.knn, keywords=messages.keywords)
     if isinstance(response, dict) and "keywords" in response and "context" in response:
         return response
     else:
