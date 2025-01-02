@@ -113,7 +113,8 @@ test('Copy button behavior', async () => {
   const disabledCopyButton = screen.getByText('Copy');
   expect(disabledCopyButton).toBeDisabled();
 });
-  render(<ChatInterface />);
+
+render(<ChatInterface />);
 
   const input = screen.getByPlaceholderText('Type a message...');
   const charCount = screen.getByText('0/1000');
