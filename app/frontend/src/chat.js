@@ -61,6 +61,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
             handleSendMessage();
           }
         }}
+        disabled={loading}
         maxLength={1000}
         rows={4}
         className="message-input"
