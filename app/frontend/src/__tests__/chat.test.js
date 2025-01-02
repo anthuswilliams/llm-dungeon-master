@@ -95,7 +95,38 @@ test('updates character count as user types', () => {
   expect(screen.getByText('13/1000')).toBeInTheDocument();
 });
 
-test('sends correct payload to server on button click and checks spinner visibility', async () => {
+test('disables input box while request is in flight', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({}),
+  }));
+
+  render(<ChatInterface />);
+
+  const input = screen.getByPlaceholderText('Type a message...');
+  const sendButton = screen.getByText('Send');
+
+  expect(input).not.toBeDisabled();
+
+  fireEvent.change(input, { target: { value: 'Test message' } });
+
+  // eslint-disable-next-line testing-library/no-unnecessary-act
+  act(() => {
+    fireEvent.click(sendButton);
+  });
+
+  expect(input).toBeDisabled();
+
+  // eslint-disable-next-line testing-library/no-unnecessary-act
+  await act(async () => {
+    await screen.findByText((content, element) => {
+      return element.tagName.toLowerCase() === 'div' && content === 'Test message';
+    });
+  });
+
+  expect(input).not.toBeDisabled();
+
+  fetchMock.mockRestore();
+});
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({}),
   }));
