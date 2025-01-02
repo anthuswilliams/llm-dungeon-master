@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
 
@@ -18,7 +18,7 @@ test('renders all messages', () => {
     const messageElement = screen.getByText(msg.message);
     expect(messageElement).toBeInTheDocument();
   });
-  fetchMock.mockRestore();
+
 });
 
 test('each message is rendered', () => {
@@ -60,4 +60,6 @@ test('sends correct payload to server on submit', async () => {
     },
     body: JSON.stringify({ message: newMessage }),
   });
+
+  fetchMock.mockRestore();
 });
