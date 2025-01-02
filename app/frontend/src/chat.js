@@ -68,7 +68,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {renderMessages()}
       </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <button onClick={handleCopyToClipboard} className="copy-link" style={{ textDecoration: 'underline', background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textAlign: 'right', marginBottom: '1em' }}>
+      <button onClick={handleCopyToClipboard} className="copy-link" style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textAlign: 'right', marginBottom: '1em' }}>
         Copy
       </button>
       <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
