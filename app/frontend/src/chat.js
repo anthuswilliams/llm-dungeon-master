@@ -61,6 +61,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       setCopyStatus('Failed to copy to clipboard');
     }
   };
+
   return (
     <div className="chat-interface">
       <h1 className="chat-title">Chat with the RPG</h1>

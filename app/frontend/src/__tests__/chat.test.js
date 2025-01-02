@@ -59,7 +59,7 @@ test('renders all messages', () => {
     { id: 0, message: 'I am fine, thank you!' },
   ];
 
-  const { rerender } = render(<ChatInterface initialMessages={messages} />);
+  render(<ChatInterface initialMessages={messages} />);
 
   messages.forEach(msg => {
     const messageElement = screen.getByText(msg.message);
@@ -75,7 +75,7 @@ test('each message is rendered', () => {
     { id: 0, message: 'I am fine, thank you!' },
   ];
 
-  const { rerender } = render(<ChatInterface initialMessages={messages} />);
+  render(<ChatInterface initialMessages={messages} />);
 
   messages.forEach(msg => {
     const messageElement = screen.getByText(msg.message);
@@ -84,6 +84,9 @@ test('each message is rendered', () => {
 });
 
 test('Copy button behavior', async () => {
+  const { rerender } = render(<ChatInterface initialMessages={[]} />);
+  expect(screen.getByText('Copy')).toBeDisabled();
+
   const messages = [
     { id: 0, message: 'Hello', type: 'user' },
     { id: 1, message: 'How are you?', type: 'api' },
@@ -97,10 +100,8 @@ test('Copy button behavior', async () => {
     },
   });
 
-  render(<ChatInterface initialMessages={messages} />);
-
-  const copyButtons = screen.getAllByText('Copy');
-  const copyButton = copyButtons[0];
+  act(() => rerender(<ChatInterface initialMessages={messages} />));
+  const copyButton = screen.getByText('Copy');
   expect(copyButton).not.toBeDisabled();
 
   // Simulate clicking the copy button
@@ -108,24 +109,22 @@ test('Copy button behavior', async () => {
 
   // Assert that the clipboard's writeText method was called with the correct JSON string
   expect(writeTextMock).toHaveBeenCalledWith(JSON.stringify(messages, null, 2));
+});
 
+test('displays character count', () => {
   // Render the component with no initial messages
   // Render the component with no initial messages
-  rerender(<ChatInterface initialMessages={[]} />);
+  render(<ChatInterface initialMessages={[]} />);
   const disabledCopyButton = screen.getByText('Copy');
   expect(disabledCopyButton).toBeDisabled();
 
   const input = screen.getByPlaceholderText('Type a message...');
-  const charCount = screen.getByText('0/1000');
-
-  expect(charCount).toBeInTheDocument();
+  expect(screen.getByText('0/1000')).toBeInTheDocument();
 
   fireEvent.change(input, { target: { value: 'Hello' } });
-
   expect(screen.getByText('5/1000')).toBeInTheDocument();
 
   fireEvent.change(input, { target: { value: 'Hello, world!' } });
-
   expect(screen.getByText('13/1000')).toBeInTheDocument();
 });
 
