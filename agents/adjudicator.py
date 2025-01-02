@@ -93,6 +93,7 @@ def query_elastic(keywords, question):
 
 
 def generate_response(client, context, history):
+    print(history)
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -127,8 +128,8 @@ def query(history):
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
 
     @params
-    question: Str
-      the question to be ruled upon
+    conversation: Dict[{role: str, content: str}]
+      The entire conversation the user is having with the rules. The last element is typically the question to be ruled upon
 
     @return
     response: str
@@ -142,8 +143,13 @@ def query(history):
           => "You can cover a number of feet up to your Strength score if you move at least 10 feet on foot immediately before the jump. With a Strength score of 18, you can jump up to 18 feet."
     """
     client = OpenAI()
+    if not history:
+        return "Please provide a question."
+    question = history[-1]["content"]
     keywords = generate_keywords(client, question)
+    print(keywords)
     context = query_elastic(keywords, question)
+    print(context)
 
     return generate_response(client, context, history)
 
