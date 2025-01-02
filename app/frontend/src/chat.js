@@ -82,7 +82,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           id: updatedMessages.length,
           message: data.response,
           type: 'api',
-          keywords: data.keywords || null,
+          keywords: keywordsWeight,
           context: data.context || null
         };
         setMessages([...updatedMessages, responseMessage]);
