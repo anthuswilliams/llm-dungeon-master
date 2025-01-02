@@ -55,7 +55,7 @@ test('sends correct payload to server on submit and checks spinner visibility', 
     fireEvent.click(sendButton);
   });
 
-  expect(screen.queryByText('Loading...')).toBeInTheDocument();
+  expect(screen.getByText('Loading...')).toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
