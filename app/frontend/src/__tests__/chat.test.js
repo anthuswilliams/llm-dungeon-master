@@ -244,6 +244,8 @@ test('debug info includes slider values at submission time', async () => {
 
   fetchMock.mockRestore();
 });
+
+test('displays character count', () => {
   render(<ChatInterface initialMessages={[]} />);
   const input = screen.getByPlaceholderText('Type a message...');
   expect(screen.getByText('0/1000')).toBeInTheDocument();
