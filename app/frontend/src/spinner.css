@@ -16,3 +16,13 @@
     transform: rotate(360deg);
   }
 }
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.char-count {
+  margin-left: 10px;
+  font-size: 0.9em;
+  color: #555;
+}
