@@ -50,7 +50,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <div className="chat-feed">
         {renderMessages()}
       </div>
-      {loading && <div className="spinner">Loading...</div>}
+      {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
       <textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
