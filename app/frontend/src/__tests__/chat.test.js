@@ -38,7 +38,7 @@ test('submits message on Enter key press', async () => {
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
     await screen.findByText((content, element) => {
-      return element.tagName.toLowerCase() === 'div' && content === 'Enter key message';
+      return element.tagName.toLowerCase() === 'span' && content === 'Enter key message';
     });
   });
 
@@ -119,7 +119,7 @@ test('disables input box while request is in flight', async () => {
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
     await screen.findByText((content, element) => {
-      return element.tagName.toLowerCase() === 'div' && content === 'Test message';
+      return element.tagName.toLowerCase() === 'span' && content === 'Test message';
     });
   });
 
