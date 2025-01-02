@@ -50,25 +50,24 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {renderMessages()}
       </div>
       {loading && <div className="spinner">Loading...</div>}
-      <div className="input-container">
-        <textarea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
-          maxLength={1000}
-          rows={4}
-        />
-        <div className="char-count">
-          {newMessage.length}/1000
-        </div>
+      <textarea
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        placeholder="Type a message..."
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+          }
+        }}
+        maxLength={1000}
+        rows={4}
+        className="message-input"
+      />
+      <div className="char-count">
+        {newMessage.length}/1000
       </div>
-      <button onClick={handleSendMessage} style={{ alignSelf: 'flex-end' }}>Send</button>
+      <button onClick={handleSendMessage} className="send-button">Send</button>
     </div>
   );
 };
