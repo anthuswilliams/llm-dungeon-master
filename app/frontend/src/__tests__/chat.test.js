@@ -8,7 +8,6 @@ beforeAll(() => {
       console.error(message);
     }
   });
-});
 
 test('submits message on Enter key press', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
