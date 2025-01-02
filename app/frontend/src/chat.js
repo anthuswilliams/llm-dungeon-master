@@ -139,17 +139,46 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {newMessage.length}/1000
       </div>
       <div className="controls">
-        <div className="debug-checkbox">
-          <label>
-            <input
-              type="checkbox"
-              checked={debug}
-              onChange={() => setDebug(!debug)}
-            />
-            Debug
-          </label>
+        <div className="control-elements">
+          <div className="debug-checkbox">
+            <label>
+              <input
+                type="checkbox"
+                checked={debug}
+                onChange={() => setDebug(!debug)}
+              />
+              Debug
+            </label>
+          </div>
+          <br />
+          <div className="slider-container">
+            <label>
+              KNN: {knn.toFixed(2)}
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={knn}
+                onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
+              />
+            </label>
+          </div>
+          <br />
+          <div className="slider-container">
+            <label>
+              Keywords: {keywords.toFixed(2)}
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={keywords}
+                onChange={(e) => handleSliderChange('keywords', parseFloat(e.target.value))}
+              />
+            </label>
+          </div>
         </div>
-        <div className="slider-container">
           <label>
             KNN: {knn.toFixed(2)}
             <input
