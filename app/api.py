@@ -3,6 +3,8 @@ from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from agents.adjudicator import query
+
 app = FastAPI()
 
 # Add CORS middleware
@@ -21,4 +23,5 @@ class Messages(BaseModel):
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    return {"messages": messages.messages}
+    responses = [query(message) for message in messages.messages]
+    return {"responses": responses}
