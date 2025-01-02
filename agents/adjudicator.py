@@ -59,7 +59,7 @@ def generate_keywords(client, question):
     return completion.choices[0].message.content
 
 
-def query_elastic(keywords, question):
+def query_elastic(keywords, question, knn):
     results = elastic_request(
         url="_search",
             data={
@@ -147,7 +147,7 @@ def query(history, debug=False, knn=0.4, keywords=0.6):
         return "Please provide a question."
     question = history[-1]["content"]
     keywords = generate_keywords(client, question)
-    context = query_elastic(keywords, question)
+    context = query_elastic(keywords, question, knn)
 
     if debug:
         return {
