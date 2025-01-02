@@ -20,6 +20,11 @@
     color: #8b4513; // Dark brown
   }
 
+  .copy-link:disabled {
+    color: #d3d3d3; // Very light grey
+    cursor: default;
+  }
+
 }
 
   .chat-feed {
