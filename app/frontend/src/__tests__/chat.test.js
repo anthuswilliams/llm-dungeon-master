@@ -17,9 +17,14 @@ afterAll(() => {
 });
 
 test('submits message on Enter key press', async () => {
-  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-    json: () => Promise.resolve({}),
-  }));
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body).toHaveProperty('messages');
+    expect(Array.isArray(body.messages)).toBe(true);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
 
   render(<ChatInterface />);
 
