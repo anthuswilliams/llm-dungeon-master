@@ -83,7 +83,36 @@ test('each message is rendered', () => {
   });
 });
 
-test('updates character count as user types', () => {
+test('Copy button behavior', async () => {
+  const messages = [
+    { id: 0, message: 'Hello', type: 'user' },
+    { id: 1, message: 'How are you?', type: 'api' },
+  ];
+
+  // Mock the clipboard API
+  const writeTextMock = jest.fn();
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: writeTextMock,
+    },
+  });
+
+  render(<ChatInterface initialMessages={messages} />);
+
+  const copyButton = screen.getByText('Copy');
+  expect(copyButton).not.toBeDisabled();
+
+  // Simulate clicking the copy button
+  fireEvent.click(copyButton);
+
+  // Assert that the clipboard's writeText method was called with the correct JSON string
+  expect(writeTextMock).toHaveBeenCalledWith(JSON.stringify(messages, null, 2));
+
+  // Render the component with no initial messages
+  render(<ChatInterface initialMessages={[]} />);
+  const disabledCopyButton = screen.getByText('Copy');
+  expect(disabledCopyButton).toBeDisabled();
+});
   render(<ChatInterface />);
 
   const input = screen.getByPlaceholderText('Type a message...');
