@@ -23,4 +23,5 @@ class Messages(BaseModel):
 
 @app.post("/messages")
 async def create_message(messages: Messages):
-    return {"messages": [{"role": msg["role"], "content": msg["content"]} for msg in messages.messages]}
+    response = query(messages.messages)
+    return {"response": response}
