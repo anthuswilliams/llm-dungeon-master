@@ -25,7 +25,7 @@ test('submits message on Enter key press', async () => {
   fireEvent.change(input, { target: { value: newMessage } });
 
   // Simulate pressing the Enter key
-  fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   expect(screen.getByText('Loading...')).toBeInTheDocument();
 
