@@ -45,7 +45,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   };
 
   return (
-    <div>
+    <div className="chat-interface">
       <div className="chat-feed">
         {renderMessages()}
       </div>
