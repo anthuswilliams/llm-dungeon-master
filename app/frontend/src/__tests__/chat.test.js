@@ -10,7 +10,6 @@ beforeAll(() => {
       console.error(message);
     }
   });
-});
 
 afterAll(() => {
   console.error.mockRestore();
