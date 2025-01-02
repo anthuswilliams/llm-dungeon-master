@@ -11,14 +11,14 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [debug, setDebug] = useState(false);
 
   const [knn, setKnn] = useState(0.4);
-  const [keywords, setKeywords] = useState(0.6);
+  const [keywordsWeight, setKeywordsWeight] = useState(0.6);
 
   const handleSliderChange = (type, value) => {
     if (type === 'knn') {
       setKnn(value);
-      setKeywords(1 - value);
+      setKeywordsWeight(1 - value);
     } else {
-      setKeywords(value);
+      setKeywordsWeight(value);
       setKnn(1 - value);
     }
   };
@@ -66,7 +66,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         })),
         debug,
         knn,
-        keywords
+        keywords: keywordsWeight
       };
 
       const response = await fetch('http://localhost:8000/messages', {
@@ -167,14 +167,14 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <br />
           <div className="slider-container">
             <label>
-              Keywords: {keywords.toFixed(2)}
+              Keywords: {keywordsWeight.toFixed(2)}
               <input
                 type="range"
                 min="0"
                 max="1"
                 step="0.01"
-                value={keywords}
-                onChange={(e) => handleSliderChange('keywords', parseFloat(e.target.value))}
+                value={keywordsWeight}
+                onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
               />
             </label>
           </div>
