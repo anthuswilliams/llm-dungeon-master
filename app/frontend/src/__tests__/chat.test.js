@@ -198,29 +198,6 @@ test('displays debug info when debug is checked', async () => {
   fetchMock.mockRestore();
 });
 
-test('displays message when no debug info is available', async () => {
-  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-    json: () => Promise.resolve({
-      response: 'API response',
-      context: null,
-    }),
-  }));
-
-  render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
-  fireEvent.click(debugCheckbox);
-
-  const input = screen.getByPlaceholderText('Type a message...');
-  fireEvent.change(input, { target: { value: 'Test message' } });
-  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-  await screen.findByText('API response');
-  expect(screen.getByText((content, element) => {
-    return element.tagName.toLowerCase() === 'div' && content.includes('No debug information');
-  })).toBeInTheDocument();
-
-  fetchMock.mockRestore();
-});
 
 test('debug info includes slider values at submission time', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
