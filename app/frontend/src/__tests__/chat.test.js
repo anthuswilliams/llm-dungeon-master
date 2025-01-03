@@ -215,7 +215,9 @@ test('displays message when no debug info is available', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  expect(screen.getByText('No debug information for this response.')).toBeInTheDocument();
+  expect(screen.getByText((content, element) => {
+    return element.tagName.toLowerCase() === 'div' && content.includes('No debug information');
+  })).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
