@@ -24,26 +24,26 @@ const ChatInterface = ({ initialMessages = [] }) => {
   };
   const renderMessages = () => {
     return messages.map((msg, index) => (
-        <div key={index}>
-          <div className={`message ${msg.type}`}>
-            <span className={msg.type}>{msg.message}</span>
-          </div>
-          {debug && msg.type === 'api' && (
-            <div className="debug-info">
-              {msg.context !== null ? (
-                <>
-                  <div><strong>Keywords:</strong> {msg.keywords}</div>
-                  <div><strong>Context:</strong> {msg.context.join(', ')}</div>
-                  <div><strong>KNN:</strong> {msg.knn}</div>
-                  <div><strong>Keywords:</strong> {msg.keywords}</div>
-                </>
-              ) : (
-                <div>No debug information for this response.</div>
-              )}
-            </div>
-          )}
+      <div key={index}>
+        <div className={`message ${msg.type}`}>
+          <span className={msg.type}>{msg.message}</span>
         </div>
-      ));
+        {debug && msg.type === 'api' && (
+          <div className="debug-info">
+            {msg.context !== null ? (
+              <>
+                <div><strong>Keywords:</strong> {msg.keywordsWeight}</div>
+                <div><strong>Context:</strong> {msg.context.join(', ')}</div>
+                <div><strong>KNN:</strong> {msg.knn}</div>
+                <div><strong>Keywords:</strong> {msg.keywords}</div>
+              </>
+            ) : (
+              <div>No debug information for this response.</div>
+            )}
+          </div>
+        )}
+      </div>
+    ));
   };
 
   if (messageInputRef.current) {
