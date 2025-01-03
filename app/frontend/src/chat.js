@@ -34,7 +34,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <div><strong>Keywords Weight:</strong> {msg.keywordsWeight !== undefined ? msg.keywordsWeight.toFixed(2) : 'N/A'}</div>
               <div><strong>KNN:</strong> {msg.knn !== undefined ? msg.knn.toFixed(2) : 'N/A'}</div>
               <div><strong>Context:</strong> {msg.context ? msg.context.join(', ') : 'N/A'}</div>
-              <div><strong>Keywords:</strong> {msg.keywords ? msg.keywords.join(', ') : 'N/A'}</div>
+              <div><strong>Keywords:</strong> {Array.isArray(msg.keywords) ? msg.keywords.join(', ') : 'N/A'}</div>
             </>
           </div>
         )}
