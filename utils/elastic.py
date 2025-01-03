@@ -3,7 +3,8 @@ import os
 import requests
 
 
-ELASTIC_HOST = "https://192.168.1.153:9200"
+# ELASTIC_HOST = "https://192.168.1.153:9200"
+ELASTIC_HOST = "https://localhost:9201"
 
 
 def elastic_request(data=None, method=None, url=None, headers=None):
@@ -17,8 +18,9 @@ def elastic_request(data=None, method=None, url=None, headers=None):
     return method(f"{ELASTIC_HOST}/{url}",
                   headers={
                       "Accept": "application/json",
-                      "Authorization": f"ApiKey {os.getenv('ELASTIC_API_KEY')}",
+                      "Authorization": f"Basic {os.getenv('K8S_ELASTIC_API_KEY')}",
+                      # "Authorization": f"ApiKey {os.getenv('ELASTIC_API_KEY')}",
                       **headers
-                  },
-                  verify=False,
-                  data=data)
+    },
+        verify=False,
+        data=data)
