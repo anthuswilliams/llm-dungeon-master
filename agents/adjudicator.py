@@ -66,14 +66,14 @@ def query_elastic(keywords, question, settings):
                 "content": {
                     "query": keywords,
                     "operator": "or",
-                    "boost": settings["keywords"]
+                    "boost": settings["keywordWeight"]
                 }
             }
         },
         "knn": {
             "field": "content-embedding",
             "k": 10,
-            "boost": settings["knn"],
+            "boost": settings["knnWeight"],
             "num_candidates": 10,
             "query_vector_builder": {
                 "text_embedding": {
@@ -84,9 +84,9 @@ def query_elastic(keywords, question, settings):
         }
     }
 
-    if settings["keywords"] == 0:
+    if settings["keywordWeight"] == 0:
         del data["query"]
-    if settings["knn"] == 0:
+    if settings["knnWeight"] == 0:
         del data["knn"]
 
     results = elastic_request(
@@ -130,7 +130,7 @@ def generate_response(client, context, history):
     return response.choices[0].message.content
 
 
-def query(history, debug=False, knn=0.4, keywords=0.6):
+def query(history, knnWeight=0.4, keywordWeight=0.6):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -154,19 +154,16 @@ def query(history, debug=False, knn=0.4, keywords=0.6):
     if not history:
         return "Please provide a question."
     question = history[-1]["content"]
-    keyword_query = generate_keywords(
-        client, question) if keywords > 0 else None
+    keywords = generate_keywords(
+        client, question) if keywordWeight > 0 else None
     context = query_elastic(keywords, question, {
-                            "knn": knn, "keywords": keywords})
+                            "knnWeight": knnWeight, "keywordWeight": keywordWeight})
 
-    if debug:
-        return {
-            "response": generate_response(client, context, history),
-            "keywords": keyword_query,
-            "context": context
-        }
-    else:
-        return generate_response(client, context, history)
+    return {
+        "response": generate_response(client, context, history),
+        "keywords": keywords,
+        "context": context
+    }
 
 
 if __name__ == "__main__":

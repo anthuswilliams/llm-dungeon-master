@@ -22,6 +22,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       setKnn(1 - value);
     }
   };
+
   const renderMessages = () => {
     return messages.map((msg, index) => (
       <div key={index}>
@@ -31,10 +32,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {debug && msg.type === 'api' && (
           <div className="debug-info">
             <>
-              <div><strong>Keywords Weight:</strong> {msg.keywordsWeight !== undefined ? msg.keywordsWeight.toFixed(2) : 'N/A'}</div>
-              <div><strong>KNN:</strong> {msg.knn !== undefined ? msg.knn.toFixed(2) : 'N/A'}</div>
+              <div><strong>Keywords Weight:</strong> {msg.keywordWeight !== undefined ? msg.keywordWeight.toFixed(2) : 'N/A'}</div>
+              <div><strong>KNN:</strong> {msg.knnWeight !== undefined ? msg.knnWeight.toFixed(2) : 'N/A'}</div>
+              <div><strong>Keywords:</strong> {msg.keywords}</div>
               <div><strong>Context:</strong> {msg.context ? msg.context.join(', ') : 'N/A'}</div>
-              <div><strong>Keywords:</strong> {Array.isArray(msg.keywords) ? msg.keywords.join(', ') : 'N/A'}</div>
             </>
           </div>
         )}
@@ -61,8 +62,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
           content: msg.message,
         })),
         debug,
-        knn,
-        keywords: keywordsWeight
+        knnWeight: knn,
+        keywordWeight: keywordsWeight
       };
 
       const response = await fetch('http://localhost:8000/messages', {
@@ -78,9 +79,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
           id: updatedMessages.length,
           message: data.response,
           type: 'api',
-          keywords: keywordsWeight,
+          keywords: data.keywords || null,
+          keywordWeight: keywordsWeight,
           context: data.context || null,
-          knn
+          knnWeight: knn,
         };
         setMessages([...updatedMessages, responseMessage]);
       }
