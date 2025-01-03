@@ -27,7 +27,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <div key={index}>
         {debug && msg.type === 'api' && (
           <div className="debug-info">
-            {msg.context !== null || msg.knn === 1 ? (
+            {msg.context !== null || msg.knn === 1 || msg.keywordsWeight === 1 ? (
               <>
                 <div><strong>Keywords:</strong> {msg.keywordsWeight}</div>
                 <div><strong>Context:</strong> {msg.context ? msg.context.join(', ') : 'N/A'}</div>
