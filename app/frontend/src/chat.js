@@ -25,9 +25,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const renderMessages = () => {
     return messages.map((msg, index) => (
       <div key={index}>
-        <div className={`message ${msg.type}`}>
-          <span className={msg.type}>{msg.message}</span>
-        </div>
         {debug && msg.type === 'api' && (
           <div className="debug-info">
             {msg.context !== null || msg.knn === 1 ? (
@@ -42,6 +39,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
             )}
           </div>
         )}
+        <div className={`message ${msg.type}`}>
+          <span className={msg.type}>{msg.message}</span>
+        </div>
       </div>
     ));
   };
