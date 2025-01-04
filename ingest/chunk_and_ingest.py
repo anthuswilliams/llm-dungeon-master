@@ -46,7 +46,7 @@ def chunk_file(path_to_file):
 
             if font_size < last_font_size:
                 if b.text != ",":
-                    current_doc.append("\n--------\n")
+                    current_doc.append("\n")
 
             if font_size < 20:
                 if font_size > last_font_size:
@@ -56,7 +56,8 @@ def chunk_file(path_to_file):
             if font_size > last_font_size:
                 if font_size > 20:
                     # end of section
-                    docs[f"{stringify(chapter_heading)}{(' - ' + stringify(section_heading)) if section_heading else ''}"] = f"{stringify(chapter_heading)}\n\n{stringify(section_heading)}\n{stringify(current_doc)}"
+                    docs[f"{stringify(chapter_heading)}{(' - ' + stringify(section_heading)) if section_heading else ''}"] = f"{
+                        stringify(chapter_heading)}\n\n{stringify(section_heading)}\n{stringify(current_doc)}"
                     current_doc = []
                     section_heading = []
                     if font_size > 30:
@@ -74,18 +75,22 @@ def chunk_file(path_to_file):
 
 
 def ingest(doc, title, index):
-    print(title, doc)
     cleaned_title = title.replace("?", "")
     rslt = elastic_request(method=requests.put,
-                           url=f"{index}/_doc/{cleaned_title}?pipeline=clean_and_embed",
+                           url=f"{
+                               index}/_doc/{cleaned_title}?pipeline=clean_and_embed",
                            data={"content": doc})
     return rslt
 
 
 if __name__ == "__main__":
 
-    FILENAME = "/data/Player's Handbook (2014).pdf"
-    INDEX = "players-handbook-2014"
+    # FILENAME = "/data/Player's Handbook (2014).pdf"
+    # FILENAME = "/data/Tasha’s Cauldron of Everything.pdf"
+    # FILENAME = "/data/Xanathar's Guide to Everything.pdf"
+    FILENAME = "/data/Volo's Guide to Monsters.pdf"
+
+    INDEX = "volos-guide-to-monsters"
     docs = chunk_file(FILENAME)
     for title, item in docs.items():
         if title:
