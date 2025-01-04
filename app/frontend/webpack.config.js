@@ -7,7 +7,7 @@ const env = dotenv.config({ path: './.env' }).parsed || {};
 console.log('Loaded environment variables:', env);
 
 const envKeys = Object.keys(env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  prev[`process.env.REACT_APP_${next}`] = JSON.stringify(env[next]);
   return prev;
 }, {});
 
