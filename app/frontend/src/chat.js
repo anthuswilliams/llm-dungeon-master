@@ -66,10 +66,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
         keywordWeight: keywordsWeight
       };
 
-      const response = await fetch(`${API_HOST}/messages`, {
+      const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/messages`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(formattedMessages),
       });

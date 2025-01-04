@@ -16,7 +16,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 
-ENV ELASTIC_HOST='http://chat-rpg-es-internal-http.elastic-system.svc.cluster.local:9200'
-
 # Run app.py when the container launches
 CMD ["uvicorn", "api:app", "--host", "0.0.0.0"]

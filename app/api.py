@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from agents.adjudicator import query
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 # Add CORS middleware
 app.add_middleware(
