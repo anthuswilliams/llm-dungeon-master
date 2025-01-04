@@ -1,7 +1,3 @@
-import requests
-import json
-import os
-
 from openai import OpenAI
 
 from utils.elastic import elastic_request
