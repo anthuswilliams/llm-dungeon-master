@@ -66,7 +66,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         keywordWeight: keywordsWeight
       };
 
-      const response = await fetch('http://localhost:8000/messages', {
+      const response = await fetch(`${API_HOST}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
