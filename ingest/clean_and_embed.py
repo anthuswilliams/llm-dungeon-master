@@ -26,14 +26,14 @@ def create_clean_and_embed_pipeline():
                 "gsub": {
                     "field": "content",
                     # remove links from content
-                    "pattern": "https?:\/\/[^\s]+\s",
+                    "pattern": "https?:\\/\\/[^\\s]+\\s",
                     "replacement": ""
                 },
             }, {
                 "gsub": {
                     "field": "content",
                     # remove links at content end (someone better at regex than I could do this in line with above)
-                    "pattern": "https?:\/\/[^\s]+$",
+                    "pattern": "https?:\\/\\/[^\\s]+$",
                     "replacement": ""
                 }
             }, {

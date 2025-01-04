@@ -1,6 +1,8 @@
 # torch
 notebook
 openai
-tiktoken
-cbor2
-python-poppler
+uvicorn
+fastapi
+#tiktoken
+#cbor2
+#python-poppler

@@ -1,0 +1,17 @@
+# Stage 1: Build
+FROM node:lts-bullseye-slim AS build
+
+WORKDIR /app
+
+COPY app/frontend .
+RUN npm install
+RUN npm run build
+
+# Stage 2: Serve
+FROM node:lts-bullseye-slim
+
+COPY --from=build /app/build /build
+
+EXPOSE 3000
+
+CMD ["npx", "serve", "-s", "build"]

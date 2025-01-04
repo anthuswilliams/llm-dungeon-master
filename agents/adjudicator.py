@@ -1,7 +1,3 @@
-import requests
-import json
-import os
-
 from openai import OpenAI
 
 from utils.elastic import elastic_request
@@ -59,32 +55,40 @@ def generate_keywords(client, question):
     return completion.choices[0].message.content
 
 
-def query_elastic(keywords, question):
+def query_elastic(keywords, question, settings):
+    data = {
+        "query": {
+            "match": {
+                "content": {
+                    "query": keywords,
+                    "operator": "or",
+                    "boost": settings["keywordWeight"]
+                }
+            }
+        },
+        "knn": {
+            "field": "content-embedding",
+            "k": 10,
+            "boost": settings["knnWeight"],
+            "num_candidates": 10,
+            "query_vector_builder": {
+                "text_embedding": {
+                    "model_id": "open-ai-embeddings",
+                    "model_text": question
+                }
+            }
+        }
+    }
+
+    if settings["keywordWeight"] == 0:
+        del data["query"]
+    if settings["knnWeight"] == 0:
+        del data["knn"]
+
     results = elastic_request(
         url="_search",
-            data={
-                "query": {
-                    "match": {
-                        "content": {
-                            "query": keywords,
-                            "operator": "or",
-                            "boost": 0.7
-                        }
-                    }
-                },
-                "knn": {
-                    "field": "content-embedding",
-                    "k": 10,
-                    "boost": 0.3,
-                    "num_candidates": 10,
-                    "query_vector_builder": {
-                        "text_embedding": {
-                            "model_id": "open-ai-embeddings",
-                            "model_text": question
-                        }
-                    }
-                }
-            })
+        data=data
+    )
 
     results.raise_for_status()
     hits = results.json()["hits"]["hits"]
@@ -93,6 +97,7 @@ def query_elastic(keywords, question):
 
 
 def generate_response(client, context, history):
+    print(history)
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -121,14 +126,14 @@ def generate_response(client, context, history):
     return response.choices[0].message.content
 
 
-def query(history):
+def query(history, knnWeight=0.4, keywordWeight=0.6):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
 
     @params
-    question: Str
-      the question to be ruled upon
+    conversation: Dict[{role: str, content: str}]
+      The entire conversation the user is having with the rules. The last element is typically the question to be ruled upon
 
     @return
     response: str
@@ -142,10 +147,19 @@ def query(history):
           => "You can cover a number of feet up to your Strength score if you move at least 10 feet on foot immediately before the jump. With a Strength score of 18, you can jump up to 18 feet."
     """
     client = OpenAI()
-    keywords = generate_keywords(client, question)
-    context = query_elastic(keywords, question)
+    if not history:
+        return "Please provide a question."
+    question = history[-1]["content"]
+    keywords = generate_keywords(
+        client, question) if keywordWeight > 0 else None
+    context = query_elastic(keywords, question, {
+                            "knnWeight": knnWeight, "keywordWeight": keywordWeight})
 
-    return generate_response(client, context, history)
+    return {
+        "response": generate_response(client, context, history),
+        "keywords": keywords,
+        "context": context
+    }
 
 
 if __name__ == "__main__":

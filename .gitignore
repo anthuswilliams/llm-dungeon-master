@@ -167,3 +167,4 @@ cython_debug/
 local-elastic-creds.txt
 .aider*
 node_modules
+app/frontend/node_modules
