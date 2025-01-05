@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
+import exampleQuestions from './example_questions.json';
 import './spinner.scss'; // Assuming you have a CSS file for the spinner
 
 const ChatInterface = ({ initialMessages = [] }) => {
   const [messages, setMessages] = useState(initialMessages);
+  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)];
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
 
@@ -121,7 +123,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Type a message..."
+        placeholder={randomExampleQuestion}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
