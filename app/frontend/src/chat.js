@@ -12,8 +12,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
 
-  const [knn, setKnn] = useState(0.4);
-  const [keywordsWeight, setKeywordsWeight] = useState(0.6);
+  const [knn, setKnn] = useState(0.8);
+  const [keywordsWeight, setKeywordsWeight] = useState(0.2);
 
   const handleSliderChange = (type, value) => {
     if (type === 'knn') {
