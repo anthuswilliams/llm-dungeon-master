@@ -40,6 +40,40 @@ test('Send button is active and sends random question when clicked with no user 
   fetchMock.mockRestore();
 });
 
+test('handles Enter key press to send message', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body).toHaveProperty('messages');
+    expect(Array.isArray(body.messages)).toBe(true);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+
+  const input = screen.getByPlaceholderText(/e\.g\./);
+
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+  const newMessage = 'Enter key message';
+  fireEvent.change(input, { target: { value: newMessage } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+  // eslint-disable-next-line testing-library/no-unnecessary-act
+  await act(async () => {
+    await screen.findByText((content, element) => {
+      return element.tagName.toLowerCase() === 'span' && content === 'Enter key message';
+    });
+  });
+
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
 test('uses "Type new message..." as placeholder when messages are submitted', () => {
   const messages = [{ id: 0, message: 'Hello', type: 'user' }];
   render(<ChatInterface initialMessages={messages} />);
