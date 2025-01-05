@@ -161,7 +161,10 @@
     margin-left: auto;
   }
 
-  .send-button:hover {
+  .send-button:disabled {
+    background-color: #d3d3d3; // Light grey
+    cursor: not-allowed;
+  }
     background-color: #0056b3;
   }
 
