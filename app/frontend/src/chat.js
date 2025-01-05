@@ -123,7 +123,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
       <textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        placeholder={randomExampleQuestion}
+        placeholder={`e.g. "${randomExampleQuestion}"`}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
