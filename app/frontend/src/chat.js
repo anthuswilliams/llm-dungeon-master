@@ -50,10 +50,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
   }
 
   const handleSendMessage = async () => {
-    if (newMessage.trim() === '') return;
+    const messageToSend = newMessage.trim() === '' ? randomExampleQuestion : newMessage;
     setLoading(true);
 
-    const userMessage = { id: 0, message: newMessage, type: 'user' };
+    const userMessage = { id: 0, message: messageToSend, type: 'user' };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
 
