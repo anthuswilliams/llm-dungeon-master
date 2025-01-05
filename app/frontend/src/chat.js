@@ -181,7 +181,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
             </label>
           </div>
         </div>
-        <button onClick={handleSendMessage} className="send-button">Send</button>
+        <button onClick={handleSendMessage} className="send-button" disabled={messages.length > 0 && newMessage.trim() === ''}>Send</button>
       </div>
     </div>
   );
