@@ -16,7 +16,47 @@ afterAll(() => {
   console.error.mockRestore();
 });
 
-test('submits message on Enter key press', async () => {
+test('uses random question as placeholder when no messages are submitted', () => {
+  render(<ChatInterface initialMessages={[]} />);
+  const input = screen.getByPlaceholderText(/e\.g\./);
+  expect(input).toBeInTheDocument();
+});
+
+test('Send button is active and sends random question when clicked with no user input', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.messages[0].content).toMatch(/e\.g\./);
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface initialMessages={[]} />);
+  const sendButton = screen.getByText('Send');
+  expect(sendButton).not.toBeDisabled();
+
+  fireEvent.click(sendButton);
+
+  fetchMock.mockRestore();
+});
+
+test('uses "Type new message..." as placeholder when messages are submitted', () => {
+  const messages = [{ id: 0, message: 'Hello', type: 'user' }];
+  render(<ChatInterface initialMessages={messages} />);
+  const input = screen.getByPlaceholderText('Type new message...');
+  expect(input).toBeInTheDocument();
+});
+
+test('Send button is disabled until user types a message after messages are submitted', () => {
+  const messages = [{ id: 0, message: 'Hello', type: 'user' }];
+  render(<ChatInterface initialMessages={messages} />);
+  const sendButton = screen.getByText('Send');
+  expect(sendButton).toBeDisabled();
+
+  const input = screen.getByPlaceholderText('Type new message...');
+  fireEvent.change(input, { target: { value: 'New message' } });
+  expect(sendButton).not.toBeDisabled();
+});
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
     const body = JSON.parse(options.body);
     expect(body).toHaveProperty('messages');
