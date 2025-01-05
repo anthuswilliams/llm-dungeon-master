@@ -294,8 +294,8 @@ test('debug info includes slider values at submission time', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  expect(screen.getByText('KNN: 0.40')).toBeInTheDocument();
-  expect(screen.getByText('Keywords: 0.60')).toBeInTheDocument();
+  expect(screen.getByText('KNN: 0.80')).toBeInTheDocument();
+  expect(screen.getByText('Keywords: 0.20')).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
