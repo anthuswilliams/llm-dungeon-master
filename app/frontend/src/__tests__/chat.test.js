@@ -91,6 +91,8 @@ test('Send button is disabled until user types a message after messages are subm
   fireEvent.change(input, { target: { value: 'New message' } });
   expect(sendButton).not.toBeDisabled();
 });
+
+test('submits message on Enter key press', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
     const body = JSON.parse(options.body);
     expect(body).toHaveProperty('messages');
