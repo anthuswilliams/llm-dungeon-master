@@ -1,6 +1,11 @@
 from openai import OpenAI
 
 from utils.elastic import elastic_request
+import utils.anthropic_client as anthropic_client
+import utils.openai_client as openai_client
+
+CLAUDE_35 = "claude-3.5"
+GPT_4O = "gpt-4o"
 
 SEARCH_PROMPT = """
 Users are playing an RPG. They will ask questions pertaining to the rules, setting, lore,
@@ -31,28 +36,25 @@ If the content is not sufficient to answer the question, say so.
 """
 
 
-def generate_keywords(client, question):
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "developer",
-                "content": [{
-                    "type": "text",
-                    "text": SEARCH_PROMPT
-                }],
-            },
-            {
-                "role": "user",
-                "content": [{
-                    "type": "text",
-                    "text": question
-                }]
-            }
-        ]
-    )
+def get_client(model):
+    if model == "gpt-4o":
+        return openai_client
+    elif model == "claude-3.5":
+        return anthropic_client
+    else:
+        raise Exception("No such model implementation")
 
-    return completion.choices[0].message.content
+
+def generate_keywords(client, question):
+    return client.chat_completion(system_prompt=SEARCH_PROMPT, messages=[
+        {
+            "role": "user",
+            "content": [{
+                "type": "text",
+                "text": question
+            }]
+        }
+    ])
 
 
 def query_elastic(keywords, question, settings):
@@ -92,41 +94,26 @@ def query_elastic(keywords, question, settings):
 
     results.raise_for_status()
     hits = results.json()["hits"]["hits"]
-    # logger.debug(hits)
+
     return [h["_source"]["content"] for h in hits]
 
 
 def generate_response(client, context, history):
-    print(history)
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
+    response = client.chat_completion(
+        system_prompt=ADJUDICATION_PROMPT,
         messages=[
             {
-                "role": "developer",
-                "content": [{
-                    "type": "text",
-                    "text": ADJUDICATION_PROMPT
-                }],
-            },
-            {
                 "role": "assistant",
-                "content": [{"type": "text", "text": c} for c in context[0:6]]
+                "content": [{"type": "text", "text": c} for c in context]
             },
-            # {
-            #     "role": "user",
-            #     "content": [{
-            #         "type": "text",
-            #         "text": question
-            #     }]
-            # },
             *history
         ]
     )
 
-    return response.choices[0].message.content
+    return response
 
 
-def query(history, knnWeight=0.4, keywordWeight=0.6):
+def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -146,7 +133,7 @@ def query(history, knnWeight=0.4, keywordWeight=0.6):
         query("My Strength is 18. I will take a running jump. How far can I make it?")
           => "You can cover a number of feet up to your Strength score if you move at least 10 feet on foot immediately before the jump. With a Strength score of 18, you can jump up to 18 feet."
     """
-    client = OpenAI()
+    client = get_client(model)
     if not history:
         return "Please provide a question."
     question = history[-1]["content"]
@@ -174,11 +161,11 @@ if __name__ == "__main__":
                 "content": question
             }
         )
-        answer = query(conversation)
-        print(answer)
+        answer = query(conversation, model=CLAUDE_35)
+        print(answer["response"])
         conversation.append(
             {
                 "role": "assistant",
-                "content": answer
+                "content": answer["response"]
             }
         )
