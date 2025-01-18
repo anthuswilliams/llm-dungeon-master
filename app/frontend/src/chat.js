@@ -145,12 +145,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <div className="control-elements">
           <div className="debug-checkbox">
             <label>
+              <span className="control-label">Debug:</span>
               <input
                 type="checkbox"
                 checked={debug}
                 onChange={() => setDebug(!debug)}
+                style={{ marginLeft: '5px' }}
               />
-              <span className="control-label">Debug</span>
             </label>
           </div>
           <div style={{ marginTop: '0.5em' }}>
