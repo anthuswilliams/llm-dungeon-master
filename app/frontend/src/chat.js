@@ -150,12 +150,12 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 checked={debug}
                 onChange={() => setDebug(!debug)}
               />
-              Debug
+              <span className="control-label">Debug</span>
             </label>
           </div>
           <br />
           <div>
-            <span>Model:</span>
+            <span className="control-label">Model:</span>
             <select 
               value={model}
               onChange={(e) => setModel(e.target.value)}
@@ -168,7 +168,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <br />
           <div className="slider-container">
             <label>
-              KNN: {knn.toFixed(2)}
+              <span className="control-label">KNN:</span> {knn.toFixed(2)}
               <input
                 type="range"
                 min="0"
@@ -182,7 +182,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <br />
           <div className="slider-container">
             <label>
-              Keywords: {keywordsWeight.toFixed(2)}
+              <span className="control-label">Keywords:</span> {keywordsWeight.toFixed(2)}
               <input
                 type="range"
                 min="0"
