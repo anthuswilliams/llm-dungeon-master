@@ -195,7 +195,7 @@ test('sends debug: true when checkbox is checked', async () => {
   });
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
+  const debugCheckbox = screen.getByLabelText('Debug:');
   fireEvent.click(debugCheckbox);
 
   const input = screen.getByPlaceholderText(/e\.g\./);
@@ -261,7 +261,7 @@ test('displays debug info when debug is checked', async () => {
   }));
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
+  const debugCheckbox = screen.getByLabelText('Debug:');
   fireEvent.click(debugCheckbox);
 
   const input = screen.getByPlaceholderText(/e\.g\./);
@@ -311,7 +311,7 @@ test('debug info includes slider values at submission time', async () => {
   }));
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
+  const debugCheckbox = screen.getByLabelText('Debug:');
   fireEvent.click(debugCheckbox);
 
   const input = screen.getByPlaceholderText(/e\.g\./);
