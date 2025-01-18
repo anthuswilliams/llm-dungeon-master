@@ -156,7 +156,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 onChange={(e) => setModel(e.target.value)}
                 style={{ marginLeft: '10px' }}
               >
-                <option value="gpt-4">OpenAI GPT 4o</option>
+                <option value="gpt-4o">OpenAI GPT 4o</option>
                 <option value="claude-3.5">Claude 3.5 Sonnet</option>
               </select>
             </label>
