@@ -11,7 +11,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [loading, setLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
-  const [model, setModel] = useState('gpt-4');
+  const [model, setModel] = useState('claude-3.5');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
 
@@ -156,7 +156,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           </div>
           <div style={{ marginTop: '0.5em' }}>
             <span className="control-label">Model:</span>
-            <select 
+            <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
               style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
