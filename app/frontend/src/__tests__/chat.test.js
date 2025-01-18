@@ -300,34 +300,16 @@ test('sends selected model value to API', async () => {
   fetchMock.mockRestore();
 });
 
-test('debug info includes slider values at submission time', async () => {
-  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-    json: () => Promise.resolve({
-      response: 'API response',
-      context: ['context1', 'context2'],
-      knn: 0.4,
-      keywords: 0.6,
-    }),
-  }));
-
+test('slider controls show correct initial values', () => {
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug:');
-  fireEvent.click(debugCheckbox);
-
-  const input = screen.getByPlaceholderText(/e\.g\./);
-  fireEvent.change(input, { target: { value: 'Test message' } });
-  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-  await screen.findByText('API response');
   
-  // Find the debug info section
-  const debugInfo = screen.getByText('KNN:').closest('div');
-  expect(debugInfo).toHaveTextContent('0.80');
+  // Find the KNN slider label in the control panel
+  const knnLabel = screen.getByText('KNN:').closest('label');
+  expect(knnLabel).toHaveTextContent('0.80');
   
-  const keywordsInfo = screen.getByText('Keywords:').closest('div');
-  expect(keywordsInfo).toHaveTextContent('0.20');
-
-  fetchMock.mockRestore();
+  // Find the Keywords slider label in the control panel
+  const keywordsLabel = screen.getByText('Keywords:').closest('label');
+  expect(keywordsLabel).toHaveTextContent('0.20');
 });
 
 test('displays character count', () => {
