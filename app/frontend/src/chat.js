@@ -153,8 +153,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <span className="control-label">Debug</span>
             </label>
           </div>
-          <br />
-          <div>
+          <div style={{ marginTop: '0.5em' }}>
             <span className="control-label">Model:</span>
             <select 
               value={model}
@@ -165,8 +164,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <option value="claude-3.5">Claude 3.5 Sonnet</option>
             </select>
           </div>
-          <br />
-          <div className="slider-container">
+          <div className="slider-container" style={{ marginTop: '0.5em' }}>
             <label>
               <span className="control-label">KNN:</span> {knn.toFixed(2)}
               <input
@@ -179,8 +177,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               />
             </label>
           </div>
-          <br />
-          <div className="slider-container">
+          <div className="slider-container" style={{ marginTop: '0.5em' }}>
             <label>
               <span className="control-label">Keywords:</span> {keywordsWeight.toFixed(2)}
               <input
