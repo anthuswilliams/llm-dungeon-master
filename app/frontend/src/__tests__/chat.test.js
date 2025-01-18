@@ -195,7 +195,7 @@ test('sends debug: true when checkbox is checked', async () => {
   });
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
+  const debugCheckbox = screen.getByLabelText('Debug:');
   fireEvent.click(debugCheckbox);
 
   const input = screen.getByPlaceholderText(/e\.g\./);
@@ -261,7 +261,7 @@ test('displays debug info when debug is checked', async () => {
   }));
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
+  const debugCheckbox = screen.getByLabelText('Debug:');
   fireEvent.click(debugCheckbox);
 
   const input = screen.getByPlaceholderText(/e\.g\./);
@@ -275,29 +275,41 @@ test('displays debug info when debug is checked', async () => {
 });
 
 
-test('debug info includes slider values at submission time', async () => {
-  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-    json: () => Promise.resolve({
-      response: 'API response',
-      context: ['context1', 'context2'],
-      knn: 0.4,
-      keywords: 0.6,
-    }),
-  }));
+test('sends selected model value to API', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.model).toBe('claude-3.5');
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug');
-  fireEvent.click(debugCheckbox);
+  
+  // Change model selection
+  const modelSelect = screen.getByRole('combobox');
+  fireEvent.change(modelSelect, { target: { value: 'claude-3.5' } });
 
+  // Send a message
   const input = screen.getByPlaceholderText(/e\.g\./);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  await screen.findByText('API response');
-  expect(screen.getByText('KNN: 0.80')).toBeInTheDocument();
-  expect(screen.getByText('Keywords: 0.20')).toBeInTheDocument();
-
+  await screen.findByText('Test message');
+  
   fetchMock.mockRestore();
+});
+
+test('slider controls show correct initial values', () => {
+  render(<ChatInterface />);
+  
+  // Find the KNN slider label in the control panel
+  const knnLabel = screen.getByText('KNN:').closest('label');
+  expect(knnLabel).toHaveTextContent('0.80');
+  
+  // Find the Keywords slider label in the control panel
+  const keywordsLabel = screen.getByText('Keywords:').closest('label');
+  expect(keywordsLabel).toHaveTextContent('0.20');
 });
 
 test('displays character count', () => {

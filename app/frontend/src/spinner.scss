@@ -179,6 +179,16 @@
     margin-top: 0.25em;
   }
 
+  .control-label {
+    color: #666;
+  }
+
+  select {
+    padding: 0.3em 0.5em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid rgba(139, 69, 19, 0.8); // #8b4513 with 80% opacity
+  }
+
   .copy-link {
     background: none;
     border: none;
