@@ -11,7 +11,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [loading, setLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
-
+  const [model, setModel] = useState('gpt-4');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
 
@@ -65,7 +65,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
         })),
         debug,
         knnWeight: knn,
-        keywordWeight: keywordsWeight
+        keywordWeight: keywordsWeight,
+        model: model
       };
 
       const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
@@ -150,6 +151,14 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 onChange={() => setDebug(!debug)}
               />
               Debug
+              <select 
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                style={{ marginLeft: '10px' }}
+              >
+                <option value="gpt-4">OpenAI GPT 4o</option>
+                <option value="claude-3.5">Claude 3.5 Sonnet</option>
+              </select>
             </label>
           </div>
           <br />
