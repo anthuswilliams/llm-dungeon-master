@@ -151,7 +151,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 onChange={() => setDebug(!debug)}
               />
               Debug
-              <span style={{ marginLeft: '10px' }}>Model:</span>
+              <br />
+              <span style={{ marginTop: '10px', display: 'inline-block' }}>Model:</span>
               <select 
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
