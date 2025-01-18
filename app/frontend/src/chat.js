@@ -151,17 +151,19 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 onChange={() => setDebug(!debug)}
               />
               Debug
-              <br />
-              <span style={{ marginTop: '10px', display: 'inline-block' }}>Model:</span>
-              <select 
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                style={{ marginLeft: '5px' }}
-              >
-                <option value="gpt-4o">OpenAI GPT 4o</option>
-                <option value="claude-3.5">Claude 3.5 Sonnet</option>
-              </select>
             </label>
+          </div>
+          <br />
+          <div>
+            <span>Model:</span>
+            <select 
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              style={{ marginLeft: '5px' }}
+            >
+              <option value="gpt-4o">OpenAI GPT 4o</option>
+              <option value="claude-3.5">Claude 3.5 Sonnet</option>
+            </select>
           </div>
           <br />
           <div className="slider-container">
