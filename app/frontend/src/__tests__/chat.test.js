@@ -275,6 +275,31 @@ test('displays debug info when debug is checked', async () => {
 });
 
 
+test('sends selected model value to API', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.model).toBe('claude-3.5');
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+  
+  // Change model selection
+  const modelSelect = screen.getByRole('combobox');
+  fireEvent.change(modelSelect, { target: { value: 'claude-3.5' } });
+
+  // Send a message
+  const input = screen.getByPlaceholderText(/e\.g\./);
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  await screen.findByText('Test message');
+  
+  fetchMock.mockRestore();
+});
+
 test('debug info includes slider values at submission time', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
     json: () => Promise.resolve({
