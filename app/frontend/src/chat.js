@@ -17,6 +17,17 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
 
+  const getFormattedGameName = () => {
+    switch(game) {
+      case 'dnd-5e':
+        return 'Dungeons & Dragons 5th Edition';
+      case 'metro-otherscape':
+        return 'Metro: Otherscape';
+      default:
+        return 'the RPG';
+    }
+  };
+
   const handleSliderChange = (type, value) => {
     if (type === 'knn') {
       setKnn(value);
@@ -129,7 +140,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         </button>
       </div>
       <div className="chat-main">
-        <h1 className="chat-title">Chat with the RPG</h1>
+        <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
       <div className="chat-feed">
         {renderMessages()}
       </div>
