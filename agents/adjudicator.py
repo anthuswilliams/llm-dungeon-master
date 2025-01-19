@@ -113,7 +113,7 @@ def generate_response(client, context, history):
     return response
 
 
-def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O, game="dnd5e"):
+def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O, game="dnd-5e"):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
