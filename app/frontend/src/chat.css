@@ -121,15 +121,18 @@
 .settings-toggle {
   background: none;
   border: 1px solid #ddd;
-  padding: 8px 15px;
+  padding: 5px;
   border-radius: 5px;
   cursor: pointer;
+  width: 2em;
+  height: 2em;
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
   color: #555;
   transition: all 0.2s ease;
   margin-bottom: 10px;
+  font-size: 1.2em;
 }
 
 .settings-toggle:hover {

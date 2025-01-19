@@ -194,8 +194,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
           className="settings-toggle"
           onClick={() => setControlsVisible(!controlsVisible)}
           aria-expanded={controlsVisible}
+          title="Settings"
         >
-          ⚙️ Settings
+          ⚙️
         </button>
         {controlsVisible && (
           <div className="controls-panel">
