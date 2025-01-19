@@ -94,15 +94,14 @@
 }
 
 .send-button {
-  position: absolute;
-  right: 0;
-  top: calc(100% - 45px);
+  float: right;
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .send-button:disabled {
@@ -145,6 +144,7 @@
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 15px;
+  max-width: 70%;
 }
 
 .control-elements {
