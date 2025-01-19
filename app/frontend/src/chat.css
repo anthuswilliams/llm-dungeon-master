@@ -110,12 +110,11 @@
   cursor: not-allowed;
 }
 
-.char-count {
+.char-limit {
   text-align: right;
   color: #666;
   font-size: 0.8em;
-  margin-bottom: 10px;
-  margin-top: 40px;
+  margin: 5px 0;
 }
 
 .settings-toggle {

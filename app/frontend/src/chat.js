@@ -179,6 +179,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
           rows={4}
           className="message-input"
         />
+        <div className="char-limit">
+          {1000 - newMessage.length} characters remaining
+        </div>
         <button 
           onClick={handleSendMessage} 
           className="send-button" 
