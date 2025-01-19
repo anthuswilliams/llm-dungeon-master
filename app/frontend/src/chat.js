@@ -112,8 +112,24 @@ const ChatInterface = ({ initialMessages = [] }) => {
   };
 
   return (
-    <div className="chat-interface">
-      <h1 className="chat-title">Chat with the RPG</h1>
+    <div className="chat-container">
+      <div className="game-sidebar">
+        <h2>Games</h2>
+        <button 
+          className={`game-option ${game === 'dnd-5e' ? 'selected' : ''}`}
+          onClick={() => setGame('dnd-5e')}
+        >
+          Dungeons & Dragons 5th Edition
+        </button>
+        <button 
+          className={`game-option ${game === 'metro-otherscape' ? 'selected' : ''}`}
+          onClick={() => setGame('metro-otherscape')}
+        >
+          Metro: Otherscape
+        </button>
+      </div>
+      <div className="chat-main">
+        <h1 className="chat-title">Chat with the RPG</h1>
       <div className="chat-feed">
         {renderMessages()}
       </div>
@@ -157,29 +173,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
               />
             </label>
           </div>
-          <div className="control-row" style={{ marginTop: '0.5em' }}>
-            <div className="control-item">
-              <span className="control-label">Model:</span>
-              <select
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
-              >
-                <option value="gpt-4o">OpenAI GPT 4o</option>
-                <option value="claude-3.5">Claude 3.5 Sonnet</option>
-              </select>
-            </div>
-            <div className="control-item">
-              <span className="control-label">Game:</span>
-              <select
-                value={game}
-                onChange={(e) => setGame(e.target.value)}
-                style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
-              >
-                <option value="dnd-5e">Dungeons & Dragons 5th Edition</option>
-                <option value="metro-otherscape">Metro: Otherscape</option>
-              </select>
-            </div>
+          <div style={{ marginTop: '0.5em' }}>
+            <span className="control-label">Model:</span>
+            <select
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
+            >
+              <option value="gpt-4o">OpenAI GPT 4o</option>
+              <option value="claude-3.5">Claude 3.5 Sonnet</option>
+            </select>
           </div>
           <div style={{ marginTop: '0.5em', display: 'none' }}>
             <span className="control-label">Model:</span>

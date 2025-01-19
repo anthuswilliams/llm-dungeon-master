@@ -1,3 +1,45 @@
+.chat-container {
+  display: flex;
+  height: 100vh;
+}
+
+.game-sidebar {
+  width: 250px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.game-option {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.game-option.selected {
+  border-color: #007bff;
+  background-color: #e7f1ff;
+  font-weight: bold;
+}
+
+.game-option:hover {
+  background-color: #f0f0f0;
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
 .control-row {
   display: flex;
   justify-content: space-between;
