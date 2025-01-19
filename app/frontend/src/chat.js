@@ -180,24 +180,26 @@ const ChatInterface = ({ initialMessages = [] }) => {
             className="message-input"
           />
         </div>
-        <div className="char-count">
-          {newMessage.length}/1000
+        <div className="controls-row">
+          <button
+            className="settings-toggle"
+            onClick={() => setControlsVisible(!controlsVisible)}
+            aria-expanded={controlsVisible}
+            title="Settings"
+          >
+            ⚙️
+          </button>
+          <div className="char-count">
+            {newMessage.length}/1000
+          </div>
+          <button
+            onClick={handleSendMessage}
+            className="send-button"
+            disabled={messages.length > 0 && newMessage.trim() === ''}
+          >
+            Send
+          </button>
         </div>
-        <button
-          onClick={handleSendMessage}
-          className="send-button"
-          disabled={messages.length > 0 && newMessage.trim() === ''}
-        >
-          Send
-        </button>
-        <button
-          className="settings-toggle"
-          onClick={() => setControlsVisible(!controlsVisible)}
-          aria-expanded={controlsVisible}
-          title="Settings"
-        >
-          ⚙️
-        </button>
         {controlsVisible && (
           <div className="controls-panel">
             <div className="control-elements">

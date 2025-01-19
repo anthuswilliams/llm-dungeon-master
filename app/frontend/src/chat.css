@@ -94,14 +94,13 @@
 }
 
 .send-button {
-  float: right;
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-left: auto;
 }
 
 .send-button:disabled {
@@ -109,12 +108,18 @@
   cursor: not-allowed;
 }
 
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .char-count {
-  text-align: right;
   color: #666;
   font-size: 0.8em;
-  margin: 2px 0;
-  padding-right: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .settings-toggle {
