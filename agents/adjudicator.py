@@ -57,7 +57,7 @@ def generate_keywords(client, question):
     ])
 
 
-def query_elastic(keywords, question, settings):
+def query_elastic(keywords, question, settings, game):
     data = {
         "query": {
             "match": {
@@ -88,7 +88,7 @@ def query_elastic(keywords, question, settings):
         del data["knn"]
 
     results = elastic_request(
-        url="_search",
+        url=f"{game}*/_search",
         data=data
     )
 
@@ -113,7 +113,7 @@ def generate_response(client, context, history):
     return response
 
 
-def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O):
+def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O, game="dnd5e"):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -140,7 +140,7 @@ def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O):
     keywords = generate_keywords(
         client, question) if keywordWeight > 0 else None
     context = query_elastic(keywords, question, {
-                            "knnWeight": knnWeight, "keywordWeight": keywordWeight})
+                            "knnWeight": knnWeight, "keywordWeight": keywordWeight}, game)
 
     return {
         "response": generate_response(client, context, history),

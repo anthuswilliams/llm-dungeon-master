@@ -20,6 +20,7 @@ app.add_middleware(
 class Messages(BaseModel):
     debug: bool
     model: str
+    game: str
     knnWeight: float
     keywordWeight: float
     messages: List[Dict[str, str]]
@@ -28,5 +29,6 @@ class Messages(BaseModel):
 @app.post("/messages")
 async def create_message(messages: Messages):
     response = query(messages.messages, knnWeight=messages.knnWeight,
-                     keywordWeight=messages.keywordWeight, model=messages.model)
+                     keywordWeight=messages.keywordWeight, model=messages.model,
+                     game=messages.game)
     return response
