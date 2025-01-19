@@ -160,25 +160,34 @@ const ChatInterface = ({ initialMessages = [] }) => {
         </div>
       </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <textarea
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSendMessage();
-          }
-        }}
-        ref={messageInputRef}
-        autoFocus
-        disabled={loading}
-        maxLength={1000}
-        rows={4}
-        className="message-input"
-      />
-      <div className="char-count">
-        {newMessage.length}/1000
+      <div className="input-container">
+        <textarea
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage();
+            }
+          }}
+          ref={messageInputRef}
+          autoFocus
+          disabled={loading}
+          maxLength={1000}
+          rows={4}
+          className="message-input"
+        />
+        <button 
+          onClick={handleSendMessage} 
+          className="send-button" 
+          disabled={messages.length > 0 && newMessage.trim() === ''}
+        >
+          Send
+        </button>
+        <div className="char-count">
+          {newMessage.length}/1000
+        </div>
       </div>
       <div className="controls">
         <div className="control-elements">
@@ -242,7 +251,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
             </label>
           </div>
         </div>
-        <button onClick={handleSendMessage} className="send-button" disabled={messages.length > 0 && newMessage.trim() === ''}>Send</button>
       </div>
     </div>
   </div>

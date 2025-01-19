@@ -79,6 +79,11 @@
   border-radius: 5px;
 }
 
+.input-container {
+  position: relative;
+  margin-bottom: 10px;
+}
+
 .message-input {
   width: 100%;
   padding: 10px;
@@ -88,11 +93,29 @@
   resize: vertical;
 }
 
+.send-button {
+  position: absolute;
+  right: 0;
+  top: calc(100% - 45px);
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .char-count {
   text-align: right;
   color: #666;
   font-size: 0.8em;
   margin-bottom: 10px;
+  margin-top: 40px;
 }
 
 .controls {
@@ -119,20 +142,6 @@
   margin-top: 5px;
 }
 
-.send-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  align-self: flex-end;
-}
-
-.send-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
 
 .copy-container {
   position: absolute;
