@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Literal
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ app.add_middleware(
 class Messages(BaseModel):
     debug: bool
     model: str
-    game: str
+    game: Literal["dnd-5e", "otherscape"]
     knnWeight: float
     keywordWeight: float
     messages: List[Dict[str, str]]
