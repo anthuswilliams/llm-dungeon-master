@@ -16,6 +16,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [game, setGame] = useState('dnd-5e');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
+  const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
     switch(game) {
@@ -189,44 +190,40 @@ const ChatInterface = ({ initialMessages = [] }) => {
           {newMessage.length}/1000
         </div>
       </div>
-      <div className="controls">
-        <div className="control-elements">
-          <div className="debug-checkbox">
-            <label>
-              <span className="control-label">Debug:</span>
-              <input
-                type="checkbox"
-                checked={debug}
-                onChange={() => setDebug(!debug)}
-                style={{ marginLeft: '5px' }}
-              />
-            </label>
-          </div>
-          <div style={{ marginTop: '0.5em' }}>
-            <span className="control-label">Model:</span>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
-            >
-              <option value="gpt-4o">OpenAI GPT 4o</option>
-              <option value="claude-3.5">Claude 3.5 Sonnet</option>
-            </select>
-          </div>
-          <div style={{ marginTop: '0.5em', display: 'none' }}>
-            <span className="control-label">Model:</span>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
-            >
-              <option value="gpt-4o">OpenAI GPT 4o</option>
-              <option value="claude-3.5">Claude 3.5 Sonnet</option>
-            </select>
-          </div>
-          <div className="slider-container" style={{ marginTop: '0.5em' }}>
-            <label>
-              <span className="control-label">KNN:</span> {knn.toFixed(2)}
+      <button 
+        className="settings-toggle"
+        onClick={() => setControlsVisible(!controlsVisible)}
+        aria-expanded={controlsVisible}
+      >
+        ⚙️ Settings
+      </button>
+      {controlsVisible && (
+        <div className="controls-panel">
+          <div className="control-elements">
+            <div className="control-group">
+              <label className="control-label">
+                <input
+                  type="checkbox"
+                  checked={debug}
+                  onChange={() => setDebug(!debug)}
+                />
+                Debug Mode
+              </label>
+            </div>
+            <div className="control-group">
+              <label className="control-label">Model</label>
+              <select
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+              >
+                <option value="gpt-4o">OpenAI GPT 4o</option>
+                <option value="claude-3.5">Claude 3.5 Sonnet</option>
+              </select>
+            </div>
+            <div className="control-group">
+              <label className="control-label">
+                KNN Weight: {knn.toFixed(2)}
+              </label>
               <input
                 type="range"
                 min="0"
@@ -235,11 +232,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 value={knn}
                 onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
               />
-            </label>
-          </div>
-          <div className="slider-container" style={{ marginTop: '0.5em' }}>
-            <label>
-              <span className="control-label">Keywords:</span> {keywordsWeight.toFixed(2)}
+            </div>
+            <div className="control-group">
+              <label className="control-label">
+                Keywords Weight: {keywordsWeight.toFixed(2)}
+              </label>
               <input
                 type="range"
                 min="0"
@@ -248,10 +245,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 value={keywordsWeight}
                 onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
               />
-            </label>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   </div>
   );
