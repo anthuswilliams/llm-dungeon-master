@@ -141,16 +141,25 @@ const ChatInterface = ({ initialMessages = [] }) => {
       </div>
       <div className="chat-main">
         <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
-      <div className="chat-feed">
+      <div className="chat-feed" style={{ position: 'relative' }}>
         {renderMessages()}
+        <div className="copy-container">
+          <button 
+            onClick={handleCopyToClipboard} 
+            className="copy-link" 
+            disabled={messages.length === 0}
+            aria-label="Copy"
+          >
+            📋
+          </button>
+          {copyStatus && (
+            <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+              {copyStatus}
+            </span>
+          )}
+        </div>
       </div>
       {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <button onClick={handleCopyToClipboard} className="copy-link" disabled={messages.length === 0}>
-        Copy
-      </button>
-      <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-        {copyStatus}
-      </span>
       <textarea
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
