@@ -19,7 +19,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
-    switch(game) {
+    switch (game) {
       case 'dnd-5e':
         return 'Dungeons & Dragons 5th Edition';
       case 'metro-otherscape':
@@ -127,13 +127,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
     <div className="chat-container">
       <div className="game-sidebar">
         <h2>Games</h2>
-        <button 
+        <button
           className={`game-option ${game === 'dnd-5e' ? 'selected' : ''}`}
           onClick={() => setGame('dnd-5e')}
         >
           Dungeons & Dragons 5th Edition
         </button>
-        <button 
+        <button
           className={`game-option ${game === 'metro-otherscape' ? 'selected' : ''}`}
           onClick={() => setGame('metro-otherscape')}
         >
@@ -142,118 +142,118 @@ const ChatInterface = ({ initialMessages = [] }) => {
       </div>
       <div className="chat-main">
         <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
-      <div className="chat-feed" style={{ position: 'relative' }}>
-        {renderMessages()}
-        <div className="copy-container">
-          <button 
-            onClick={handleCopyToClipboard} 
-            className="copy-link" 
-            disabled={messages.length === 0}
-            aria-label="Copy"
-          >
-            📋
-          </button>
-          {copyStatus && (
-            <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-              {copyStatus}
-            </span>
-          )}
-        </div>
-      </div>
-      {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <div className="input-container">
-        <textarea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSendMessage();
-            }
-          }}
-          ref={messageInputRef}
-          autoFocus
-          disabled={loading}
-          maxLength={1000}
-          rows={4}
-          className="message-input"
-        />
-        <div className="char-limit">
-          {1000 - newMessage.length} characters remaining
-        </div>
-        <button 
-          onClick={handleSendMessage} 
-          className="send-button" 
-          disabled={messages.length > 0 && newMessage.trim() === ''}
-        >
-          Send
-        </button>
-        <div className="char-count">
-          {newMessage.length}/1000
-        </div>
-      </div>
-      <button 
-        className="settings-toggle"
-        onClick={() => setControlsVisible(!controlsVisible)}
-        aria-expanded={controlsVisible}
-      >
-        ⚙️ Settings
-      </button>
-      {controlsVisible && (
-        <div className="controls-panel">
-          <div className="control-elements">
-            <div className="control-group">
-              <label className="control-label">
-                <input
-                  type="checkbox"
-                  checked={debug}
-                  onChange={() => setDebug(!debug)}
-                />
-                Debug Mode
-              </label>
-            </div>
-            <div className="control-group">
-              <label className="control-label">Model</label>
-              <select
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-              >
-                <option value="gpt-4o">OpenAI GPT 4o</option>
-                <option value="claude-3.5">Claude 3.5 Sonnet</option>
-              </select>
-            </div>
-            <div className="control-group">
-              <label className="control-label">
-                KNN Weight: {knn.toFixed(2)}
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={knn}
-                onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
-              />
-            </div>
-            <div className="control-group">
-              <label className="control-label">
-                Keywords Weight: {keywordsWeight.toFixed(2)}
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={keywordsWeight}
-                onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
-              />
-            </div>
+        <div className="chat-feed" style={{ position: 'relative' }}>
+          {renderMessages()}
+          <div className="copy-container">
+            <button
+              onClick={handleCopyToClipboard}
+              className="copy-link"
+              disabled={messages.length === 0}
+              aria-label="Copy"
+            >
+              📋
+            </button>
+            {copyStatus && (
+              <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+                {copyStatus}
+              </span>
+            )}
           </div>
         </div>
-      )}
+        {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
+        <div className="input-container">
+          <textarea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            ref={messageInputRef}
+            autoFocus
+            disabled={loading}
+            maxLength={1000}
+            rows={4}
+            className="message-input"
+          />
+        </div>
+        <div className="control-container">
+          <div className="char-count">
+            {newMessage.length}/1000
+          </div>
+
+          <button
+            onClick={handleSendMessage}
+            className="send-button"
+            disabled={messages.length > 0 && newMessage.trim() === ''}
+          >
+            Send
+          </button>
+        </div>
+        <button
+          className="settings-toggle"
+          onClick={() => setControlsVisible(!controlsVisible)}
+          aria-expanded={controlsVisible}
+        >
+          ⚙️ Settings
+        </button>
+        {controlsVisible && (
+          <div className="controls-panel">
+            <div className="control-elements">
+              <div className="control-group">
+                <label className="control-label">
+                  <input
+                    type="checkbox"
+                    checked={debug}
+                    onChange={() => setDebug(!debug)}
+                  />
+                  Debug Mode
+                </label>
+              </div>
+              <div className="control-group">
+                <label className="control-label">Model</label>
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                >
+                  <option value="gpt-4o">OpenAI GPT 4o</option>
+                  <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                </select>
+              </div>
+              <div className="control-group">
+                <label className="control-label">
+                  KNN Weight: {knn.toFixed(2)}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={knn}
+                  onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="control-group">
+                <label className="control-label">
+                  Keywords Weight: {keywordsWeight.toFixed(2)}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={keywordsWeight}
+                  onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
   );
 };
 
