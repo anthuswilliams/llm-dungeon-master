@@ -180,19 +180,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
             className="message-input"
           />
         </div>
-        <div className="control-container">
-          <div className="char-count">
-            {newMessage.length}/1000
-          </div>
-
-          <button
-            onClick={handleSendMessage}
-            className="send-button"
-            disabled={messages.length > 0 && newMessage.trim() === ''}
-          >
-            Send
-          </button>
+        <div className="char-count">
+          {newMessage.length}/1000
         </div>
+        <button
+          onClick={handleSendMessage}
+          className="send-button"
+          disabled={messages.length > 0 && newMessage.trim() === ''}
+        >
+          Send
+        </button>
         <button
           className="settings-toggle"
           onClick={() => setControlsVisible(!controlsVisible)}
