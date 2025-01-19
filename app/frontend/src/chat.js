@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import exampleQuestions from './example_questions.json';
-import './spinner.scss'; // Assuming you have a CSS file for the spinner
+import './spinner.scss';
+import './chat.css';
 
 const ChatInterface = ({ initialMessages = [] }) => {
   const [messages, setMessages] = useState(initialMessages);
@@ -12,6 +13,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
   const [model, setModel] = useState('claude-3.5');
+  const [game, setGame] = useState('dnd-5e');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
 
@@ -66,7 +68,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
         debug,
         knnWeight: knn,
         keywordWeight: keywordsWeight,
-        model: model
+        model: model,
+        game: game
       };
 
       const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
@@ -154,7 +157,31 @@ const ChatInterface = ({ initialMessages = [] }) => {
               />
             </label>
           </div>
-          <div style={{ marginTop: '0.5em' }}>
+          <div className="control-row" style={{ marginTop: '0.5em' }}>
+            <div className="control-item">
+              <span className="control-label">Model:</span>
+              <select
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
+              >
+                <option value="gpt-4o">OpenAI GPT 4o</option>
+                <option value="claude-3.5">Claude 3.5 Sonnet</option>
+              </select>
+            </div>
+            <div className="control-item">
+              <span className="control-label">Game:</span>
+              <select
+                value={game}
+                onChange={(e) => setGame(e.target.value)}
+                style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
+              >
+                <option value="dnd-5e">Dungeons & Dragons 5th Edition</option>
+                <option value="metro-otherscape">Metro: Otherscape</option>
+              </select>
+            </div>
+          </div>
+          <div style={{ marginTop: '0.5em', display: 'none' }}>
             <span className="control-label">Model:</span>
             <select
               value={model}

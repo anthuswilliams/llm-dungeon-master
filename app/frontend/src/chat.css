@@ -1,0 +1,14 @@
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.control-item {
+  flex: 1;
+}
+
+.control-item select {
+  width: 100%;
+  max-width: 200px;
+}
