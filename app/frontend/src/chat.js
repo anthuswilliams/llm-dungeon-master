@@ -22,8 +22,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
     switch (game) {
       case 'dnd-5e':
         return 'Dungeons & Dragons 5th Edition';
-      case 'metro-otherscape':
-        return 'Metro: Otherscape';
+      case 'otherscape':
+        return ':Otherscape';
       default:
         return 'the RPG';
     }
@@ -134,10 +134,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
           Dungeons & Dragons 5th Edition
         </button>
         <button
-          className={`game-option ${game === 'metro-otherscape' ? 'selected' : ''}`}
-          onClick={() => setGame('metro-otherscape')}
+          className={`game-option ${game === 'otherscape' ? 'selected' : ''}`}
+          onClick={() => setGame('otherscape')}
         >
-          Metro: Otherscape
+          :Otherscape
         </button>
       </div>
       <div className="chat-main">
@@ -180,6 +180,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
             className="message-input"
           />
         </div>
+        <div className="char-count">
+          {newMessage.length}/1000
+        </div>
         <div className="controls-row">
           <button
             className="settings-toggle"
@@ -189,9 +192,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
           >
             ⚙️
           </button>
-          <div className="char-count">
-            {newMessage.length}/1000
-          </div>
           <button
             onClick={handleSendMessage}
             className="send-button"
