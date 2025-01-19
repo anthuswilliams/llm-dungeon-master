@@ -40,6 +40,120 @@
   padding: 20px;
 }
 
+.chat-title {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.chat-feed {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.message.user {
+  background-color: #e3f2fd;
+  margin-left: 20%;
+}
+
+.message.api {
+  background-color: #f5f5f5;
+  margin-right: 20%;
+}
+
+.debug-info {
+  font-size: 0.9em;
+  color: #666;
+  margin: 5px 0 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.message-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+.char-count {
+  text-align: right;
+  color: #666;
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.control-elements {
+  flex: 1;
+}
+
+.control-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.slider-container {
+  margin: 10px 0;
+}
+
+.slider-container input[type="range"] {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.send-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.copy-link {
+  padding: 5px 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.copy-link:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.copy-status {
+  margin-left: 10px;
+  font-size: 0.9em;
+}
+
 .control-row {
   display: flex;
   justify-content: space-between;
