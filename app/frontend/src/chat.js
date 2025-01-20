@@ -217,7 +217,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
             </div>
           </div>
         </div>
-        {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
+        {loading && <div className="spinner" aria-label="Loading..." />}
         <div className="input-container">
           <textarea
             value={newMessage}
