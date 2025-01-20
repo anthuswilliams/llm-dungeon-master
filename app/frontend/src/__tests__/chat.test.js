@@ -219,7 +219,7 @@ test('sends debug: false when checkbox is unchecked', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -237,7 +237,7 @@ test('sends correct slider values', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -341,7 +341,7 @@ test('slider controls show correct initial values', () => {
 
 test('displays character count', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   expect(screen.getByText('0/1000')).toBeInTheDocument();
 
   fireEvent.change(input, { target: { value: 'Hello' } });
@@ -358,7 +358,7 @@ test('disables input box while request is in flight', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   const sendButton = screen.getByText('Send');
 
   expect(input).not.toBeDisabled();
