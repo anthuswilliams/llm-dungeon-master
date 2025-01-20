@@ -185,14 +185,21 @@ const ChatInterface = ({ initialMessages = [] }) => {
           </div>
           <div className="copy-container">
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <button
-                onClick={handleCopyToClipboard}
-                className="copy-link"
-                disabled={!messages.length}
-                aria-label="Copy"
-              >
-                Copy
-              </button>
+              <div className="copy-status-container">
+                <button
+                  onClick={handleCopyToClipboard}
+                  className="copy-link"
+                  disabled={!messages.length}
+                  aria-label="Copy"
+                >
+                  Copy
+                </button>
+                {copyStatus && (
+                  <div className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+                    {copyStatus}
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleClearChat}
                 className="copy-link"
@@ -201,11 +208,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
               >
                 Clear
               </button>
-              {copyStatus && (
-                <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-                  {copyStatus}
-                </span>
-              )}
             </div>
           </div>
         </div>
