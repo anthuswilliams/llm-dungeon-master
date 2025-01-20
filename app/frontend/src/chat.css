@@ -104,14 +104,13 @@
 }
 
 .message-input {
-  width: 90%;
-  margin: 0 auto;
-  display: block;
+  width: 100%;
   border-radius: 0.3125em;
   padding: 0.625em;
   background-color: #f5f5dc;
   border: 0.0625em solid #8b4513;
   resize: vertical;
+  box-sizing: border-box;
 }
 
 .send-button {
