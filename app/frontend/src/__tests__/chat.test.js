@@ -16,6 +16,10 @@ afterAll(() => {
   console.error.mockRestore();
 });
 
+afterEach(() => {
+  cleanup();
+});
+
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
   const input = screen.getByPlaceholderText(/e\.g\. "/);
