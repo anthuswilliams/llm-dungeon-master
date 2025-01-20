@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
-import './spinner.scss';
 import './chat.css';
 
 const ChatInterface = ({ initialMessages = [] }) => {
