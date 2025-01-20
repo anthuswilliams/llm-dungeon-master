@@ -345,6 +345,125 @@ test('slider controls show correct initial values', () => {
   expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.20');
 });
 
+test('conversation can be saved to and loaded from localStorage', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
+    json: () => Promise.resolve({ response: 'API response' }),
+  }));
+
+  // First render - create a conversation
+  const { unmount } = render(<ChatInterface />);
+  
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+  
+  await screen.findByText('Test message');
+  await screen.findByText('API response');
+  
+  // Unmount and remount to simulate page refresh
+  unmount();
+  render(<ChatInterface />);
+  
+  // Verify messages are still present
+  expect(screen.getByText('Test message')).toBeInTheDocument();
+  expect(screen.getByText('API response')).toBeInTheDocument();
+  
+  fetchMock.mockRestore();
+});
+
+test('sends correct game parameter in API request', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation((url, options) => {
+    const body = JSON.parse(options.body);
+    expect(body.game).toBe('dnd-5e'); // Default game
+    return Promise.resolve({
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  render(<ChatInterface />);
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  fireEvent.change(input, { target: { value: 'Test message' } });
+  fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+  await screen.findByText('Test message');
+  fetchMock.mockRestore();
+});
+
+test('clear button empties message list and localStorage', async () => {
+  // Setup initial messages
+  const messages = [
+    { id: 0, message: 'Hello', type: 'user' },
+    { id: 1, message: 'Hi there', type: 'api' }
+  ];
+  localStorage.setItem('chat-history-dnd-5e', JSON.stringify(messages));
+  
+  render(<ChatInterface />);
+  
+  // Verify initial messages are shown
+  expect(screen.getByText('Hello')).toBeInTheDocument();
+  expect(screen.getByText('Hi there')).toBeInTheDocument();
+  
+  // Clear messages
+  const clearButton = screen.getByText('Clear');
+  fireEvent.click(clearButton);
+  
+  // Verify messages are cleared from UI
+  expect(screen.queryByText('Hello')).not.toBeInTheDocument();
+  expect(screen.queryByText('Hi there')).not.toBeInTheDocument();
+  
+  // Verify localStorage is cleared
+  expect(localStorage.getItem('chat-history-dnd-5e')).toBeNull();
+});
+
+test('switching games clears the conversation', () => {
+  // Setup initial messages for D&D
+  const messages = [
+    { id: 0, message: 'D&D message', type: 'user' }
+  ];
+  localStorage.setItem('chat-history-dnd-5e', JSON.stringify(messages));
+  
+  render(<ChatInterface />);
+  expect(screen.getByText('D&D message')).toBeInTheDocument();
+  
+  // Switch to Otherscape
+  const otherscapeButton = screen.getByText(':Otherscape');
+  fireEvent.click(otherscapeButton);
+  
+  // Verify D&D message is no longer shown
+  expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
+});
+
+test('conversations are retained when switching between games', async () => {
+  // Setup initial messages for both games
+  const dndMessages = [{ id: 0, message: 'D&D message', type: 'user' }];
+  const otherscapeMessages = [{ id: 0, message: 'Otherscape message', type: 'user' }];
+  
+  localStorage.setItem('chat-history-dnd-5e', JSON.stringify(dndMessages));
+  localStorage.setItem('chat-history-otherscape', JSON.stringify(otherscapeMessages));
+  
+  render(<ChatInterface />);
+  
+  // Check D&D messages (default game)
+  expect(screen.getByText('D&D message')).toBeInTheDocument();
+  expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
+  
+  // Switch to Otherscape
+  const otherscapeButton = screen.getByText(':Otherscape');
+  fireEvent.click(otherscapeButton);
+  
+  // Check Otherscape messages
+  expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
+  expect(screen.getByText('Otherscape message')).toBeInTheDocument();
+  
+  // Switch back to D&D
+  const dndButton = screen.getByText('Dungeons & Dragons 5th Edition');
+  fireEvent.click(dndButton);
+  
+  // Verify D&D messages are restored
+  expect(screen.getByText('D&D message')).toBeInTheDocument();
+  expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
+});
+
 test('displays character count', () => {
   render(<ChatInterface initialMessages={[]} />);
   const input = screen.getByPlaceholderText(/^e\.g\. /);
