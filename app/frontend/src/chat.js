@@ -179,8 +179,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
       </div>
       <div className="chat-main">
         <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
-        <div className="chat-feed" style={{ position: 'relative' }}>
-          {renderMessages()}
+        <div className="chat-feed">
+          <div className="messages-container">
+            {renderMessages()}
+          </div>
           <div className="copy-container">
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <button
