@@ -58,7 +58,7 @@ test('handles Enter key press to send message', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -110,7 +110,7 @@ test('submits message on Enter key press', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -208,7 +208,7 @@ test('sends debug: true when checkbox is checked', async () => {
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -225,7 +225,7 @@ test('sends debug: false when checkbox is unchecked', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -243,7 +243,7 @@ test('sends correct slider values', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
