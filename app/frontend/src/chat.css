@@ -47,17 +47,20 @@
 
 .chat-feed {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+  position: relative;
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .messages-container {
   flex: 1;
+  overflow-y: auto;
+  padding-bottom: 50px;
 }
 
 .message {
@@ -187,13 +190,18 @@
 
 
 .copy-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 5px;
-  padding: 10px 0 0 0;
+  padding: 10px;
+  background-color: white;
   border-top: 1px solid #ddd;
-  margin-top: auto;
+  z-index: 1;
 }
 
 .copy-link {
