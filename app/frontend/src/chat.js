@@ -4,7 +4,10 @@ import './spinner.scss';
 import './chat.css';
 
 const ChatInterface = ({ initialMessages = [] }) => {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState(() => {
+    const savedMessages = localStorage.getItem(`chat-history-${game}`);
+    return savedMessages ? JSON.parse(savedMessages) : initialMessages;
+  });
   const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)];
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
@@ -62,6 +65,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
   if (messageInputRef.current) {
     messageInputRef.current.focus();
   }
+
+  // Save messages to localStorage whenever they change
+  React.useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+    }
+  }, [messages, game]);
 
   const handleSendMessage = async () => {
     const messageToSend = newMessage.trim() === '' ? randomExampleQuestion : newMessage;
@@ -129,13 +139,31 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <h2>Games</h2>
         <button
           className={`game-option ${game === 'dnd-5e' ? 'selected' : ''}`}
-          onClick={() => setGame('dnd-5e')}
+          onClick={() => {
+            // Save current chat before switching
+            if (messages.length > 0) {
+              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+            }
+            setGame('dnd-5e');
+            // Load chat history for new game or start fresh
+            const savedMessages = localStorage.getItem('chat-history-dnd-5e');
+            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+          }}
         >
           Dungeons & Dragons 5th Edition
         </button>
         <button
           className={`game-option ${game === 'otherscape' ? 'selected' : ''}`}
-          onClick={() => setGame('otherscape')}
+          onClick={() => {
+            // Save current chat before switching
+            if (messages.length > 0) {
+              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+            }
+            setGame('otherscape');
+            // Load chat history for new game or start fresh
+            const savedMessages = localStorage.getItem('chat-history-otherscape');
+            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+          }}
         >
           :Otherscape
         </button>
