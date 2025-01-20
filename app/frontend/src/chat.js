@@ -190,7 +190,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 <button
                   onClick={handleCopyToClipboard}
                   className="copy-link"
-                  disabled={!messages.length}
+                  disabled={!messages.length || loading}
                   aria-label="Copy"
                 >
                   Copy
@@ -208,7 +208,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <button
                 onClick={handleClearChat}
                 className="copy-link"
-                disabled={messages.length === 0}
+                disabled={messages.length === 0 || loading}
                 aria-label="Clear"
               >
                 Clear
