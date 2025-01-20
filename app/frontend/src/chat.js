@@ -183,7 +183,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               <button
                 onClick={handleCopyToClipboard}
                 className="copy-link"
-                disabled={messages.length === 0}
+                disabled={!messages.length}
                 aria-label="Copy"
               >
                 Copy

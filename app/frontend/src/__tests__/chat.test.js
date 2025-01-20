@@ -52,7 +52,7 @@ test('handles Enter key press to send message', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -128,9 +128,9 @@ test('submits message on Enter key press', async () => {
 
 test('renders all messages', () => {
   const messages = [
-    { id: 0, message: 'Hello' },
-    { id: 1, message: 'How are you?' },
-    { id: 0, message: 'I am fine, thank you!' },
+    { id: 0, message: 'Hello', type: 'user' },
+    { id: 1, message: 'How are you?', type: 'api' },
+    { id: 0, message: 'I am fine, thank you!', type: 'user' },
   ];
 
   render(<ChatInterface initialMessages={messages} />);
@@ -139,7 +139,6 @@ test('renders all messages', () => {
     const messageElement = screen.getByText(msg.message);
     expect(messageElement).toBeInTheDocument();
   });
-
 });
 
 test('each message is rendered', () => {
@@ -242,8 +241,13 @@ test('sends correct slider values', async () => {
 
 test('sliders always sum to 1', () => {
   render(<ChatInterface />);
-  const knnSlider = screen.getByLabelText(/KNN:/);
-  const keywordsSlider = screen.getByLabelText(/Keywords:/);
+  
+  // Open settings panel first
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  const knnSlider = screen.getByLabelText(/KNN Weight:/);
+  const keywordsSlider = screen.getByLabelText(/Keywords Weight:/);
 
   fireEvent.change(knnSlider, { target: { value: 0.7 } });
   expect(parseFloat(knnSlider.value) + parseFloat(keywordsSlider.value)).toBeCloseTo(1);
@@ -286,12 +290,16 @@ test('sends selected model value to API', async () => {
 
   render(<ChatInterface />);
   
+  // Open settings panel first
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
   // Change model selection
-  const modelSelect = screen.getByRole('combobox');
+  const modelSelect = screen.getByLabelText('Model');
   fireEvent.change(modelSelect, { target: { value: 'claude-3.5' } });
 
   // Send a message
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
