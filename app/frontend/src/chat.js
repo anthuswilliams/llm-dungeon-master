@@ -248,8 +248,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <div className="controls-panel">
             <div className="control-elements">
               <div className="control-group">
-                <label className="control-label">
+                <label className="control-label" htmlFor="debug-checkbox">
                   <input
+                    id="debug-checkbox"
                     type="checkbox"
                     checked={debug}
                     onChange={() => setDebug(!debug)}
@@ -258,8 +259,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 </label>
               </div>
               <div className="control-group">
-                <label className="control-label">Model</label>
+                <label className="control-label" htmlFor="model-select">Model</label>
                 <select
+                  id="model-select"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                 >
@@ -268,10 +270,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 </select>
               </div>
               <div className="control-group">
-                <label className="control-label">
+                <label className="control-label" htmlFor="knn-slider">
                   KNN Weight: {knn.toFixed(2)}
                 </label>
                 <input
+                  id="knn-slider"
                   type="range"
                   min="0"
                   max="1"
@@ -281,10 +284,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
                 />
               </div>
               <div className="control-group">
-                <label className="control-label">
+                <label className="control-label" htmlFor="keywords-slider">
                   Keywords Weight: {keywordsWeight.toFixed(2)}
                 </label>
                 <input
+                  id="keywords-slider"
                   type="range"
                   min="0"
                   max="1"

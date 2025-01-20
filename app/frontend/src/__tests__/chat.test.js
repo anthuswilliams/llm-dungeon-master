@@ -104,7 +104,7 @@ test('submits message on Enter key press', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -194,10 +194,15 @@ test('sends debug: true when checkbox is checked', async () => {
   });
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug:');
+  
+  // Open settings panel first
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -311,12 +316,16 @@ test('sends selected model value to API', async () => {
 test('slider controls show correct initial values', () => {
   render(<ChatInterface />);
   
+  // Open settings panel first
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
   // Find the KNN slider label in the control panel
-  const knnLabel = screen.getByText('KNN:').closest('label');
+  const knnLabel = screen.getByLabelText(/KNN Weight/).closest('label');
   expect(knnLabel).toHaveTextContent('0.80');
   
   // Find the Keywords slider label in the control panel
-  const keywordsLabel = screen.getByText('Keywords:').closest('label');
+  const keywordsLabel = screen.getByLabelText(/Keywords Weight/).closest('label');
   expect(keywordsLabel).toHaveTextContent('0.20');
 });
 
