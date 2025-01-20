@@ -79,6 +79,7 @@
   margin-right: 5%;
   background-color: #f5f5dc;
   border: 0.0625em solid #8b4513;
+  text-align: right;
 }
 
 .message.api {
