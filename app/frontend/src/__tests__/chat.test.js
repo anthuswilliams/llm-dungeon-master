@@ -284,7 +284,7 @@ test('displays debug info when debug is checked', async () => {
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -315,7 +315,7 @@ test('sends selected model value to API', async () => {
   fireEvent.change(modelSelect, { target: { value: 'claude-3.5' } });
 
   // Send a message
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -347,7 +347,7 @@ test('slider controls show correct initial values', () => {
 
 test('displays character count', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   expect(screen.getByText('0/1000')).toBeInTheDocument();
 
   fireEvent.change(input, { target: { value: 'Hello' } });
