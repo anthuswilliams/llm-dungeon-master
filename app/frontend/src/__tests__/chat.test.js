@@ -364,7 +364,7 @@ test('disables input box while request is in flight', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText("Type new message...");
+  const input = screen.getByPlaceholderText(/^e\.g\. /);
   const sendButton = screen.getByText('Send');
 
   expect(input).not.toBeDisabled();
