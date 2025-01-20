@@ -131,8 +131,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(messages, null, 2));
       setCopyStatus('Copied!');
+      setTimeout(() => setCopyStatus(''), 500);
     } catch (err) {
       setCopyStatus('Failed to copy to clipboard');
+      setTimeout(() => setCopyStatus(''), 500);
     }
   };
 
@@ -195,7 +197,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   Copy
                 </button>
                 {copyStatus && (
-                  <div className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+                  <div 
+                    className="copy-status visible" 
+                    style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}
+                    aria-hidden="true"
+                  >
                     {copyStatus}
                   </div>
                 )}
