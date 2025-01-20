@@ -71,6 +71,21 @@
   padding: 0.625em;
   border-radius: 0.3125em;
   font-family: 'Gill Sans Nova', sans-serif;
+  max-width: 80%;
+}
+
+.message.user {
+  margin-left: auto;
+  margin-right: 5%;
+  background-color: #f5f5dc;
+  border: 0.0625em solid #8b4513;
+}
+
+.message.api {
+  margin-right: auto;
+  margin-left: 5%;
+  background-color: #e5e5c9;
+  border: 0.0625em solid #8b4513;
 }
 
 .debug-info {

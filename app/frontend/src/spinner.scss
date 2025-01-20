@@ -60,41 +60,6 @@
     overflow-y: auto;
   }
 
-  .message.user {
-    text-align: left;
-    margin-left: 5%;
-    background-color: #f5f5dc; // Light beige
-    border: 0.0625em solid #8b4513; // Dark brown
-  }
-
-  .message.api {
-    margin-left: auto;
-    margin-right: 5%;
-    background-color: #e5e5c9; // Slightly darker beige
-    border: 0.0625em solid #8b4513; // Dark brown
-  }
-
-  .message {
-    border: 0.0625em solid #ddd;
-    padding: 0.625em;
-    background-color: #f5f5dc; // Light beige
-    border: 0.0625em solid #8b4513; // Dark brown
-    margin-bottom: 0.625em;
-    border-radius: 0.3125em;
-    font-family: 'Gill Sans Nova', sans-serif;
-    max-width: 80%;
-    margin-right: auto;
-  }
-
-  .message.user {
-    text-align: left;
-    margin-left: 5%;
-  }
-
-  .message.api {
-    margin-left: auto;
-    margin-right: 5%;
-  }
 
   .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
