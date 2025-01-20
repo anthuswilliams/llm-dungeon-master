@@ -4,6 +4,7 @@ import './spinner.scss';
 import './chat.css';
 
 const ChatInterface = ({ initialMessages = [] }) => {
+  const [game, setGame] = useState('dnd-5e');
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem(`chat-history-${game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
@@ -16,7 +17,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(false);
   const [model, setModel] = useState('claude-3.5');
-  const [game, setGame] = useState('dnd-5e');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
   const [controlsVisible, setControlsVisible] = useState(false);
