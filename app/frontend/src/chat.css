@@ -41,8 +41,11 @@
 }
 
 .chat-title {
-  margin-bottom: 20px;
-  color: #333;
+  font-family: 'Old English Text MT', serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1em;
+  color: #8b4513;
 }
 
 .chat-feed {
@@ -64,19 +67,10 @@
 }
 
 .message {
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.message.user {
-  background-color: #e3f2fd;
-  margin-left: 20%;
-}
-
-.message.api {
-  background-color: #f5f5f5;
-  margin-right: 20%;
+  margin-bottom: 0.625em;
+  padding: 0.625em;
+  border-radius: 0.3125em;
+  font-family: 'Gill Sans Nova', sans-serif;
 }
 
 .debug-info {
@@ -93,22 +87,25 @@
 }
 
 .message-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 5px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  width: 90%;
+  margin: 0 auto;
+  display: block;
+  border-radius: 0.3125em;
+  padding: 0.625em;
+  background-color: #f5f5dc;
+  border: 0.0625em solid #8b4513;
   resize: vertical;
 }
 
 .send-button {
-  padding: 10px 20px;
+  padding: 0.625em 1.25em;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.3125em;
   cursor: pointer;
   margin-left: auto;
+  transition: background-color 0.3s ease;
 }
 
 .send-button:disabled {
