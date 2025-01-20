@@ -18,7 +18,7 @@ afterAll(() => {
 
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/e\.g\. "/);
   expect(input).toBeInTheDocument();
 });
 
@@ -158,7 +158,7 @@ test('each message is rendered', () => {
 
 test('Copy button is disabled when there are no messages', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const copyButton = screen.getByText('Copy');
+  const copyButton = screen.getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeDisabled();
 });
 
@@ -270,10 +270,15 @@ test('displays debug info when debug is checked', async () => {
   }));
 
   render(<ChatInterface />);
-  const debugCheckbox = screen.getByLabelText('Debug:');
+  
+  // Open settings panel first
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+  
+  const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/e\.g\./);
+  const input = screen.getByPlaceholderText(/Type new message.../);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -308,7 +313,12 @@ test('sends selected model value to API', async () => {
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  await screen.findByText('Test message');
+  // Wait for message to be sent
+  await screen.findByText((content, element) => {
+    return element.tagName.toLowerCase() === 'span' && 
+           element.className === 'user' && 
+           content === 'Test message';
+  });
   
   fetchMock.mockRestore();
 });
@@ -321,12 +331,12 @@ test('slider controls show correct initial values', () => {
   fireEvent.click(settingsButton);
 
   // Find the KNN slider label in the control panel
-  const knnLabel = screen.getByLabelText(/KNN Weight/).closest('label');
-  expect(knnLabel).toHaveTextContent('0.80');
+  const knnLabel = screen.getByText(/KNN Weight:/);
+  expect(knnLabel).toHaveTextContent('KNN Weight: 0.80');
   
   // Find the Keywords slider label in the control panel
-  const keywordsLabel = screen.getByLabelText(/Keywords Weight/).closest('label');
-  expect(keywordsLabel).toHaveTextContent('0.20');
+  const keywordsLabel = screen.getByText(/Keywords Weight:/);
+  expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.20');
 });
 
 test('displays character count', () => {
