@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import exampleQuestions from './example_questions.json';
+import dndQuestions from './dnd-5e-questions.json';
+import otherscapeQuestions from './otherscape-questions.json';
 import './spinner.scss';
 import './chat.css';
 
@@ -9,7 +10,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
     const savedMessages = localStorage.getItem(`chat-history-${game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
   });
-  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)];
+  const exampleQuestions = game === 'dnd-5e' ? dndQuestions : otherscapeQuestions;
+  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
 
