@@ -72,6 +72,7 @@
   border-radius: 0.3125em;
   font-family: 'Gill Sans Nova', sans-serif;
   max-width: 80%;
+  width: fit-content;
 }
 
 .message.user {

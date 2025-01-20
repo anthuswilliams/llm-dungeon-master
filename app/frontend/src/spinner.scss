@@ -58,6 +58,11 @@
   .chat-feed {
     flex: 1;
     overflow-y: auto;
+    
+    .message {
+      width: fit-content;
+      display: inline-block;
+    }
   }
 
 
