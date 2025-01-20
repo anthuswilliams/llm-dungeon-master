@@ -133,6 +133,12 @@ const ChatInterface = ({ initialMessages = [] }) => {
     }
   };
 
+  const handleClearChat = () => {
+    localStorage.removeItem(`chat-history-${game}`);
+    setMessages([]);
+    setCopyStatus('');
+  };
+
   return (
     <div className="chat-container">
       <div className="game-sidebar">
@@ -173,19 +179,29 @@ const ChatInterface = ({ initialMessages = [] }) => {
         <div className="chat-feed" style={{ position: 'relative' }}>
           {renderMessages()}
           <div className="copy-container">
-            <button
-              onClick={handleCopyToClipboard}
-              className="copy-link"
-              disabled={messages.length === 0}
-              aria-label="Copy"
-            >
-              Copy
-            </button>
-            {copyStatus && (
-              <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-                {copyStatus}
-              </span>
-            )}
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <button
+                onClick={handleCopyToClipboard}
+                className="copy-link"
+                disabled={messages.length === 0}
+                aria-label="Copy"
+              >
+                Copy
+              </button>
+              <button
+                onClick={handleClearChat}
+                className="copy-link"
+                disabled={messages.length === 0}
+                aria-label="Clear"
+              >
+                Clear
+              </button>
+              {copyStatus && (
+                <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
+                  {copyStatus}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
