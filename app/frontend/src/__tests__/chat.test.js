@@ -18,6 +18,8 @@ afterAll(() => {
 
 afterEach(() => {
   cleanup();
+  // Clear localStorage after each test
+  localStorage.clear();
 })
 
 test('uses random question as placeholder when no messages are submitted', () => {
