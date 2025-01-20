@@ -104,7 +104,7 @@ test('submits message on Enter key press', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/e\.g\./);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -194,7 +194,7 @@ test('sends debug: true when checkbox is checked', async () => {
   });
 
   render(<ChatInterface />);
-  
+
   // Open settings panel first
   const settingsButton = screen.getByTitle('Settings');
   fireEvent.click(settingsButton);
@@ -202,7 +202,7 @@ test('sends debug: true when checkbox is checked', async () => {
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/e\.g\./);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -219,7 +219,7 @@ test('sends debug: false when checkbox is unchecked', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/e\.g\./);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -237,7 +237,7 @@ test('sends correct slider values', async () => {
   });
 
   render(<ChatInterface />);
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/e\.g\./);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -246,7 +246,7 @@ test('sends correct slider values', async () => {
 
 test('sliders always sum to 1', () => {
   render(<ChatInterface />);
-  
+
   // Open settings panel first
   const settingsButton = screen.getByTitle('Settings');
   fireEvent.click(settingsButton);
@@ -270,15 +270,15 @@ test('displays debug info when debug is checked', async () => {
   }));
 
   render(<ChatInterface />);
-  
+
   // Open settings panel first
   const settingsButton = screen.getByTitle('Settings');
   fireEvent.click(settingsButton);
-  
+
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText(/e\.g\./);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -299,7 +299,7 @@ test('sends selected model value to API', async () => {
   });
 
   render(<ChatInterface />);
-  
+
   // Open settings panel first
   const settingsButton = screen.getByTitle('Settings');
   fireEvent.click(settingsButton);
@@ -309,23 +309,23 @@ test('sends selected model value to API', async () => {
   fireEvent.change(modelSelect, { target: { value: 'claude-3.5' } });
 
   // Send a message
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText("Type new message...");
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   // Wait for message to be sent
   await screen.findByText((content, element) => {
-    return element.tagName.toLowerCase() === 'span' && 
-           element.className === 'user' && 
-           content === 'Test message';
+    return element.tagName.toLowerCase() === 'span' &&
+      element.className === 'user' &&
+      content === 'Test message';
   });
-  
+
   fetchMock.mockRestore();
 });
 
 test('slider controls show correct initial values', () => {
   render(<ChatInterface />);
-  
+
   // Open settings panel first
   const settingsButton = screen.getByTitle('Settings');
   fireEvent.click(settingsButton);
@@ -333,7 +333,7 @@ test('slider controls show correct initial values', () => {
   // Find the KNN slider label in the control panel
   const knnLabel = screen.getByText(/KNN Weight:/);
   expect(knnLabel).toHaveTextContent('KNN Weight: 0.80');
-  
+
   // Find the Keywords slider label in the control panel
   const keywordsLabel = screen.getByText(/Keywords Weight:/);
   expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.20');
@@ -358,7 +358,7 @@ test('disables input box while request is in flight', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/Type new message.../);
+  const input = screen.getByPlaceholderText("Type new message...");
   const sendButton = screen.getByText('Send');
 
   expect(input).not.toBeDisabled();
