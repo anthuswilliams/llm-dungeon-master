@@ -151,7 +151,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
               disabled={messages.length === 0}
               aria-label="Copy"
             >
-              📋
+              Copy
             </button>
             {copyStatus && (
               <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
