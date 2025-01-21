@@ -1,0 +1,279 @@
+.chat-container {
+  display: flex;
+  height: 100vh;
+}
+
+.game-sidebar {
+  width: 250px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.game-option {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.game-option.selected {
+  border-color: #007bff;
+  background-color: #e7f1ff;
+  font-weight: bold;
+}
+
+.game-option:hover {
+  background-color: #f0f0f0;
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.chat-title {
+  font-family: 'Old English Text MT', serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1em;
+  color: #8b4513;
+}
+
+.chat-feed {
+  flex: 1;
+  position: relative;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 50px;
+}
+
+.message {
+  margin-bottom: 0.625em;
+  padding: 0.625em;
+  border-radius: 0.3125em;
+  font-family: 'Gill Sans Nova', sans-serif;
+  max-width: 80%;
+  width: fit-content;
+}
+
+.message.user {
+  margin-left: auto;
+  margin-right: 5%;
+  background-color: #f5f5dc;
+  border: 0.0625em solid #8b4513;
+  text-align: right;
+}
+
+.message.api {
+  margin-right: auto;
+  margin-left: 5%;
+  background-color: #e5e5c9;
+  border: 0.0625em solid #8b4513;
+}
+
+.debug-info {
+  font-size: 0.9em;
+  color: #666;
+  margin: 5px 0 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.input-container {
+  margin-bottom: 10px;
+}
+
+.message-input {
+  width: 100%;
+  border-radius: 0.3125em;
+  padding: 0.625em;
+  background-color: #f5f5dc;
+  border: 0.0625em solid #8b4513;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.send-button {
+  padding: 0.625em 1.25em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.3125em;
+  cursor: pointer;
+  margin-left: auto;
+  transition: background-color 0.3s ease;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.char-count {
+  color: #666;
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-toggle {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.settings-toggle:hover {
+  background-color: #f5f5f5;
+}
+
+.controls-panel {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  max-width: 70%;
+}
+
+.control-elements {
+  display: grid;
+  gap: 15px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.control-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.control-group select,
+.control-group input[type="range"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.control-group input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+
+.copy-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  z-index: 1;
+}
+
+.copy-link {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1.2em;
+  background: none;
+  border: none;
+  padding: 5px;
+  transition: color 0.2s ease;
+}
+
+.copy-link:hover {
+  color: #0056b3;
+}
+
+.copy-link:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.copy-status-container {
+  position: relative;
+}
+
+.copy-status {
+  position: absolute;
+  bottom: 100%;
+  right: -25px;
+  padding: 4px 8px;
+  font-size: 0.9em;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-bottom: 5px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+}
+
+.copy-status.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 2.25em;
+  height: 2.25em;
+  border-radius: 50%;
+  border-left-color: #09f;
+  animation: spin 1s ease infinite;
+  margin: 0.625em auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,10 +1,17 @@
 import React, { useState, useRef } from 'react';
-import exampleQuestions from './example_questions.json';
-import './spinner.scss'; // Assuming you have a CSS file for the spinner
+import dndQuestions from './dnd-5e-questions.json';
+import otherscapeQuestions from './otherscape-questions.json';
+import './chat.css';
 
 const ChatInterface = ({ initialMessages = [] }) => {
-  const [messages, setMessages] = useState(initialMessages);
-  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)];
+  const [game, setGame] = useState('dnd-5e');
+  const [messages, setMessages] = useState(() => {
+    const savedMessages = localStorage.getItem(`chat-history-${game}`);
+    return savedMessages ? JSON.parse(savedMessages) : initialMessages;
+  });
+  const exampleQuestions = game === 'dnd-5e' ? dndQuestions : otherscapeQuestions;
+  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
 
@@ -14,6 +21,18 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [model, setModel] = useState('claude-3.5');
   const [knn, setKnn] = useState(0.8);
   const [keywordsWeight, setKeywordsWeight] = useState(0.2);
+  const [controlsVisible, setControlsVisible] = useState(false);
+
+  const getFormattedGameName = () => {
+    switch (game) {
+      case 'dnd-5e':
+        return 'Dungeons & Dragons 5th Edition';
+      case 'otherscape':
+        return ':Otherscape';
+      default:
+        return 'the RPG';
+    }
+  };
 
   const handleSliderChange = (type, value) => {
     if (type === 'knn') {
@@ -49,6 +68,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
     messageInputRef.current.focus();
   }
 
+  // Save messages to localStorage whenever they change
+  React.useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+    }
+  }, [messages, game]);
+
   const handleSendMessage = async () => {
     const messageToSend = newMessage.trim() === '' ? randomExampleQuestion : newMessage;
     setLoading(true);
@@ -66,7 +92,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
         debug,
         knnWeight: knn,
         keywordWeight: keywordsWeight,
-        model: model
+        model: model,
+        game: game
       };
 
       const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
@@ -103,96 +130,188 @@ const ChatInterface = ({ initialMessages = [] }) => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(messages, null, 2));
       setCopyStatus('Copied!');
+      setTimeout(() => setCopyStatus(''), 500);
     } catch (err) {
       setCopyStatus('Failed to copy to clipboard');
+      setTimeout(() => setCopyStatus(''), 500);
     }
   };
 
+  const handleClearChat = () => {
+    localStorage.removeItem(`chat-history-${game}`);
+    setMessages([]);
+    setCopyStatus('');
+  };
+
   return (
-    <div className="chat-interface">
-      <h1 className="chat-title">Chat with the RPG</h1>
-      <div className="chat-feed">
-        {renderMessages()}
+    <div className="chat-container">
+      <div className="game-sidebar">
+        <h2>Games</h2>
+        <button
+          className={`game-option ${game === 'dnd-5e' ? 'selected' : ''}`}
+          onClick={() => {
+            // Save current chat before switching
+            if (messages.length > 0) {
+              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+            }
+            setGame('dnd-5e');
+            // Load chat history for new game or start fresh
+            const savedMessages = localStorage.getItem('chat-history-dnd-5e');
+            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+          }}
+        >
+          Dungeons & Dragons 5th Edition
+        </button>
+        <button
+          className={`game-option ${game === 'otherscape' ? 'selected' : ''}`}
+          onClick={() => {
+            // Save current chat before switching
+            if (messages.length > 0) {
+              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+            }
+            setGame('otherscape');
+            // Load chat history for new game or start fresh
+            const savedMessages = localStorage.getItem('chat-history-otherscape');
+            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+          }}
+        >
+          :Otherscape
+        </button>
       </div>
-      {loading && <div className="spinner" aria-label="Loading..."><span className="visually-hidden">Loading...</span></div>}
-      <button onClick={handleCopyToClipboard} className="copy-link" disabled={messages.length === 0}>
-        Copy
-      </button>
-      <span className="copy-status" style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}>
-        {copyStatus}
-      </span>
-      <textarea
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSendMessage();
-          }
-        }}
-        ref={messageInputRef}
-        autoFocus
-        disabled={loading}
-        maxLength={1000}
-        rows={4}
-        className="message-input"
-      />
-      <div className="char-count">
-        {newMessage.length}/1000
-      </div>
-      <div className="controls">
-        <div className="control-elements">
-          <div className="debug-checkbox">
-            <label>
-              <span className="control-label">Debug:</span>
-              <input
-                type="checkbox"
-                checked={debug}
-                onChange={() => setDebug(!debug)}
-                style={{ marginLeft: '5px' }}
-              />
-            </label>
+      <div className="chat-main">
+        <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
+        <div className="chat-feed">
+          <div className="messages-container">
+            {renderMessages()}
           </div>
-          <div style={{ marginTop: '0.5em' }}>
-            <span className="control-label">Model:</span>
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              style={{ marginLeft: '5px', padding: '0.3em 0.5em' }}
-            >
-              <option value="gpt-4o">OpenAI GPT 4o</option>
-              <option value="claude-3.5">Claude 3.5 Sonnet</option>
-            </select>
-          </div>
-          <div className="slider-container" style={{ marginTop: '0.5em' }}>
-            <label>
-              <span className="control-label">KNN:</span> {knn.toFixed(2)}
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={knn}
-                onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
-              />
-            </label>
-          </div>
-          <div className="slider-container" style={{ marginTop: '0.5em' }}>
-            <label>
-              <span className="control-label">Keywords:</span> {keywordsWeight.toFixed(2)}
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={keywordsWeight}
-                onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
-              />
-            </label>
+          <div className="copy-container">
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <div className="copy-status-container">
+                <button
+                  onClick={handleCopyToClipboard}
+                  className="copy-link"
+                  disabled={!messages.length || loading}
+                  aria-label="Copy"
+                >
+                  Copy
+                </button>
+                {copyStatus && (
+                  <div 
+                    className="copy-status visible" 
+                    style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}
+                    aria-hidden="true"
+                  >
+                    {copyStatus}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={handleClearChat}
+                className="copy-link"
+                disabled={messages.length === 0 || loading}
+                aria-label="Clear"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
-        <button onClick={handleSendMessage} className="send-button" disabled={messages.length > 0 && newMessage.trim() === ''}>Send</button>
+        {loading && <div className="spinner" aria-label="Loading..." />}
+        <div className="input-container">
+          <textarea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            ref={messageInputRef}
+            autoFocus
+            disabled={loading}
+            maxLength={1000}
+            rows={4}
+            className="message-input"
+          />
+        </div>
+        <div className="char-count">
+          {newMessage.length}/1000
+        </div>
+        <div className="controls-row">
+          <button
+            className="settings-toggle"
+            onClick={() => setControlsVisible(!controlsVisible)}
+            aria-expanded={controlsVisible}
+            title="Settings"
+          >
+            ⚙️
+          </button>
+          <button
+            onClick={handleSendMessage}
+            className="send-button"
+            disabled={messages.length > 0 && newMessage.trim() === ''}
+          >
+            Send
+          </button>
+        </div>
+        {controlsVisible && (
+          <div className="controls-panel">
+            <div className="control-elements">
+              <div className="control-group">
+                <label className="control-label" htmlFor="debug-checkbox">
+                  <input
+                    id="debug-checkbox"
+                    type="checkbox"
+                    checked={debug}
+                    onChange={() => setDebug(!debug)}
+                  />
+                  Debug Mode
+                </label>
+              </div>
+              <div className="control-group">
+                <label className="control-label" htmlFor="model-select">Model</label>
+                <select
+                  id="model-select"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                >
+                  <option value="gpt-4o">OpenAI GPT 4o</option>
+                  <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                </select>
+              </div>
+              <div className="control-group">
+                <label className="control-label" htmlFor="knn-slider">
+                  KNN Weight: {knn.toFixed(2)}
+                </label>
+                <input
+                  id="knn-slider"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={knn}
+                  onChange={(e) => handleSliderChange('knn', parseFloat(e.target.value))}
+                />
+              </div>
+              <div className="control-group">
+                <label className="control-label" htmlFor="keywords-slider">
+                  Keywords Weight: {keywordsWeight.toFixed(2)}
+                </label>
+                <input
+                  id="keywords-slider"
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={keywordsWeight}
+                  onChange={(e) => handleSliderChange('keywordsWeight', parseFloat(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

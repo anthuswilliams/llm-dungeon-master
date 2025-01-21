@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Literal
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -20,6 +20,7 @@ app.add_middleware(
 class Messages(BaseModel):
     debug: bool
     model: str
+    game: Literal["dnd-5e", "otherscape"]
     knnWeight: float
     keywordWeight: float
     messages: List[Dict[str, str]]
@@ -28,5 +29,6 @@ class Messages(BaseModel):
 @app.post("/messages")
 async def create_message(messages: Messages):
     response = query(messages.messages, knnWeight=messages.knnWeight,
-                     keywordWeight=messages.keywordWeight, model=messages.model)
+                     keywordWeight=messages.keywordWeight, model=messages.model,
+                     game=messages.game)
     return response
