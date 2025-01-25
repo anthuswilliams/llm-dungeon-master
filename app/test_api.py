@@ -16,7 +16,7 @@ def test_create_message(mock_elastic_request):
                 ]
             }
         },
-        "raise_for_status": lambda: None
+        "raise_for_status": lambda self: None
     })()
     response = client.post(
         "/messages",
