@@ -9,8 +9,8 @@ const getUrlParams = () => {
     game: params.get('game') || 'dnd-5e',
     debug: params.get('debug') === 'true',
     model: params.get('model') || 'claude-3.5',
-    knn: parseFloat(params.get('knn')) || 0.8,
-    keywords: parseFloat(params.get('keywords')) || 0.2
+    knn: params.has('knn') ? parseFloat(params.get('knn')) : 0.7,
+    keywords: params.has('keywords') ? parseFloat(params.get('keywords')) : 0.3
   };
 };
 
@@ -47,8 +47,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(urlParams.debug);
   const [model, setModel] = useState(urlParams.model);
-  const [knn, setKnn] = useState(urlParams.knn || 0.7);
-  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords || 0.3);
+  const [knn, setKnn] = useState(urlParams.knn);
+  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords);
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {

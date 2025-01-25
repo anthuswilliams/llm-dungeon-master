@@ -299,7 +299,7 @@ test('displays debug info when debug is checked', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  const debugInfo = await screen.findByText(/Context: context1, context2/);
+  const debugInfo = await screen.findByText('context1, context2');
   expect(debugInfo).toBeInTheDocument();
 
   fetchMock.mockRestore();
@@ -458,8 +458,10 @@ test('loads settings from URL parameters', () => {
   expect(screen.getByText(':Otherscape')).toHaveClass('selected');
   expect(screen.getByLabelText('Debug Mode')).toBeChecked();
   expect(screen.getByLabelText('Model')).toHaveValue('gpt-4o');
-  expect(screen.getByLabelText(/KNN Weight/)).toHaveValue('0.6');
-  expect(screen.getByLabelText(/Keywords Weight/)).toHaveValue('0.4');
+  const knnSlider = screen.getByLabelText(/KNN Weight/);
+  const keywordsSlider = screen.getByLabelText(/Keywords Weight/);
+  expect(knnSlider).toHaveValue('0.6');
+  expect(keywordsSlider).toHaveValue('0.4');
 });
 
 test('updates URL when settings change', () => {
