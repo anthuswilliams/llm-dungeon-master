@@ -66,7 +66,7 @@ test('handles Enter key press to send message', async () => {
   fireEvent.change(input, { target: { value: newMessage } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+  expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
@@ -118,7 +118,7 @@ test('submits message on Enter key press', async () => {
   fireEvent.change(input, { target: { value: newMessage } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+  expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
@@ -289,7 +289,7 @@ test('displays debug info when debug is checked', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  expect(screen.getByText('context1, context2')).toBeInTheDocument();
+  expect(screen.getByText(/Context: context1, context2/)).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
@@ -454,8 +454,11 @@ test('loads settings from URL parameters', () => {
 
 test('updates URL when settings change', () => {
   // Mock window.location and history
+  const originalLocation = window.location;
+  const originalHistory = window.history;
   delete window.location;
-  window.location = new URL('http://localhost:3000');
+  window.location = { ...originalLocation, search: '' };
+  window.history = { ...originalHistory, replaceState: jest.fn() };
   const historySpy = jest.spyOn(window.history, 'replaceState');
 
   render(<ChatInterface />);
@@ -491,7 +494,9 @@ test('updates URL when settings change', () => {
     expect.stringContaining('keywords=0.4')
   );
 
-  historySpy.mockRestore();
+  // Restore mocks
+  window.location = originalLocation;
+  window.history = originalHistory;
 });
 
 test('conversations are retained when switching between games', async () => {

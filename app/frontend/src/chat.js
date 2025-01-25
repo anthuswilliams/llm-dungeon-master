@@ -41,8 +41,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(urlParams.debug);
   const [model, setModel] = useState(urlParams.model);
-  const [knn, setKnn] = useState(urlParams.knn);
-  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords);
+  const [knn, setKnn] = useState(urlParams.knn || 0.7);
+  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords || 0.3);
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
