@@ -435,8 +435,9 @@ test('switching games clears the conversation', () => {
 
 test('loads settings from URL parameters', () => {
   // Mock window.location
+  const originalLocation = window.location;
   delete window.location;
-  window.location = new URL('http://localhost:3000/?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4');
+  window.location = { ...originalLocation, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
 
   render(<ChatInterface />);
 
