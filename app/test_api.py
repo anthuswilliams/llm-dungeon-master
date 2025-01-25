@@ -9,7 +9,7 @@ client = TestClient(app)
 @patch('agents.adjudicator.elastic_request')
 def test_create_message(mock_elastic_request):
     mock_elastic_request.return_value = type('MockResponse', (object,), {
-        "json": lambda: {
+        "json": lambda self: {
             "hits": {
                 "hits": [
                     {"_source": {"content": "Mocked response"}}
