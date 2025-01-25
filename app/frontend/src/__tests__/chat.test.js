@@ -16,11 +16,21 @@ afterAll(() => {
   console.error.mockRestore();
 });
 
+const originalLocation = window.location;
+
+beforeEach(() => {
+  // Reset window.location before each test
+  delete window.location;
+  window.location = { ...originalLocation, search: '' };
+});
+
 afterEach(() => {
   cleanup();
   // Clear localStorage after each test
   localStorage.clear();
-})
+  // Restore original location
+  window.location = originalLocation;
+});
 
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
@@ -435,10 +445,8 @@ test('switching games clears the conversation', () => {
 });
 
 test('loads settings from URL parameters', () => {
-  // Mock window.location
-  const originalLocation = window.location;
-  delete window.location;
-  window.location = { ...originalLocation, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
+  // Set URL parameters for this test
+  window.location = { ...window.location, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
 
   render(<ChatInterface />);
 
@@ -455,11 +463,8 @@ test('loads settings from URL parameters', () => {
 });
 
 test('updates URL when settings change', () => {
-  // Mock window.location and history
-  const originalLocation = window.location;
+  // Mock history for this test
   const originalHistory = window.history;
-  delete window.location;
-  window.location = { ...originalLocation, search: '' };
   window.history = { ...originalHistory, replaceState: jest.fn() };
   const historySpy = jest.spyOn(window.history, 'replaceState');
 
