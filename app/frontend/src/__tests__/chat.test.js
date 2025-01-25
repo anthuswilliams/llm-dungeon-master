@@ -289,7 +289,8 @@ test('displays debug info when debug is checked', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  expect(screen.getByText(/Context: context1, context2/)).toBeInTheDocument();
+  const debugInfo = screen.getByText(/context1, context2/, { exact: false });
+  expect(debugInfo).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });

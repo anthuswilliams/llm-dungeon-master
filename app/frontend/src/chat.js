@@ -15,13 +15,19 @@ const getUrlParams = () => {
 };
 
 const updateUrl = (params) => {
-  const url = new URL(window.location);
+  if (typeof window === 'undefined') return;
+  
+  const url = new URL(window.location.href || 'http://localhost');
   Object.entries(params).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {
       url.searchParams.set(key, value);
     }
   });
-  window.history.replaceState({}, '', url);
+  try {
+    window.history.replaceState({}, '', url.search);
+  } catch (e) {
+    console.warn('Failed to update URL:', e);
+  }
 };
 
 const ChatInterface = ({ initialMessages = [] }) => {
@@ -41,8 +47,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [copyStatus, setCopyStatus] = useState('');
   const [debug, setDebug] = useState(urlParams.debug);
   const [model, setModel] = useState(urlParams.model);
-  const [knn, setKnn] = useState(urlParams.knn || 0.7);
-  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords || 0.3);
+  const [knn, setKnn] = useState(urlParams.knn || 0.8);
+  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords || 0.2);
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
