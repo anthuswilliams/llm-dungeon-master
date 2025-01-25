@@ -1,12 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
 import './chat.css';
 
+const getUrlParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    game: params.get('game') || 'dnd-5e',
+    debug: params.get('debug') === 'true',
+    model: params.get('model') || 'claude-3.5',
+    knn: parseFloat(params.get('knn')) || 0.8,
+    keywords: parseFloat(params.get('keywords')) || 0.2
+  };
+};
+
+const updateUrl = (params) => {
+  const url = new URL(window.location);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) {
+      url.searchParams.set(key, value);
+    }
+  });
+  window.history.replaceState({}, '', url);
+};
+
 const ChatInterface = ({ initialMessages = [] }) => {
-  const [game, setGame] = useState('dnd-5e');
+  const urlParams = getUrlParams();
+  const [game, setGame] = useState(urlParams.game);
   const [messages, setMessages] = useState(() => {
-    const savedMessages = localStorage.getItem(`chat-history-${game}`);
+    const savedMessages = localStorage.getItem(`chat-history-${urlParams.game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
   });
   const exampleQuestions = game === 'dnd-5e' ? dndQuestions : otherscapeQuestions;
@@ -17,10 +39,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   const [loading, setLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
-  const [debug, setDebug] = useState(false);
-  const [model, setModel] = useState('claude-3.5');
-  const [knn, setKnn] = useState(0.8);
-  const [keywordsWeight, setKeywordsWeight] = useState(0.2);
+  const [debug, setDebug] = useState(urlParams.debug);
+  const [model, setModel] = useState(urlParams.model);
+  const [knn, setKnn] = useState(urlParams.knn);
+  const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords);
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
@@ -38,11 +60,24 @@ const ChatInterface = ({ initialMessages = [] }) => {
     if (type === 'knn') {
       setKnn(value);
       setKeywordsWeight(1 - value);
+      updateUrl({ knn: value, keywords: 1 - value });
     } else {
       setKeywordsWeight(value);
       setKnn(1 - value);
+      updateUrl({ keywords: value, knn: 1 - value });
     }
   };
+
+  // Update URL when settings change
+  useEffect(() => {
+    updateUrl({
+      game,
+      debug,
+      model,
+      knn,
+      keywords: keywordsWeight
+    });
+  }, [game, debug, model, knn, keywordsWeight]);
 
   const renderMessages = () => {
     return messages.map((msg, index) => (
