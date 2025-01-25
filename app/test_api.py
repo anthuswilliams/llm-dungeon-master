@@ -1,10 +1,20 @@
 import pytest
 from fastapi.testclient import TestClient
+from unittest.mock import patch
 from app.api import app
+from utils.elastic import elastic_request
 
 client = TestClient(app)
 
-def test_create_message():
+@patch('utils.elastic.elastic_request')
+def test_create_message(mock_elastic_request):
+    mock_elastic_request.return_value = {
+        "hits": {
+            "hits": [
+                {"_source": {"content": "Mocked response"}}
+            ]
+        }
+    }
     response = client.post(
         "/messages",
         json={
