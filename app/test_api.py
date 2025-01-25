@@ -6,7 +6,7 @@ from utils.elastic import elastic_request
 
 client = TestClient(app)
 
-@patch('utils.elastic.elastic_request')
+@patch('agents.adjudicator.elastic_request')
 def test_create_message(mock_elastic_request):
     mock_elastic_request.return_value = {
         "hits": {
