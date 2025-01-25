@@ -433,6 +433,67 @@ test('switching games clears the conversation', () => {
   expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
 });
 
+test('loads settings from URL parameters', () => {
+  // Mock window.location
+  delete window.location;
+  window.location = new URL('http://localhost:3000/?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4');
+
+  render(<ChatInterface />);
+
+  // Open settings panel
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  // Verify all settings match URL parameters
+  expect(screen.getByText(':Otherscape')).toHaveClass('selected');
+  expect(screen.getByLabelText('Debug Mode')).toBeChecked();
+  expect(screen.getByLabelText('Model')).toHaveValue('gpt-4o');
+  expect(screen.getByLabelText(/KNN Weight/)).toHaveValue('0.6');
+  expect(screen.getByLabelText(/Keywords Weight/)).toHaveValue('0.4');
+});
+
+test('updates URL when settings change', () => {
+  // Mock window.location and history
+  delete window.location;
+  window.location = new URL('http://localhost:3000');
+  const historySpy = jest.spyOn(window.history, 'replaceState');
+
+  render(<ChatInterface />);
+
+  // Open settings panel
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  // Change settings
+  fireEvent.click(screen.getByLabelText('Debug Mode'));
+  fireEvent.change(screen.getByLabelText('Model'), { target: { value: 'gpt-4o' }});
+  fireEvent.change(screen.getByLabelText(/KNN Weight/), { target: { value: '0.6' }});
+
+  // Verify URL was updated with new settings
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('debug=true')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('model=gpt-4o')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('knn=0.6')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('keywords=0.4')
+  );
+
+  historySpy.mockRestore();
+});
+
 test('conversations are retained when switching between games', async () => {
   // Setup initial messages for both games
   const dndMessages = [{ id: 0, message: 'D&D message', type: 'user' }];
