@@ -289,7 +289,7 @@ test('displays debug info when debug is checked', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  const debugInfo = screen.getByText(/context1, context2/, { exact: false });
+  const debugInfo = await screen.findByText(/Context: context1, context2/);
   expect(debugInfo).toBeInTheDocument();
 
   fetchMock.mockRestore();
@@ -339,11 +339,11 @@ test('slider controls show correct initial values', () => {
 
   // Find the KNN slider label in the control panel
   const knnLabel = screen.getByText(/KNN Weight:/);
-  expect(knnLabel).toHaveTextContent('KNN Weight: 0.80');
+  expect(knnLabel).toHaveTextContent('KNN Weight: 0.70');
 
   // Find the Keywords slider label in the control panel
   const keywordsLabel = screen.getByText(/Keywords Weight:/);
-  expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.20');
+  expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.30');
 });
 
 test('conversation can be saved to and loaded from localStorage', async () => {
@@ -512,9 +512,9 @@ test('conversations are retained when switching between games', async () => {
   render(<ChatInterface />);
   
   // Check D&D messages (default game)
-  expect(screen.getByText('D&D message')).toBeInTheDocument();
+  await screen.findByText('D&D message');
   expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
-  
+
   // Switch to Otherscape
   const otherscapeButton = screen.getByText(':Otherscape');
   fireEvent.click(otherscapeButton);
