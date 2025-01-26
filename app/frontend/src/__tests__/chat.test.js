@@ -464,7 +464,7 @@ test('shows loading spinner while fetching games', async () => {
   
   // Games should be rendered
   expect(screen.getByText('Dungeons & Dragons 5th Edition')).toBeInTheDocument();
-  expect(screen.getByText(':Otherscape')).toBeInTheDocument();
+  expect(screen.getByText('Otherscape')).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
