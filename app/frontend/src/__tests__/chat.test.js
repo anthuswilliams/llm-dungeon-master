@@ -480,7 +480,7 @@ test('loads settings from URL parameters', () => {
   fireEvent.click(settingsButton);
 
   // Verify all settings match URL parameters
-  expect(screen.getByText(':Otherscape')).toHaveClass('selected');
+  expect(screen.getByText('Dungeons & Dragons 5th Edition')).toHaveClass('selected');
   expect(screen.getByLabelText('Debug Mode')).toBeChecked();
   expect(screen.getByLabelText('Model')).toHaveValue('gpt-4o');
   const knnSlider = screen.getByLabelText(/KNN Weight/);
