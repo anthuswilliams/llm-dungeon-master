@@ -1,6 +1,7 @@
 from typing import List, Dict, Literal
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
+from utils.elastic import elastic_request
 from pydantic import BaseModel
 
 from agents.adjudicator import query
@@ -32,3 +33,21 @@ async def create_message(messages: Messages):
                      keywordWeight=messages.keywordWeight, model=messages.model,
                      game=messages.game)
     return response
+
+@app.get("/games")
+async def get_games():
+    response = elastic_request(
+        url="source-books/_search",
+        data={
+            "size": 0,
+            "aggs": {
+                "unique_games": {
+                    "terms": {
+                        "field": "game.keyword"
+                    }
+                }
+            }
+        }
+    ).json()
+    buckets = response.get("aggregations", {}).get("unique_games", {}).get("buckets", [])
+    return [bucket["key"] for bucket in buckets]
