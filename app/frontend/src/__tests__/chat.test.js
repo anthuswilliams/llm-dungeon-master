@@ -16,11 +16,21 @@ afterAll(() => {
   console.error.mockRestore();
 });
 
+const originalLocation = window.location;
+
+beforeEach(() => {
+  // Reset window.location before each test
+  delete window.location;
+  window.location = { ...originalLocation, search: '' };
+});
+
 afterEach(() => {
   cleanup();
   // Clear localStorage after each test
   localStorage.clear();
-})
+  // Restore original location
+  window.location = originalLocation;
+});
 
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
@@ -66,7 +76,7 @@ test('handles Enter key press to send message', async () => {
   fireEvent.change(input, { target: { value: newMessage } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+  expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
@@ -118,7 +128,7 @@ test('submits message on Enter key press', async () => {
   fireEvent.change(input, { target: { value: newMessage } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-  expect(screen.getByText('Loading...')).toBeInTheDocument();
+  expect(screen.getByLabelText('Loading...')).toBeInTheDocument();
 
   // eslint-disable-next-line testing-library/no-unnecessary-act
   await act(async () => {
@@ -289,7 +299,8 @@ test('displays debug info when debug is checked', async () => {
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
   await screen.findByText('API response');
-  expect(screen.getByText('context1, context2')).toBeInTheDocument();
+  const debugInfo = await screen.findByText('context1, context2');
+  expect(debugInfo).toBeInTheDocument();
 
   fetchMock.mockRestore();
 });
@@ -338,11 +349,11 @@ test('slider controls show correct initial values', () => {
 
   // Find the KNN slider label in the control panel
   const knnLabel = screen.getByText(/KNN Weight:/);
-  expect(knnLabel).toHaveTextContent('KNN Weight: 0.80');
+  expect(knnLabel).toHaveTextContent('KNN Weight: 0.70');
 
   // Find the Keywords slider label in the control panel
   const keywordsLabel = screen.getByText(/Keywords Weight:/);
-  expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.20');
+  expect(keywordsLabel).toHaveTextContent('Keywords Weight: 0.30');
 });
 
 test('conversation can be saved to and loaded from localStorage', async () => {
@@ -433,6 +444,70 @@ test('switching games clears the conversation', () => {
   expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
 });
 
+test('loads settings from URL parameters', () => {
+  // Set URL parameters for this test
+  window.location = { ...window.location, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
+
+  render(<ChatInterface />);
+
+  // Open settings panel
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  // Verify all settings match URL parameters
+  expect(screen.getByText(':Otherscape')).toHaveClass('selected');
+  expect(screen.getByLabelText('Debug Mode')).toBeChecked();
+  expect(screen.getByLabelText('Model')).toHaveValue('gpt-4o');
+  const knnSlider = screen.getByLabelText(/KNN Weight/);
+  const keywordsSlider = screen.getByLabelText(/Keywords Weight/);
+  expect(knnSlider).toHaveValue('0.6');
+  expect(keywordsSlider).toHaveValue('0.4');
+});
+
+test('updates URL when settings change', () => {
+  // Mock history for this test
+  const originalHistory = window.history;
+  window.history = { ...originalHistory, replaceState: jest.fn() };
+  const historySpy = jest.spyOn(window.history, 'replaceState');
+
+  render(<ChatInterface />);
+
+  // Open settings panel
+  const settingsButton = screen.getByTitle('Settings');
+  fireEvent.click(settingsButton);
+
+  // Change settings
+  fireEvent.click(screen.getByLabelText('Debug Mode'));
+  fireEvent.change(screen.getByLabelText('Model'), { target: { value: 'gpt-4o' }});
+  fireEvent.change(screen.getByLabelText(/KNN Weight/), { target: { value: '0.6' }});
+
+  // Verify URL was updated with new settings
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('debug=true')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('model=gpt-4o')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('knn=0.6')
+  );
+  expect(historySpy).toHaveBeenCalledWith(
+    {},
+    '',
+    expect.stringContaining('keywords=0.4')
+  );
+
+  // Restore mocks
+  window.location = originalLocation;
+  window.history = originalHistory;
+});
+
 test('conversations are retained when switching between games', async () => {
   // Setup initial messages for both games
   const dndMessages = [{ id: 0, message: 'D&D message', type: 'user' }];
@@ -444,9 +519,9 @@ test('conversations are retained when switching between games', async () => {
   render(<ChatInterface />);
   
   // Check D&D messages (default game)
-  expect(screen.getByText('D&D message')).toBeInTheDocument();
+  await screen.findByText('D&D message');
   expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
-  
+
   // Switch to Otherscape
   const otherscapeButton = screen.getByText(':Otherscape');
   fireEvent.click(otherscapeButton);
