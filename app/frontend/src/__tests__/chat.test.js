@@ -1,4 +1,6 @@
 import React from 'react';
+import dndQuestions from '../dnd-5e-questions.json';
+import otherscapeQuestions from '../otherscape-questions.json';
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
@@ -444,6 +446,28 @@ test('switching games clears the conversation', () => {
   expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
 });
 
+test('shows loading spinner while fetching games', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => 
+    new Promise(resolve => setTimeout(() => 
+      resolve({ json: () => Promise.resolve(['dnd-5e', ':Otherscape']) }), 100)
+    )
+  );
+
+  render(<ChatInterface />);
+  
+  // Loading spinner should be visible initially
+  expect(screen.getByLabelText('Loading games...')).toBeInTheDocument();
+  
+  // Wait for games to load
+  await waitForElementToBeRemoved(() => screen.queryByLabelText('Loading games...'));
+  
+  // Games should be rendered
+  expect(screen.getByText('dnd-5e')).toBeInTheDocument();
+  expect(screen.getByText(':Otherscape')).toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
 test('loads settings from URL parameters', () => {
   // Set URL parameters for this test
   window.location = { ...window.location, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
@@ -462,6 +486,61 @@ test('loads settings from URL parameters', () => {
   const keywordsSlider = screen.getByLabelText(/Keywords Weight/);
   expect(knnSlider).toHaveValue('0.6');
   expect(keywordsSlider).toHaveValue('0.4');
+});
+
+test('shows appropriate example questions for D&D 5e', () => {
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  const placeholder = input.getAttribute('placeholder');
+  
+  // Should contain a D&D question from the imported questions
+  expect(placeholder).toMatch(/^e\.g\. ".*"/);
+  const questionText = placeholder.match(/^e\.g\. "(.*)"$/)[1];
+  expect(dndQuestions).toContain(questionText);
+});
+
+test('shows appropriate example questions for Otherscape', () => {
+  window.location = { ...window.location, search: '?game=:Otherscape' };
+  
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  const placeholder = input.getAttribute('placeholder');
+  
+  // Should contain an Otherscape question from the imported questions
+  expect(placeholder).toMatch(/^e\.g\. ".*"/);
+  const questionText = placeholder.match(/^e\.g\. "(.*)"$/)[1];
+  expect(otherscapeQuestions).toContain(questionText);
+});
+
+test('shows no example questions for other games', () => {
+  window.location = { ...window.location, search: '?game=other-game' };
+  
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  expect(input.getAttribute('placeholder')).toBe('Type your message...');
+});
+
+test('send button behavior with no example questions', () => {
+  window.location = { ...window.location, search: '?game=other-game' };
+  
+  render(<ChatInterface />);
+  
+  const sendButton = screen.getByText('Send');
+  const input = screen.getByRole('textbox');
+  
+  // Initially disabled
+  expect(sendButton).toBeDisabled();
+  
+  // Enabled when user types
+  fireEvent.change(input, { target: { value: 'test' } });
+  expect(sendButton).not.toBeDisabled();
+  
+  // Disabled when input cleared
+  fireEvent.change(input, { target: { value: '' } });
+  expect(sendButton).toBeDisabled();
 });
 
 test('updates URL when settings change', () => {
