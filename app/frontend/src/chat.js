@@ -59,8 +59,21 @@ const ChatInterface = ({ initialMessages = [] }) => {
     const savedMessages = localStorage.getItem(`chat-history-${urlParams.game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
   });
-  const exampleQuestions = game === 'dnd-5e' ? dndQuestions : otherscapeQuestions;
-  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+  const getExampleQuestions = (gameName) => {
+    switch (gameName) {
+      case 'Dungeons & Dragons 5th Edition':
+        return dndQuestions;
+      case ':Otherscape':
+        return otherscapeQuestions;
+      default:
+        return [];
+    }
+  };
+
+  const exampleQuestions = getExampleQuestions(game);
+  const randomExampleQuestion = exampleQuestions.length > 0 
+    ? exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+    : '';
 
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
@@ -269,7 +282,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
+            placeholder={messages.length > 0 ? "Type new message..." : randomExampleQuestion ? `e.g. "${randomExampleQuestion}"` : "Type your message..."}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
