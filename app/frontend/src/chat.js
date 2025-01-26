@@ -312,7 +312,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <button
             onClick={handleSendMessage}
             className="send-button"
-            disabled={messages.length > 0 && newMessage.trim() === ''}
+            disabled={(messages.length > 0 || !randomExampleQuestion) && newMessage.trim() === ''}
           >
             Send
           </button>
