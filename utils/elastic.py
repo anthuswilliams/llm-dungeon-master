@@ -20,3 +20,10 @@ def elastic_request(data=None, method=None, url=None, headers=None):
     },
         verify=False,
         data=data)
+
+
+def unique_values(index, field):
+    return elastic_request(
+        url=f"{index}/_search",
+        data={"aggs": {f"{field}": {"terms": {"field": field}}}}
+    )
