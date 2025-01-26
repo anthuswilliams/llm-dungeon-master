@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
+import './chat.css';
 
 const API_URL = process.env.NODE_ENV === 'production' 
   ? 'https://chat-rpg.ai/api' 
   : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
-import './chat.css';
 
 const getUrlParams = () => {
   const params = new URLSearchParams(window.location.search);
