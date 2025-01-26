@@ -1,7 +1,7 @@
 from typing import List, Dict, Literal
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from utils.elastic import elastic_request
+from utils.elastic import elastic_request, unique_values
 from pydantic import BaseModel
 
 from agents.adjudicator import query
