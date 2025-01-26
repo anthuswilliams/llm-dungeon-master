@@ -37,7 +37,7 @@ afterEach(() => {
 
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const input = screen.getByPlaceholderText(/e\.g\. "/);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
   expect(input).toBeInTheDocument();
 });
 
@@ -71,7 +71,7 @@ test('handles Enter key press to send message', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -123,7 +123,7 @@ test('submits message on Enter key press', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -221,7 +221,7 @@ test('sends debug: true when checkbox is checked', async () => {
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -603,7 +603,7 @@ test('conversations are retained when switching between games', async () => {
   expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
 
   // Switch to Otherscape
-  const otherscapeButton = screen.getByText(':Otherscape');
+  const otherscapeButton = screen.getByText('Otherscape');
   fireEvent.click(otherscapeButton);
   
   // Check Otherscape messages
