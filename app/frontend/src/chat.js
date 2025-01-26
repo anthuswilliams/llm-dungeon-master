@@ -37,7 +37,7 @@ const updateUrl = (params) => {
 const ChatInterface = ({ initialMessages = [] }) => {
   const urlParams = getUrlParams();
   const [game, setGame] = useState(urlParams.game);
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState(['dnd-5e']); // Default game as fallback
   const [loadingGames, setLoadingGames] = useState(true);
 
   useEffect(() => {
@@ -74,8 +74,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
-    const currentGame = games.find(g => g.id === game);
-    return currentGame ? currentGame.displayName : 'the RPG';
+    return game || 'the RPG';
   };
 
   const handleSliderChange = (type, value) => {
@@ -207,22 +206,22 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {loadingGames ? (
           <div className="spinner" aria-label="Loading games..." />
         ) : (
-          games.map(({ id, name, displayName }) => (
+          games.map((gameName) => (
             <button
-              key={id}
-              className={`game-option ${game === id ? 'selected' : ''}`}
+              key={gameName}
+              className={`game-option ${game === gameName ? 'selected' : ''}`}
               onClick={() => {
                 // Save current chat before switching
                 if (messages.length > 0) {
                   localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
                 }
-                setGame(id);
+                setGame(gameName);
                 // Load chat history for new game or start fresh
-                const savedMessages = localStorage.getItem(`chat-history-${id}`);
+                const savedMessages = localStorage.getItem(`chat-history-${gameName}`);
                 setMessages(savedMessages ? JSON.parse(savedMessages) : []);
               }}
             >
-              {displayName}
+              {gameName}
             </button>
           ))
         )}
