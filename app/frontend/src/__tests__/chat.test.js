@@ -1,4 +1,5 @@
 import React from 'react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import dndQuestions from '../dnd-5e-questions.json';
 import otherscapeQuestions from '../otherscape-questions.json';
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
@@ -439,7 +440,7 @@ test('switching games clears the conversation', () => {
   expect(screen.getByText('D&D message')).toBeInTheDocument();
   
   // Switch to Otherscape
-  const otherscapeButton = screen.getByText(':Otherscape');
+  const otherscapeButton = screen.getByText('Dungeons & Dragons 5th Edition');
   fireEvent.click(otherscapeButton);
   
   // Verify D&D message is no longer shown
@@ -462,7 +463,7 @@ test('shows loading spinner while fetching games', async () => {
   await waitForElementToBeRemoved(() => screen.queryByLabelText('Loading games...'));
   
   // Games should be rendered
-  expect(screen.getByText('dnd-5e')).toBeInTheDocument();
+  expect(screen.getByText('Dungeons & Dragons 5th Edition')).toBeInTheDocument();
   expect(screen.getByText(':Otherscape')).toBeInTheDocument();
 
   fetchMock.mockRestore();
@@ -470,7 +471,7 @@ test('shows loading spinner while fetching games', async () => {
 
 test('loads settings from URL parameters', () => {
   // Set URL parameters for this test
-  window.location = { ...window.location, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
+  window.location = { ...window.location, search: '?game=Dungeons%20%26%20Dragons%205th%20Edition&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
 
   render(<ChatInterface />);
 
@@ -501,7 +502,7 @@ test('shows appropriate example questions for D&D 5e', () => {
 });
 
 test('shows appropriate example questions for Otherscape', () => {
-  window.location = { ...window.location, search: '?game=:Otherscape' };
+  window.location = { ...window.location, search: '?game=Dungeons%20%26%20Dragons%205th%20Edition' };
   
   render(<ChatInterface />);
   
