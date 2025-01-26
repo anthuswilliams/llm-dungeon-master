@@ -36,18 +36,4 @@ async def create_message(messages: Messages):
 
 @app.get("/games")
 async def get_games():
-    response = elastic_request(
-        url="source-books/_search",
-        data={
-            "size": 0,
-            "aggs": {
-                "unique_games": {
-                    "terms": {
-                        "field": "game.keyword"
-                    }
-                }
-            }
-        }
-    ).json()
-    buckets = response.get("aggregations", {}).get("unique_games", {}).get("buckets", [])
-    return [bucket["key"] for bucket in buckets]
+    return unique_values("source-books", "game")

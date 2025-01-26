@@ -23,7 +23,17 @@ def elastic_request(data=None, method=None, url=None, headers=None):
 
 
 def unique_values(index, field):
-    return elastic_request(
+    response = elastic_request(
         url=f"{index}/_search",
-        data={"aggs": {f"{field}": {"terms": {"field": field}}}}
-    )
+        data={
+            "size": 0,
+            "aggs": {
+                "unique_values": {
+                    "terms": {
+                        "field": f"{field}.keyword"
+                    }
+                }
+            }
+        }
+    ).json()
+    return [bucket["key"] for bucket in response.get("aggregations", {}).get("unique_values", {}).get("buckets", [])]
