@@ -28,12 +28,12 @@ def unique_values(index, field):
         data={
             "size": 0,
             "aggs": {
-                "unique_values": {
+                field: {
                     "terms": {
-                        "field": f"{field}.keyword"
+                        "field": f"{field}"
                     }
                 }
             }
         }
     ).json()
-    return [bucket["key"] for bucket in response.get("aggregations", {}).get("unique_values", {}).get("buckets", [])]
+    return [bucket["key"] for bucket in response.get("aggregations", {}).get(field, {}).get("buckets", [])]
