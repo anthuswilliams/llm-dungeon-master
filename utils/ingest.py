@@ -137,14 +137,21 @@ def ingest(doc, title, index):
     return rslt
 
 
-def process_ingest(filepath, book_title):
+def add_to_source_books(game, book_title, index):
+    rslt = elastic_request(method=requests.put,
+                           url=f"source-books/_doc/{game}--{book_title}",
+                           data={"game": game, "title": book_title, "index": index})
+    return rslt
+
+
+def process_ingest(filepath, index, game_title, book_title):
     result = import_book(filepath)
     i = 0
     for rslt in without_subheadings(result):
         if not rslt.get("content"):
             continue
         title = rslt["heading"]
-        resp = ingest(rslt, title, book_title)
+        resp = ingest(rslt, title, index)
 
         try:
             resp.raise_for_status()
@@ -155,8 +162,9 @@ def process_ingest(filepath, book_title):
         i += 1
         if i % 10 == 0:
             print(rslt)
+    add_to_source_books(game_title, book_title, index)
 
 
 if __name__ == "__main__":
     process_ingest("/data/Dragonbane/dtrpg-2025-01-13_10-05pm/DB_Path_of_Glory_v1.pdf",
-                   "dragonbane--path-of-glory",)
+                   "dragonbane--path-of-glory", "Dragonbane", "Path of Glory")

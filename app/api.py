@@ -1,6 +1,7 @@
 from typing import List, Dict, Literal
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
+from utils.elastic import elastic_request, unique_values
 from pydantic import BaseModel
 
 from agents.adjudicator import query
@@ -32,3 +33,7 @@ async def create_message(messages: Messages):
                      keywordWeight=messages.keywordWeight, model=messages.model,
                      game=messages.game)
     return response
+
+@app.get("/games")
+async def get_games():
+    return unique_values("source-books", "game")

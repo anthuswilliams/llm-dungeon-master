@@ -1,4 +1,7 @@
 import React from 'react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import dndQuestions from '../dnd-5e-questions.json';
+import otherscapeQuestions from '../otherscape-questions.json';
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ChatInterface from '../chat';
@@ -34,7 +37,7 @@ afterEach(() => {
 
 test('uses random question as placeholder when no messages are submitted', () => {
   render(<ChatInterface initialMessages={[]} />);
-  const input = screen.getByPlaceholderText(/e\.g\. "/);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
   expect(input).toBeInTheDocument();
 });
 
@@ -68,7 +71,7 @@ test('handles Enter key press to send message', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -120,7 +123,7 @@ test('submits message on Enter key press', async () => {
 
   render(<ChatInterface />);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
 
   expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
@@ -218,7 +221,7 @@ test('sends debug: true when checkbox is checked', async () => {
   const debugCheckbox = screen.getByLabelText('Debug Mode');
   fireEvent.click(debugCheckbox);
 
-  const input = screen.getByPlaceholderText(/^e\.g\. /);
+  const input = screen.getByPlaceholderText(/e\.g\. ".*"/);
   fireEvent.change(input, { target: { value: 'Test message' } });
   fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
@@ -437,16 +440,38 @@ test('switching games clears the conversation', () => {
   expect(screen.getByText('D&D message')).toBeInTheDocument();
   
   // Switch to Otherscape
-  const otherscapeButton = screen.getByText(':Otherscape');
+  const otherscapeButton = screen.getByText('Dungeons & Dragons 5th Edition');
   fireEvent.click(otherscapeButton);
   
   // Verify D&D message is no longer shown
   expect(screen.queryByText('D&D message')).not.toBeInTheDocument();
 });
 
+test('shows loading spinner while fetching games', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(() => 
+    new Promise(resolve => setTimeout(() => 
+      resolve({ json: () => Promise.resolve(['dnd-5e', ':Otherscape']) }), 100)
+    )
+  );
+
+  render(<ChatInterface />);
+  
+  // Loading spinner should be visible initially
+  expect(screen.getByLabelText('Loading games...')).toBeInTheDocument();
+  
+  // Wait for games to load
+  await waitForElementToBeRemoved(() => screen.queryByLabelText('Loading games...'));
+  
+  // Games should be rendered
+  expect(screen.getByText('Dungeons & Dragons 5th Edition')).toBeInTheDocument();
+  expect(screen.getByText('Otherscape')).toBeInTheDocument();
+
+  fetchMock.mockRestore();
+});
+
 test('loads settings from URL parameters', () => {
   // Set URL parameters for this test
-  window.location = { ...window.location, search: '?game=otherscape&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
+  window.location = { ...window.location, search: '?game=Dungeons%20%26%20Dragons%205th%20Edition&debug=true&model=gpt-4o&knn=0.6&keywords=0.4' };
 
   render(<ChatInterface />);
 
@@ -455,13 +480,68 @@ test('loads settings from URL parameters', () => {
   fireEvent.click(settingsButton);
 
   // Verify all settings match URL parameters
-  expect(screen.getByText(':Otherscape')).toHaveClass('selected');
+  expect(screen.getByText('Dungeons & Dragons 5th Edition')).toHaveClass('selected');
   expect(screen.getByLabelText('Debug Mode')).toBeChecked();
   expect(screen.getByLabelText('Model')).toHaveValue('gpt-4o');
   const knnSlider = screen.getByLabelText(/KNN Weight/);
   const keywordsSlider = screen.getByLabelText(/Keywords Weight/);
   expect(knnSlider).toHaveValue('0.6');
   expect(keywordsSlider).toHaveValue('0.4');
+});
+
+test('shows appropriate example questions for D&D 5e', () => {
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  const placeholder = input.getAttribute('placeholder');
+  
+  // Should contain a D&D question from the imported questions
+  expect(placeholder).toMatch(/^e\.g\. ".*"/);
+  const questionText = placeholder.match(/^e\.g\. "(.*)"$/)[1];
+  expect(dndQuestions).toContain(questionText);
+});
+
+test('shows appropriate example questions for Otherscape', () => {
+  window.location = { ...window.location, search: '?game=Dungeons%20%26%20Dragons%205th%20Edition' };
+  
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  const placeholder = input.getAttribute('placeholder');
+  
+  // Should contain an Otherscape question from the imported questions
+  expect(placeholder).toMatch(/^e\.g\. ".*"/);
+  const questionText = placeholder.match(/^e\.g\. "(.*)"$/)[1];
+  expect(otherscapeQuestions).toContain(questionText);
+});
+
+test('shows no example questions for other games', () => {
+  window.location = { ...window.location, search: '?game=other-game' };
+  
+  render(<ChatInterface />);
+  
+  const input = screen.getByRole('textbox');
+  expect(input.getAttribute('placeholder')).toBe('Type your message...');
+});
+
+test('send button behavior with no example questions', () => {
+  window.location = { ...window.location, search: '?game=other-game' };
+  
+  render(<ChatInterface />);
+  
+  const sendButton = screen.getByText('Send');
+  const input = screen.getByRole('textbox');
+  
+  // Initially disabled
+  expect(sendButton).toBeDisabled();
+  
+  // Enabled when user types
+  fireEvent.change(input, { target: { value: 'test' } });
+  expect(sendButton).not.toBeDisabled();
+  
+  // Disabled when input cleared
+  fireEvent.change(input, { target: { value: '' } });
+  expect(sendButton).toBeDisabled();
 });
 
 test('updates URL when settings change', () => {
@@ -523,7 +603,7 @@ test('conversations are retained when switching between games', async () => {
   expect(screen.queryByText('Otherscape message')).not.toBeInTheDocument();
 
   // Switch to Otherscape
-  const otherscapeButton = screen.getByText(':Otherscape');
+  const otherscapeButton = screen.getByText('Otherscape');
   fireEvent.click(otherscapeButton);
   
   // Check Otherscape messages

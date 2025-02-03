@@ -3,6 +3,10 @@ import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
 import './chat.css';
 
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://chat-rpg.ai/api' 
+  : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
+
 const getUrlParams = () => {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -33,12 +37,43 @@ const updateUrl = (params) => {
 const ChatInterface = ({ initialMessages = [] }) => {
   const urlParams = getUrlParams();
   const [game, setGame] = useState(urlParams.game);
+  const [games, setGames] = useState(['dnd-5e']); // Default game as fallback
+  const [loadingGames, setLoadingGames] = useState(true);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const response = await fetch(`${API_URL}/games`);
+        const data = await response.json();
+        setGames(data);
+      } catch (error) {
+        console.error('Error fetching games:', error);
+      } finally {
+        setLoadingGames(false);
+      }
+    };
+
+    fetchGames();
+  }, []);
   const [messages, setMessages] = useState(() => {
     const savedMessages = localStorage.getItem(`chat-history-${urlParams.game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
   });
-  const exampleQuestions = game === 'dnd-5e' ? dndQuestions : otherscapeQuestions;
-  const randomExampleQuestion = exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+  const getExampleQuestions = (gameName) => {
+    switch (gameName) {
+      case 'Dungeons & Dragons 5th Edition':
+        return dndQuestions;
+      case ':Otherscape':
+        return otherscapeQuestions;
+      default:
+        return [];
+    }
+  };
+
+  const exampleQuestions = getExampleQuestions(game);
+  const randomExampleQuestion = exampleQuestions.length > 0 
+    ? exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
+    : '';
 
   const messageInputRef = useRef(null);
   const [newMessage, setNewMessage] = useState('');
@@ -52,14 +87,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
-    switch (game) {
-      case 'dnd-5e':
-        return 'Dungeons & Dragons 5th Edition';
-      case 'otherscape':
-        return ':Otherscape';
-      default:
-        return 'the RPG';
-    }
+    return game || 'the RPG';
   };
 
   const handleSliderChange = (type, value) => {
@@ -188,36 +216,28 @@ const ChatInterface = ({ initialMessages = [] }) => {
     <div className="chat-container">
       <div className="game-sidebar">
         <h2>Games</h2>
-        <button
-          className={`game-option ${game === 'dnd-5e' ? 'selected' : ''}`}
-          onClick={() => {
-            // Save current chat before switching
-            if (messages.length > 0) {
-              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
-            }
-            setGame('dnd-5e');
-            // Load chat history for new game or start fresh
-            const savedMessages = localStorage.getItem('chat-history-dnd-5e');
-            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
-          }}
-        >
-          Dungeons & Dragons 5th Edition
-        </button>
-        <button
-          className={`game-option ${game === 'otherscape' ? 'selected' : ''}`}
-          onClick={() => {
-            // Save current chat before switching
-            if (messages.length > 0) {
-              localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
-            }
-            setGame('otherscape');
-            // Load chat history for new game or start fresh
-            const savedMessages = localStorage.getItem('chat-history-otherscape');
-            setMessages(savedMessages ? JSON.parse(savedMessages) : []);
-          }}
-        >
-          :Otherscape
-        </button>
+        {loadingGames ? (
+          <div className="spinner" aria-label="Loading games..." />
+        ) : (
+          games.map((gameName) => (
+            <button
+              key={gameName}
+              className={`game-option ${game === gameName ? 'selected' : ''}`}
+              onClick={() => {
+                // Save current chat before switching
+                if (messages.length > 0) {
+                  localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+                }
+                setGame(gameName);
+                // Load chat history for new game or start fresh
+                const savedMessages = localStorage.getItem(`chat-history-${gameName}`);
+                setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+              }}
+            >
+              {gameName}
+            </button>
+          ))
+        )}
       </div>
       <div className="chat-main">
         <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
@@ -262,7 +282,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder={messages.length > 0 ? "Type new message..." : `e.g. "${randomExampleQuestion}"`}
+            placeholder={messages.length > 0 ? "Type new message..." : randomExampleQuestion ? `e.g. "${randomExampleQuestion}"` : "Type your message..."}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -292,7 +312,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
           <button
             onClick={handleSendMessage}
             className="send-button"
-            disabled={messages.length > 0 && newMessage.trim() === ''}
+            disabled={(messages.length > 0 || !randomExampleQuestion) && newMessage.trim() === ''}
           >
             Send
           </button>

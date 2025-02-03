@@ -20,3 +20,20 @@ def elastic_request(data=None, method=None, url=None, headers=None):
     },
         verify=False,
         data=data)
+
+
+def unique_values(index, field):
+    response = elastic_request(
+        url=f"{index}/_search",
+        data={
+            "size": 0,
+            "aggs": {
+                field: {
+                    "terms": {
+                        "field": f"{field}"
+                    }
+                }
+            }
+        }
+    ).json()
+    return [bucket["key"] for bucket in response.get("aggregations", {}).get(field, {}).get("buckets", [])]
