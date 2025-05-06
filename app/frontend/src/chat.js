@@ -55,7 +55,7 @@ const updateUrl = (params) => {
 const ChatInterface = ({ initialMessages = [] }) => {
   const urlParams = getUrlParams();
   const [game, setGame] = useState(urlParams.game);
-  const [games, setGames] = useState(['dnd-5e']); // Default game as fallback
+  const [games, setGames] = useState([]); // Default game as fallback
   const [loadingGames, setLoadingGames] = useState(true);
 
   useEffect(() => {
