@@ -252,6 +252,14 @@ const ChatInterface = ({ initialMessages = [] }) => {
                     localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
                   }
                   setGame(gameId); // Use the machine-readable ID
+                  // Update URL immediately with the machine-readable ID
+                  updateUrl({
+                    game: gameId,
+                    debug,
+                    model,
+                    knn,
+                    keywords: keywordsWeight
+                  });
                   // Load chat history for new game or start fresh
                   const savedMessages = localStorage.getItem(`chat-history-${gameId}`);
                   setMessages(savedMessages ? JSON.parse(savedMessages) : []);
