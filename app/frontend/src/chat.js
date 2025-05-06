@@ -180,7 +180,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         knnWeight: knn,
         keywordWeight: keywordsWeight,
         model: model,
-        game: game
+        game: game // game is already in machine-readable format
       };
 
       const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
