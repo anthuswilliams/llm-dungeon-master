@@ -3,12 +3,22 @@ import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
 import './chat.css';
 
-// Map human-readable game names to machine-readable identifiers
-const GAME_CONSTANTS = {
-  'dnd-5e': 'Dungeons & Dragons 5th Edition',
-  ':Otherscape': 'Otherscape',
-  'dragonbane': 'Dragonbane',
-  'slugblaster': 'Slugblaster'
+// Bidirectional mapping between machine-readable IDs and human-readable names
+const GAME_MAPPINGS = {
+  // Machine ID to Human readable
+  idToName: {
+    'dnd-5e': 'Dungeons & Dragons 5th Edition',
+    ':otherscape': 'Otherscape',
+    'dragonbane': 'Dragonbane',
+    'slugblaster': 'Slugblaster'
+  },
+  // Human readable to Machine ID
+  nameToId: {
+    'Dungeons & Dragons 5th Edition': 'dnd-5e',
+    'Otherscape': ':otherscape',
+    'Dragonbane': 'dragonbane',
+    'Slugblaster': 'slugblaster'
+  }
 };
 
 const API_URL = process.env.NODE_ENV === 'production' 
@@ -67,11 +77,11 @@ const ChatInterface = ({ initialMessages = [] }) => {
     const savedMessages = localStorage.getItem(`chat-history-${urlParams.game}`);
     return savedMessages ? JSON.parse(savedMessages) : initialMessages;
   });
-  const getExampleQuestions = (gameName) => {
-    switch (gameName) {
+  const getExampleQuestions = (gameId) => {
+    switch (gameId) {
       case 'dnd-5e':
         return dndQuestions;
-      case ':Otherscape':
+      case ':otherscape':
         return otherscapeQuestions;
       default:
         return [];
@@ -95,7 +105,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
-    return GAME_CONSTANTS[game] || game || 'the RPG';
+    return GAME_MAPPINGS.idToName[game] || game || 'the RPG';
   };
 
   const handleSliderChange = (type, value) => {
