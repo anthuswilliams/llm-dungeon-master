@@ -122,8 +122,10 @@ const ChatInterface = ({ initialMessages = [] }) => {
 
   // Update URL when settings change
   useEffect(() => {
+    // Ensure we're using the machine-readable ID in the URL
+    const gameId = game;
     updateUrl({
-      game, // game is already in machine-readable format
+      game: gameId,
       debug,
       model,
       knn,
@@ -180,7 +182,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         knnWeight: knn,
         keywordWeight: keywordsWeight,
         model: model,
-        game: game // game is already in machine-readable format
+        game: game // This is the machine-readable ID
       };
 
       const apiUrl = process.env.NODE_ENV === 'production' ? 'https://chat-rpg.ai/api' : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
@@ -237,21 +239,21 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {loadingGames ? (
           <div className="spinner" aria-label="Loading games..." />
         ) : (
-          games.map((gameName) => {
+          games.map((gameId) => {
             // Display the human-readable name but store the machine-readable ID
-            const displayName = GAME_MAPPINGS.idToName[gameName] || gameName;
+            const displayName = GAME_MAPPINGS.idToName[gameId] || gameId;
             return (
               <button
-                key={gameName}
-                className={`game-option ${game === gameName ? 'selected' : ''}`}
+                key={gameId}
+                className={`game-option ${game === gameId ? 'selected' : ''}`}
                 onClick={() => {
                   // Save current chat before switching
                   if (messages.length > 0) {
                     localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
                   }
-                  setGame(gameName); // Use the machine-readable ID
+                  setGame(gameId); // Use the machine-readable ID
                   // Load chat history for new game or start fresh
-                  const savedMessages = localStorage.getItem(`chat-history-${gameName}`);
+                  const savedMessages = localStorage.getItem(`chat-history-${gameId}`);
                   setMessages(savedMessages ? JSON.parse(savedMessages) : []);
                 }}
               >
