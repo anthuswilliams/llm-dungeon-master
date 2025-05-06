@@ -237,24 +237,28 @@ const ChatInterface = ({ initialMessages = [] }) => {
         {loadingGames ? (
           <div className="spinner" aria-label="Loading games..." />
         ) : (
-          games.map((gameName) => (
-            <button
-              key={gameName}
-              className={`game-option ${game === gameName ? 'selected' : ''}`}
-              onClick={() => {
-                // Save current chat before switching
-                if (messages.length > 0) {
-                  localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
-                }
-                setGame(gameName);
-                // Load chat history for new game or start fresh
-                const savedMessages = localStorage.getItem(`chat-history-${gameName}`);
-                setMessages(savedMessages ? JSON.parse(savedMessages) : []);
-              }}
-            >
-              {gameName}
-            </button>
-          ))
+          games.map((gameName) => {
+            // Display the human-readable name but store the machine-readable ID
+            const displayName = GAME_MAPPINGS.idToName[gameName] || gameName;
+            return (
+              <button
+                key={gameName}
+                className={`game-option ${game === gameName ? 'selected' : ''}`}
+                onClick={() => {
+                  // Save current chat before switching
+                  if (messages.length > 0) {
+                    localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
+                  }
+                  setGame(gameName); // Use the machine-readable ID
+                  // Load chat history for new game or start fresh
+                  const savedMessages = localStorage.getItem(`chat-history-${gameName}`);
+                  setMessages(savedMessages ? JSON.parse(savedMessages) : []);
+                }}
+              >
+                {displayName}
+              </button>
+            );
+          })
         )}
       </div>
       <div className="chat-main">
