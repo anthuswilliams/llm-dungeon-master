@@ -42,11 +42,12 @@ const updateUrl = (params) => {
   const url = new URL(window.location.href || 'http://localhost');
   Object.entries(params).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {
+      // Directly set the raw value in the URL
       url.searchParams.set(key, value);
     }
   });
   try {
-    window.history.replaceState({}, '', url.search);
+    window.history.replaceState({}, '', url.toString());
   } catch (e) {
     console.warn('Failed to update URL:', e);
   }
@@ -251,15 +252,15 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   if (messages.length > 0) {
                     localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
                   }
-                  setGame(gameId); // Use the machine-readable ID
-                  // Update URL immediately with the machine-readable ID
-                  updateUrl({
-                    game: gameId,
-                    debug,
-                    model,
-                    knn,
-                    keywords: keywordsWeight
-                  });
+                  
+                  // Set the game state to the machine-readable ID
+                  setGame(gameId);
+                  
+                  // Force URL update with the raw machine-readable ID
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('game', gameId);
+                  window.history.replaceState({}, '', url.toString());
+                  
                   // Load chat history for new game or start fresh
                   const savedMessages = localStorage.getItem(`chat-history-${gameId}`);
                   setMessages(savedMessages ? JSON.parse(savedMessages) : []);
