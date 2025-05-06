@@ -3,6 +3,12 @@ import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
 import './chat.css';
 
+// Map human-readable game names to machine-readable identifiers
+const GAME_CONSTANTS = {
+  'dnd-5e': 'Dungeons & Dragons 5th Edition',
+  ':Otherscape': 'Otherscape'
+};
+
 const API_URL = process.env.NODE_ENV === 'production' 
   ? 'https://chat-rpg.ai/api' 
   : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
@@ -61,7 +67,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   });
   const getExampleQuestions = (gameName) => {
     switch (gameName) {
-      case 'Dungeons & Dragons 5th Edition':
+      case 'dnd-5e':
         return dndQuestions;
       case ':Otherscape':
         return otherscapeQuestions;
@@ -87,7 +93,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [controlsVisible, setControlsVisible] = useState(false);
 
   const getFormattedGameName = () => {
-    return game || 'the RPG';
+    return GAME_CONSTANTS[game] || game || 'the RPG';
   };
 
   const handleSliderChange = (type, value) => {
