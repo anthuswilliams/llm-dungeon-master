@@ -64,7 +64,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
       try {
         const response = await fetch(`${API_URL}/games`);
         const data = await response.json();
-        setGames(data);
+        // Convert human-readable names to machine-readable IDs if needed
+        const gameIds = data.map(gameName => {
+          // If the game name is already in machine-readable format, use it
+          if (GAME_MAPPINGS.idToName[gameName]) {
+            return gameName;
+          }
+          // Otherwise, try to convert from human-readable to machine-readable
+          return GAME_MAPPINGS.nameToId[gameName] || gameName;
+        });
+        setGames(gameIds);
       } catch (error) {
         console.error('Error fetching games:', error);
       } finally {
@@ -242,6 +251,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
         ) : (
           games.map((gameId) => {
             // Display the human-readable name but store the machine-readable ID
+            // gameId is already in machine-readable format
             const displayName = GAME_MAPPINGS.idToName[gameId] || gameId;
             return (
               <button
