@@ -8,21 +8,21 @@ const GAME_MAPPINGS = {
   // Machine ID to Human readable
   idToName: {
     'dnd-5e': 'Dungeons & Dragons 5th Edition',
-    ':otherscape': 'Otherscape',
+    'otherscape': 'Otherscape',
     'dragonbane': 'Dragonbane',
     'slugblaster': 'Slugblaster'
   },
   // Human readable to Machine ID
   nameToId: {
     'Dungeons & Dragons 5th Edition': 'dnd-5e',
-    'Otherscape': ':otherscape',
+    'Otherscape': 'otherscape',
     'Dragonbane': 'dragonbane',
     'Slugblaster': 'slugblaster'
   }
 };
 
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://chat-rpg.ai/api' 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://chat-rpg.ai/api'
   : process.env.REACT_APP_API_HOST || 'http://localhost:8000';
 
 const getUrlParams = () => {
@@ -38,7 +38,7 @@ const getUrlParams = () => {
 
 const updateUrl = (params) => {
   if (typeof window === 'undefined') return;
-  
+
   const url = new URL(window.location.href || 'http://localhost');
   Object.entries(params).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {
@@ -81,7 +81,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
     switch (gameId) {
       case 'dnd-5e':
         return dndQuestions;
-      case ':otherscape':
+      case 'otherscape':
         return otherscapeQuestions;
       default:
         return [];
@@ -89,7 +89,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   };
 
   const exampleQuestions = getExampleQuestions(game);
-  const randomExampleQuestion = exampleQuestions.length > 0 
+  const randomExampleQuestion = exampleQuestions.length > 0
     ? exampleQuestions[Math.floor(Math.random() * exampleQuestions.length)]
     : '';
 
@@ -275,8 +275,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   Copy
                 </button>
                 {copyStatus && (
-                  <div 
-                    className="copy-status visible" 
+                  <div
+                    className="copy-status visible"
                     style={{ color: copyStatus === 'Copied!' ? 'green' : 'red' }}
                     aria-hidden="true"
                   >
