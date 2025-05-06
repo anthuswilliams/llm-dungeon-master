@@ -37,7 +37,7 @@ const updateUrl = (params) => {
 const ChatInterface = ({ initialMessages = [] }) => {
   const urlParams = getUrlParams();
   const [game, setGame] = useState(urlParams.game);
-  const [games, setGames] = useState(['dnd-5e', 'Slugblaster']); // Default games as fallback
+  const [games, setGames] = useState(['dnd-5e']); // Default game as fallback
   const [loadingGames, setLoadingGames] = useState(true);
 
   useEffect(() => {
@@ -45,10 +45,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
       try {
         const response = await fetch(`${API_URL}/games`);
         const data = await response.json();
-        // Add Slugblaster to the games list
-        if (!data.includes('Slugblaster')) {
-          data.push('Slugblaster');
-        }
         setGames(data);
       } catch (error) {
         console.error('Error fetching games:', error);
@@ -69,14 +65,6 @@ const ChatInterface = ({ initialMessages = [] }) => {
         return dndQuestions;
       case ':Otherscape':
         return otherscapeQuestions;
-      case 'Slugblaster':
-        return [
-          "How do I create a character in Slugblaster?",
-          "What are the basic rules for Slugblaster?",
-          "How does dimension hopping work in Slugblaster?",
-          "What are the different crews in Slugblaster?",
-          "How do I earn cred in Slugblaster?"
-        ];
       default:
         return [];
     }
