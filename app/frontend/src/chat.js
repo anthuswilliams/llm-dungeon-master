@@ -6,7 +6,9 @@ import './chat.css';
 // Map human-readable game names to machine-readable identifiers
 const GAME_CONSTANTS = {
   'dnd-5e': 'Dungeons & Dragons 5th Edition',
-  ':Otherscape': 'Otherscape'
+  ':Otherscape': 'Otherscape',
+  'dragonbane': 'Dragonbane',
+  'slugblaster': 'Slugblaster'
 };
 
 const API_URL = process.env.NODE_ENV === 'production' 
