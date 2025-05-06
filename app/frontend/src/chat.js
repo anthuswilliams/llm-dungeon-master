@@ -123,7 +123,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   // Update URL when settings change
   useEffect(() => {
     updateUrl({
-      game,
+      game, // game is already in machine-readable format
       debug,
       model,
       knn,
