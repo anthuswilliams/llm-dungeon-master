@@ -8,14 +8,14 @@ const GAME_MAPPINGS = {
   // Machine ID to Human readable
   idToName: {
     'dnd-5e': 'Dungeons & Dragons 5th Edition',
-    ':otherscape': 'Otherscape',
+    'otherscape': ':Otherscape',
     'dragonbane': 'Dragonbane',
     'slugblaster': 'Slugblaster'
   },
   // Human readable to Machine ID
   nameToId: {
     'Dungeons & Dragons 5th Edition': 'dnd-5e',
-    'Otherscape': ':otherscape',
+    ':Otherscape': 'otherscape',
     'Dragonbane': 'dragonbane',
     'Slugblaster': 'slugblaster'
   }
@@ -262,15 +262,15 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   if (messages.length > 0) {
                     localStorage.setItem(`chat-history-${game}`, JSON.stringify(messages));
                   }
-                  
+
                   // Set the game state to the machine-readable ID
                   setGame(gameId);
-                  
+
                   // Force URL update with the raw machine-readable ID
                   const url = new URL(window.location.href);
                   url.searchParams.set('game', gameId);
                   window.history.replaceState({}, '', url.toString());
-                  
+
                   // Load chat history for new game or start fresh
                   const savedMessages = localStorage.getItem(`chat-history-${gameId}`);
                   setMessages(savedMessages ? JSON.parse(savedMessages) : []);
