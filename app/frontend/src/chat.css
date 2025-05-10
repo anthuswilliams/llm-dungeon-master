@@ -25,12 +25,16 @@
 
 @media (min-width: 501px) {
   .game-sidebar.open {
-    position: relative;
-    transform: none;
-    box-shadow: none;
+    position: fixed;
+    transform: translateX(0);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
   
   .game-sidebar:not(.open) + .chat-main {
+    margin-left: 0;
+  }
+  
+  .chat-main {
     margin-left: 0;
   }
 }
@@ -77,7 +81,7 @@
 
 .hamburger-menu {
   display: block;
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 10px;
   z-index: 20;
