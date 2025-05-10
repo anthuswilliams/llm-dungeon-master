@@ -71,7 +71,7 @@
 
 @media (min-width: 501px) {
   .game-sidebar.open + .chat-main {
-    margin-left: 250px;
+    margin-left: 0;
   }
 }
 
