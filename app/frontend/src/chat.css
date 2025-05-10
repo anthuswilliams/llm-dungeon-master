@@ -1,6 +1,7 @@
 .chat-container {
   display: flex;
   height: 100vh;
+  position: relative;
 }
 
 .game-sidebar {
@@ -8,6 +9,23 @@
   background-color: #f5f5f5;
   padding: 20px;
   border-right: 1px solid #ddd;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+@media (max-width: 500px) {
+  .game-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .game-sidebar.open {
+    transform: translateX(0);
+  }
 }
 
 .game-option {
@@ -38,6 +56,31 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  position: relative;
+}
+
+.hamburger-menu {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 5px;
+  color: #8b4513;
+}
+
+@media (max-width: 500px) {
+  .hamburger-menu {
+    display: block;
+  }
+  
+  .chat-main {
+    padding-top: 40px;
+  }
 }
 
 .chat-title {

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import dndQuestions from './dnd-5e-questions.json';
 import otherscapeQuestions from './otherscape-questions.json';
 import './chat.css';
@@ -113,6 +113,7 @@ const ChatInterface = ({ initialMessages = [] }) => {
   const [knn, setKnn] = useState(urlParams.knn);
   const [keywordsWeight, setKeywordsWeight] = useState(urlParams.keywords);
   const [controlsVisible, setControlsVisible] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 500);
 
   const getFormattedGameName = () => {
     return GAME_MAPPINGS.idToName[game] || game || 'the RPG';
@@ -129,6 +130,16 @@ const ChatInterface = ({ initialMessages = [] }) => {
       updateUrl({ keywords: value, knn: 1 - value });
     }
   };
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth > 500);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Update URL when settings change
   useEffect(() => {
@@ -242,9 +253,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
     setCopyStatus('');
   };
 
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen(!sidebarOpen);
+  }, [sidebarOpen]);
+
   return (
     <div className="chat-container">
-      <div className="game-sidebar">
+      <div className={`game-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h2>Games</h2>
         {loadingGames ? (
           <div className="spinner" aria-label="Loading games..." />
@@ -283,6 +298,13 @@ const ChatInterface = ({ initialMessages = [] }) => {
         )}
       </div>
       <div className="chat-main">
+        <button 
+          className="hamburger-menu" 
+          onClick={toggleSidebar}
+          aria-label="Toggle game menu"
+        >
+          ☰
+        </button>
         <h1 className="chat-title">Chat with {getFormattedGameName()}</h1>
         <div className="chat-feed">
           <div className="messages-container">
