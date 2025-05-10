@@ -9,22 +9,29 @@
   background-color: #f5f5f5;
   padding: 20px;
   border-right: 1px solid #ddd;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease;
   z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transform: translateX(-100%);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 500px) {
-  .game-sidebar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    transform: translateX(-100%);
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+.game-sidebar.open {
+  transform: translateX(0);
+}
+
+@media (min-width: 501px) {
+  .game-sidebar.open {
+    position: relative;
+    transform: none;
+    box-shadow: none;
   }
   
-  .game-sidebar.open {
-    transform: translateX(0);
+  .game-sidebar:not(.open) + .chat-main {
+    margin-left: 0;
   }
 }
 
@@ -57,6 +64,15 @@
   flex-direction: column;
   padding: 20px;
   position: relative;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+@media (min-width: 501px) {
+  .game-sidebar.open + .chat-main {
+    margin-left: 250px;
+  }
 }
 
 .hamburger-menu {
