@@ -131,14 +131,9 @@ const ChatInterface = ({ initialMessages = [] }) => {
     }
   };
 
-  // Handle window resize
+  // Set initial sidebar state based on screen width
   useEffect(() => {
-    const handleResize = () => {
-      setSidebarOpen(window.innerWidth > 500);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    setSidebarOpen(window.innerWidth > 500);
   }, []);
 
   // Update URL when settings change

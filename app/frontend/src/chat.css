@@ -60,7 +60,7 @@
 }
 
 .hamburger-menu {
-  display: none;
+  display: block;
   position: absolute;
   top: 10px;
   left: 10px;
@@ -73,14 +73,8 @@
   color: #8b4513;
 }
 
-@media (max-width: 500px) {
-  .hamburger-menu {
-    display: block;
-  }
-  
-  .chat-main {
-    padding-top: 40px;
-  }
+.chat-main {
+  padding-top: 40px;
 }
 
 .chat-title {
