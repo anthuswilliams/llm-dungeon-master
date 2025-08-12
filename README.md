@@ -36,3 +36,23 @@ There are a number of complex interactions involved in a round of combat.
 apt-get install libpoppler-cpp-dev
 apt-get install poppler-utils
 ```
+
+# Deploying
+
+To deploy, you can push new images for the `backend` and/or `frontend`.
+
+First, install and authenticate with `doctl`:
+```
+wget https://github.com/digitalocean/doctl/releases/download/v1.131.0/doctl-1.131.0-linux-amd64.tar.gz
+tar xf ~/doctl-1.131.0-linux-amd64.tar.gz
+sudo mv ~/doctl /usr/local/bin
+doctl auth init           # paste your digital ocean api key
+doctl registry login
+```
+
+then you can build and push images:
+
+```
+docker build -f Dockerfile.frontend -n registry.digitalocean.com/chat-rpg/frontend-app:latest .
+docker push registry.digitalocean.com/chat-rpg/frontend-app:latest
+```
