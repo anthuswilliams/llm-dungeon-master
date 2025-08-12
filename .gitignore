@@ -168,3 +168,7 @@ local-elastic-creds.txt
 .aider*
 node_modules
 app/frontend/node_modules
+
+# random deploy stuff
+deployment.yaml
+secret.yaml
