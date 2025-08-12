@@ -3,6 +3,7 @@ notebook
 openai
 uvicorn
 fastapi
+litellm
 anthropic
 #tiktoken
 #cbor2

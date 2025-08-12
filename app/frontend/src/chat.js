@@ -398,15 +398,29 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                 >
-                  <option value="gpt-4.1">OpenAI GPT 4.1</option>
-                  <option value="gpt-5">OpenAI GPT 5</option>
-                  <option value="gpt-5-mini">OpenAI GPT 5 Mini</option>
-                  <option value="gpt-5-nano">OpenAI GPT 5 Nano</option>
-                  <option value="claude-3.5-haiku">Claude 3.5 Haiku</option>
-                  <option value="claude-3.7-sonnet">Claude 3.7 Sonnet</option>
-                  <option value="claude-4-sonnet">Claude 4 Sonnet</option>
-                  <option value="claude-4-opus">Claude 4 Opus</option>
                   <option value="claude-4.1-opus">Claude 4.1 Opus</option>
+                  <option value="claude-opus-4">Claude 4 Opus</option>
+                  <option value="claude-sonnet-4">Claude 4 Sonnet</option>
+                  <option value="claude-3.5-haiku">Claude 3.5 Haiku</option>
+                  <option value="claude-3.7">Claude 3.7 Sonnet</option>
+                  <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                  <option value="claude-3-haiku">Claude 3 Haiku</option>
+                  <option value="claude-3-opus">Claude 3 Opus</option>
+                  <option value="gpt-5">GPT 5</option>
+                  <option value="gpt-5-mini">GPT 5 Mini</option>
+                  <option value="gpt-5-nano">GPT 5 Nano</option>
+                  <option value="gpt-4.1">GPT 4.1</option>
+                  <option value="gpt-4.1-mini">GPT 4.1 Mini</option>
+                  <option value="gpt-4.1-nano">GPT 4.1 Nano</option>
+                  <option value="o4-mini">o4 Mini</option>
+                  <option value="o3">o3</option>
+                  <option value="o3-mini">o3 Mini</option>
+                  <option value="o1-mini">o1 Mini</option>
+                  <option value="gpt-4o">GPT 4o</option>
+                  <option value="gpt-4o-mini">GPT 4o Mini</option>
+                  <option value="gpt-4">GPT 4</option>
+                  <option value="gpt-4-turbo">GPT 4 Turbo</option>
+                  <option value="gpt-3.5-turbo">GPT 3.5 Turbo</option>
                 </select>
               </div>
               <div className="control-group">

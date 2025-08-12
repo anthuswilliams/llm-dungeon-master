@@ -1,33 +1,7 @@
 from openai import OpenAI
 
 from utils.elastic import elastic_request
-import utils.anthropic_client as anthropic_client
-import utils.openai_client as openai_client
-
-GPT_4_1 = "gpt-4.1"
-GPT_5 = "gpt-5"
-GPT_5_MINI = "gpt-5-mini"
-GPT_5_NANO = "gpt-5-nano"
-CLAUDE_3_5_HAIKU = "claude-3.5-haiku"
-CLAUDE_3_7_SONNET = "claude-3.7-sonnet"
-CLAUDE_4_SONNET = "claude-4-sonnet"
-CLAUDE_4_OPUS = "claude-4-opus"
-CLAUDE_4_1_OPUS = "claude-4.1-opus"
-
-OPENAI_MODELS = [
-    GPT_4_1,
-    GPT_5,
-    GPT_5_MINI,
-    GPT_5_NANO
-]
-
-ANTHROPIC_MODELS = [
-    CLAUDE_3_5_HAIKU,
-    CLAUDE_3_7_SONNET,
-    CLAUDE_4_SONNET,
-    CLAUDE_4_OPUS,
-    CLAUDE_4_1_OPUS
-]
+import utils.llm as llm
 
 SEARCH_PROMPT = """
 Users are playing an RPG. They will ask questions pertaining to the rules, setting, lore,
@@ -58,17 +32,8 @@ If the content is not sufficient to answer the question, say so.
 """
 
 
-def get_client(model):
-    if model in OPENAI_MODELS:
-        return openai_client
-    elif model in ANTHROPIC_MODELS:
-        return anthropic_client
-    else:
-        raise Exception(f"No such model implementation: {model}")
-
-
-def generate_keywords(client, question):
-    return client.chat_completion(system_prompt=SEARCH_PROMPT, messages=[
+def generate_keywords(question, model):
+    return llm.chat_completion(system_prompt=SEARCH_PROMPT, model=model, messages=[
         {
             "role": "user",
             "content": [{
@@ -76,7 +41,7 @@ def generate_keywords(client, question):
                 "text": question
             }]
         }
-    ])
+    ]).choices[0].message.content
 
 
 def query_elastic(keywords, question, settings, game):
@@ -120,8 +85,8 @@ def query_elastic(keywords, question, settings, game):
     return [h["_source"]["content"] for h in hits]
 
 
-def generate_response(client, context, history, model):
-    response = client.chat_completion(
+def generate_response(context, history, model):
+    response = llm.chat_completion(
         system_prompt=ADJUDICATION_PROMPT,
         model=model,
         messages=[
@@ -133,10 +98,10 @@ def generate_response(client, context, history, model):
         ]
     )
 
-    return response
+    return response.choices[0].message.content if response.choices else "No response generated."
 
 
-def query(history, knnWeight=0.4, keywordWeight=0.6, model=OPENAI_MODELS[0], game="dnd-5e"):
+def query(history, knnWeight=0.4, keywordWeight=0.6, model="gpt-5-mini", game="dnd-5e"):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -156,17 +121,15 @@ def query(history, knnWeight=0.4, keywordWeight=0.6, model=OPENAI_MODELS[0], gam
         query("My Strength is 18. I will take a running jump. How far can I make it?")
           => "You can cover a number of feet up to your Strength score if you move at least 10 feet on foot immediately before the jump. With a Strength score of 18, you can jump up to 18 feet."
     """
-    client = get_client(model)
     if not history:
         return "Please provide a question."
     question = history[-1]["content"]
-    keywords = generate_keywords(
-        client, question) if keywordWeight > 0 else None
+    keywords = generate_keywords(question, model) if keywordWeight > 0 else None
     context = query_elastic(keywords, question, {
                             "knnWeight": knnWeight, "keywordWeight": keywordWeight}, game)
 
     return {
-        "response": generate_response(client, context, history, model),
+        "response": generate_response(context, history, model),
         "keywords": keywords,
         "context": context
     }
@@ -184,7 +147,7 @@ if __name__ == "__main__":
                 "content": question
             }
         )
-        answer = query(conversation, model=CLAUDE_3_5_HAIKU)
+        answer = query(conversation, model="gpt-5-mini")
         print(answer["response"])
         conversation.append(
             {

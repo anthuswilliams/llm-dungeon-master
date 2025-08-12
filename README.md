@@ -53,6 +53,9 @@ doctl registry login
 then you can build and push images:
 
 ```
-docker build -f Dockerfile.frontend -n registry.digitalocean.com/chat-rpg/frontend-app:latest .
+docker build -f Dockerfile.frontend -t registry.digitalocean.com/chat-rpg/frontend-app:latest .
 docker push registry.digitalocean.com/chat-rpg/frontend-app:latest
+docker build -f Dockerfile.backend -t registry.digitalocean.com/chat-rpg/backend-app:latest .
+docker push registry.digitalocean.com/chat-rpg/backend-app:latest
 ```
+
