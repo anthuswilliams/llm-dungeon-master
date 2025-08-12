@@ -21,7 +21,7 @@ app.add_middleware(
 class Messages(BaseModel):
     debug: bool
     model: str
-    game: Literal["dnd-5e", "otherscape"]
+    game: Literal["dnd-5e", "dragonbane", "otherscape", "slugblaster"]
     knnWeight: float
     keywordWeight: float
     messages: List[Dict[str, str]]
@@ -34,6 +34,11 @@ async def create_message(messages: Messages):
                      game=messages.game)
     return response
 
+
 @app.get("/games")
 async def get_games():
     return unique_values("source-books", "game")
+
+
+if __name__ == "__main__":
+    print(unique_values("source-books", "game"))

@@ -34,4 +34,5 @@ There are a number of complex interactions involved in a round of combat.
 - You need the `libpoppler-cpp-dev` library:
 ```
 apt-get install libpoppler-cpp-dev
+apt-get install poppler-utils
 ```

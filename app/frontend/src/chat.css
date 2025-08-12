@@ -8,6 +8,7 @@
   width: 250px;
   background-color: #f5f5f5;
   padding: 20px;
+  padding-top: 2em;
   border-right: 1px solid #ddd;
   transition: transform 0.3s ease, width 0.3s ease;
   z-index: 10;
@@ -29,11 +30,11 @@
     transform: translateX(0);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
-  
-  .game-sidebar:not(.open) + .chat-main {
+
+  .game-sidebar:not(.open)+.chat-main {
     margin-left: 0;
   }
-  
+
   .chat-main {
     margin-left: 0;
   }
@@ -74,7 +75,7 @@
 }
 
 @media (min-width: 501px) {
-  .game-sidebar.open + .chat-main {
+  .game-sidebar.open+.chat-main {
     margin-left: 0;
   }
 }
@@ -91,7 +92,6 @@
   cursor: pointer;
   padding: 5px;
   color: #8b4513;
-  margin-bottom: 0.2em;
 }
 
 .chat-main {
@@ -331,6 +331,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

@@ -36,4 +36,5 @@ def unique_values(index, field):
             }
         }
     ).json()
+
     return [bucket["key"] for bucket in response.get("aggregations", {}).get(field, {}).get("buckets", [])]
