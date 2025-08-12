@@ -293,8 +293,8 @@ const ChatInterface = ({ initialMessages = [] }) => {
         )}
       </div>
       <div className="chat-main">
-        <button 
-          className="hamburger-menu" 
+        <button
+          className="hamburger-menu"
           onClick={toggleSidebar}
           aria-label="Toggle game menu"
         >
@@ -398,8 +398,15 @@ const ChatInterface = ({ initialMessages = [] }) => {
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                 >
-                  <option value="gpt-4o">OpenAI GPT 4o</option>
-                  <option value="claude-3.5">Claude 3.5 Sonnet</option>
+                  <option value="gpt-4.1">OpenAI GPT 4.1</option>
+                  <option value="gpt-5">OpenAI GPT 5</option>
+                  <option value="gpt-5-mini">OpenAI GPT 5 Mini</option>
+                  <option value="gpt-5-nano">OpenAI GPT 5 Nano</option>
+                  <option value="claude-3.5-haiku">Claude 3.5 Haiku</option>
+                  <option value="claude-3.7-sonnet">Claude 3.7 Sonnet</option>
+                  <option value="claude-4-sonnet">Claude 4 Sonnet</option>
+                  <option value="claude-4-opus">Claude 4 Opus</option>
+                  <option value="claude-4.1-opus">Claude 4.1 Opus</option>
                 </select>
               </div>
               <div className="control-group">

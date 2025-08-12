@@ -1,12 +1,12 @@
 from openai import OpenAI
 
 
-def chat_completion(system_prompt, messages, client=None):
+def chat_completion(system_prompt, messages, client=None, model="gpt-4o-mini"):
     if not client:
         client = OpenAI()
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=[{
             "role": "developer",
             "content": [{

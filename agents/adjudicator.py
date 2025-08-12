@@ -4,8 +4,30 @@ from utils.elastic import elastic_request
 import utils.anthropic_client as anthropic_client
 import utils.openai_client as openai_client
 
-CLAUDE_35 = "claude-3.5"
-GPT_4O = "gpt-4o"
+GPT_4_1 = "gpt-4.1"
+GPT_5 = "gpt-5"
+GPT_5_MINI = "gpt-5-mini"
+GPT_5_NANO = "gpt-5-nano"
+CLAUDE_3_5_HAIKU = "claude-3.5-haiku"
+CLAUDE_3_7_SONNET = "claude-3.7-sonnet"
+CLAUDE_4_SONNET = "claude-4-sonnet"
+CLAUDE_4_OPUS = "claude-4-opus"
+CLAUDE_4_1_OPUS = "claude-4.1-opus"
+
+OPENAI_MODELS = [
+    GPT_4_1,
+    GPT_5,
+    GPT_5_MINI,
+    GPT_5_NANO
+]
+
+ANTHROPIC_MODELS = [
+    CLAUDE_3_5_HAIKU,
+    CLAUDE_3_7_SONNET,
+    CLAUDE_4_SONNET,
+    CLAUDE_4_OPUS,
+    CLAUDE_4_1_OPUS
+]
 
 SEARCH_PROMPT = """
 Users are playing an RPG. They will ask questions pertaining to the rules, setting, lore,
@@ -37,12 +59,12 @@ If the content is not sufficient to answer the question, say so.
 
 
 def get_client(model):
-    if model == "gpt-4o":
+    if model in OPENAI_MODELS:
         return openai_client
-    elif model == "claude-3.5":
+    elif model in ANTHROPIC_MODELS:
         return anthropic_client
     else:
-        raise Exception("No such model implementation")
+        raise Exception(f"No such model implementation: {model}")
 
 
 def generate_keywords(client, question):
@@ -98,9 +120,10 @@ def query_elastic(keywords, question, settings, game):
     return [h["_source"]["content"] for h in hits]
 
 
-def generate_response(client, context, history):
+def generate_response(client, context, history, model):
     response = client.chat_completion(
         system_prompt=ADJUDICATION_PROMPT,
+        model=model,
         messages=[
             {
                 "role": "assistant",
@@ -113,7 +136,7 @@ def generate_response(client, context, history):
     return response
 
 
-def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O, game="dnd-5e"):
+def query(history, knnWeight=0.4, keywordWeight=0.6, model=OPENAI_MODELS[0], game="dnd-5e"):
     """
     @description
     Make a ruling on a question pertaining to D&D rules, using the source material as context.
@@ -143,7 +166,7 @@ def query(history, knnWeight=0.4, keywordWeight=0.6, model=GPT_4O, game="dnd-5e"
                             "knnWeight": knnWeight, "keywordWeight": keywordWeight}, game)
 
     return {
-        "response": generate_response(client, context, history),
+        "response": generate_response(client, context, history, model),
         "keywords": keywords,
         "context": context
     }
@@ -161,7 +184,7 @@ if __name__ == "__main__":
                 "content": question
             }
         )
-        answer = query(conversation, model=CLAUDE_35)
+        answer = query(conversation, model=CLAUDE_3_5_HAIKU)
         print(answer["response"])
         conversation.append(
             {
